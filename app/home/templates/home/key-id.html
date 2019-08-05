@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no">
+	<title>授权码查询</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('home.static', filename='css/bound.css') }}">
+    <script type="text/javascript" src="{{ url_for('home.static', filename='js/jquery-1.11.1.min.js') }}"></script>
+</head>
+<body>
+    <div class="title">授权码查询</div>
+    <form action="" class="tel-input">
+        <div class="input-style flexBox">
+            <div class="input-text">授权码</div>
+            <input class="phone-input flex1" type="text" placeholder="请输入授权码" id="key">
+        </div>
+        <button type="button" onclick="get_key()" class="bound">查询</button>
+    </form>
+    <div class="content-width" hidden="hidden" id="divss">
+            <div class="flexBox content-text">
+                <div class="flex1 text-left">授权码</div>
+                <div class="flex1 text-right" id="kid"></div>
+            </div>
+            <div class="flexBox content-text">
+                <div class="flex1 text-left">激活状态</div>
+                <div class="flex1 text-right" id="kstatus"></div>
+            </div>
+            <div class="flexBox content-text" id="actss">
+                <div class="flex1 text-left">激活时间</div>
+                <div class="flex1 text-right" id="act"></div>
+            </div>
+    </div>
+    <p class="marke" id="no" hidden="hidden"></p>
+</body>
+<script>
+	function get_key()
+	{
+	     key_id = $("#key").val();
+		$.ajax({
+			  url: "{{url_for('home.get_key_info')}}",
+			  data: {"key_id":key_id},
+			  type: "GET",
+			  dataType: "json",
+			  async: false,
+			  cache: false
+			}).done(function( result ) {
+				var st = '';
+				if(result['status'] == 0){
+				    $('#no').show();
+				    $('#no').html('无此授权码信息');
+                    $("#divss").hide();
+                }
+                else if (result['status'] == 1){
+				    $("#divss").show();
+				    $('#no').hide();
+				    var k_st = '' + result['k_id'];
+				    $('#kid').html(k_st);
+				    if(result['k_status'] == 0){
+				        st = '未激活'
+                    }else if(result['k_status'] == 1){
+				        st = '激活'
+                    }else if(result['k_status'] == 2){
+                        st = '过期'
+                    }else {
+                        st = '使用结束'
+                    }
+				    $('#kstatus').html(st);
+                    if(result['k_status'] == 1 || result['k_status'] == 3){
+                        $("#actss").show();
+                        var act = '' + result['activate_time'];
+                        $('#act').html(act);
+                    }else{
+                       $("#actss").hide();
+                    }
+                }
+                else if (result['status'] == -1){
+                    alert('请输入授权码')
+                    $("#divss").hide();
+				    $('#no').hide();
+                }
+			}).fail(function(result){
+				var errmsg = "访问服务器出错："+fmtJqueryAjaxError(result);
+				alert(errmsg);
+			});
+	}
+</script>
+</html>

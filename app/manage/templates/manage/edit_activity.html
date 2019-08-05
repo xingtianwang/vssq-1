@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% import "_macro.html" as macro%}
+{% block subtitle %} -编辑活动{% endblock %}
+
+{% block page_content %}
+
+
+<form class="form-inline panel-default" action="{{ url_for('manage.edit_activity', activity_id=activity_id) }}" method="post" enctype="multipart/form-data">
+    {{ form.csrf_token }}
+    <div class="row" style="margin:0 auto; text-align:left;">
+        <div class="col-lg-4 col-md-4 col-lg-offset-4 col-md-offset-4">
+            <div style="padding-bottom:5px;">
+                {{ form.name.label }}
+                {{ form.name(class="form-control", placeholder="活动名称", style="width:220px; height:40px; display:inline-block;")}}
+            </div>
+            <div style="padding-bottom:5px;">
+                {{ form.award_period.label }}
+                {{ form.award_period(class="form-control", placeholder="必填", style="width:220px; height:40px; display:inline-block;")}}
+            </div>
+            <font size="2" color="red">注：此栏填写的数字为用户获得奖励的时间间隔。如填写10，用户10天可获得一次活动奖励。”邀请得会员“与”五星好评“因活动特殊此项可不填。</font>
+            <div style="padding-bottom:5px;">
+                {{ form.reward.label }}
+                {{ form.reward(class="form-control", placeholder="必填", style="width:220px; height:40px; display:inline-block;")}}
+            </div>
+            <font size="2" color="red">注：此栏填写的数字是用户参与活动获得的VIP天数。如填写10，用户获得的VIP为10天期限。”邀请得会员“因活动特殊此项可不填</font>
+            {{ macro.time_search(form) }}
+            <div style="margin: 5px auto; padding-bottom:5px;">
+                {{ form.photo.label }}:
+                {{ form.photo(class="form-control", placeholder="活动图片", style="width:220px; height:40px; display:inline-block;")}}
+            </div>
+            <div style="margin: 5px auto; padding-bottom:5px;">
+                <img src="{{ photo_url }}{{ photo }}" width="140" height="140">
+            </div>
+            <div style="padding-bottom:5px;">
+                {{ form.link.label }}
+                {{ form.link(class="form-control", placeholder="必填", style="width:220px; height:40px; display:inline-block;")}}
+            </div>
+            <div style="padding-bottom:5px;">
+                {{ form.content.label }}
+                {{ form.content(class="form-control", style="width:220px; height:40px; display:inline-block;")}}
+            </div>
+            <br><br>
+            <font size="5" color="red">注：以下信息在无分享界面请勿填写</font>
+            <div style="margin: 5px auto; padding-bottom:5px;">
+                {{ form.title.label }}:
+                {{ form.title(class="form-control", placeholder="分享标题", style="width:330px; display:inline-block; margin: 10px 0px;") }}
+            </div>
+            <div style="margin: 5px auto; padding-bottom:5px;">
+                {{ form.description.label }}:
+                {{ form.description(class="form-control", placeholder="分享描述", style="width:350px; display:inline-block; margin: 10px 0px;") }}
+            </div>
+            <div style="margin: 5px auto; padding-bottom:5px;">
+                {{ form.share_photo.label }}:
+                {{ form.share_photo(class="form-control", placeholder="分享图片", style="width:220px; height:40px; display:inline-block;")}}
+            </div>
+            <div style="margin: 5px auto; padding-bottom:5px;">
+                <img src="{{ photo_url }}{{ share_photo }}" width="140" height="140">
+            </div>
+            <div style="margin: 5px auto; padding-bottom:5px;">
+                {{ form.share_link.label }}:
+                {{ form.share_link(class="form-control", style="width:220px; height:40px; display:inline-block;")}}
+            </div>
+            <div>
+                <a href="{{url_for('manage.get_activity_info')}}" class="btn btn-primary">取消</a>
+                {{ form.submit(class="btn btn-primary") }}
+            </div>
+        </div>
+
+    </div>
+
+</form>
+{% endblock %}

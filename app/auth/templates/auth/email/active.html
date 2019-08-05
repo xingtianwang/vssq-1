@@ -1,0 +1,8 @@
+<p>Dear {{ admin_user.username }},</p>
+<p>User {{ user.username }} request you to re-activate his account.
+    To activate it <a href="{{ url_for('auth.login', _external=True) }}">click here</a>.</p>
+<p>Alternatively, you can paste the following link in your browser's address bar:</p>
+<p>{{ url_for('auth.login', _external=True) }}</p>
+<p>Sincerely,</p>
+<p>The Godinsec Team</p>
+<p><small>Notes: please don't reply to this email.</small></p>

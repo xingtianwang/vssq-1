@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block subtitle %} -倒三角功能配置{% endblock %}
+
+{% block page_content %}
+    <form action="{{ url_for('manage.set_function') }}" method="post">
+        {{ form.csrf_token }}
+        <table align="center" style="font-size:14px;">
+            <tr>
+                <td style="padding-right:5px;">{{ form.function_name.label }}:</td>
+                <td style="padding-bottom:15px;">{{ form.function_name(class="form-control") }}</td>
+                <td style="padding-bottom:15px;padding-left:10px;">必填</td>
+            </tr>
+            <tr>
+                <td style="padding-bottom:10px;">注：</td>
+                <td style="padding-bottom:10px;">显示顺序跟配置顺序一致，每个功能英文逗号隔开，不支持中文输入</td>
+            </tr>
+
+            <tr>
+                <td style="padding-bottom:100px;">
+                    {{ form.submit(class="btn btn-primary") }}
+                </td>
+            </tr>
+        </table>
+    </form>
+{% endblock %}

@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% import "_macro.html" as macro%}
+{% block subtitle %} -活动{% endblock %}
+
+{% block page_content %}
+<div class="tab-content">
+<form class="form-inline panel panel-default" action="{{url_for('manage.get_activity_share')}}" method="post">
+    {{ form.csrf_token }}
+    <div class="panel-body">
+        <div class="form-group" style="padding-right:5px;padding-top:5px;">
+            {{ form.act_id.label }}:
+            {{ form.act_id(class="form-control", placeholder="活动编号") }}
+        </div>
+        <div class="form-group" style="padding-right:5px;padding-top:5px;">
+			<a href="{{url_for('manage.get_activity_share')}}" class="btn btn-primary">重置</a>
+            {{ form.submit(class="btn btn-primary") }}
+        </div>
+    </div>
+</form>
+	<div class="tab-pane active">
+		<table id="appinfo" class="table table-striped table-hover table-bordered">
+			<thead>
+				<tr class="info">
+					<td class="text-center" style="width:200px;">序号</td>
+					<td class="text-center" >活动编号</td>
+					<td class="text-center" style="width:500px;">操作</td>
+				</tr>
+			</thead>
+			<tbody>
+
+                {% for temp in data %}
+			<tr>
+                <td class="text-center">{% if page == 1 %}{{loop.index}} {% else %}
+                    {{ per_page*(page - 1) + loop.index }}{% endif %}</td>
+				<td class="text-center">{{ temp.number}}</td>
+				<td class="text-center"><a type="button" class="btn btn-primary"
+                                           href="{{ url_for('manage.get_invite', act_id=temp.number)}}">详情</a></td>
+
+            </tr>
+			{% endfor %}
+			</tbody>
+		</table>
+	</div>
+</div>
+
+{% endblock %}
+{% block page %}
+	{{ macro.pagination_widget(pagination, 'manage.get_activity_share', act_id = form.act_id.data) }}
+{% endblock %}

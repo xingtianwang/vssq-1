@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no">
+    <title></title>
+    <link rel="stylesheet" href="{{ url_for('share.static', filename='css/generalize.css') }}">
+    <script src="{{ url_for('share.static', filename='js/generalize.js') }}" type="text/javascript"></script>
+</head>
+<body>
+    <!-- 顶部体现按钮 -->
+    <div class="container">
+        <div class="rows user">
+            <div class="flex1 balance">
+                <p class="balanceNum">{{ account_balance }}</p>
+                <p class="balanceTitle">我的余额(元)</p>
+            </div>
+            <a class="txBtn" href="{{url_for('share.withdraw', godin_id=godin_id)}}">提现</a>
+        </div>
+     </div>
+    <!--下部信息-->
+    <div class="my_state">
+      <div class='rows state_bottom'>
+         <div class='flex1' catchtap="my_pickGoods">
+            <p class="peopleNum">{{ register_person_num }}</p>
+            <p class="peopleTitle">注册人数/人</p>
+         </div>
+         <div class='flex1' catchtap="my_inventory">
+            <p class="peopleNum">{{ pay_person_num }}</p>
+            <p class="peopleTitle">付款人数/人</p>
+         </div>
+         <div class='flex1' catchtap="no_payment">
+            <p class="peopleNum">{{ account_award }}</p>
+            <p class="peopleTitle">结算奖励/元</p>
+         </div>
+      </div>
+    </div>
+    <!-- 我的收益记录 -->
+    <a class="jumpA" href="{{url_for('share.earning', godin_id=godin_id)}}">
+        <div class='rows my_manage' bindtap='coupon'>
+            <div class='flex1 manage_text'>
+                <text>我的收益记录</text>
+            </div>
+            <div class='more_icon'>
+                <img src="{{ url_for('share.static', filename='images/share/more.png') }}">
+            </div>
+        </div>
+    </a>
+    <!-- 邀请素材 -->
+    <a class="jumpA" href="{{url_for('share.fc', godin_id=godin_id, link=link)}}">
+        <div class='rows my_manage betweenB'>
+            <div class='flex1 manage_text'>
+                <text>邀请素材</text>
+            </div>
+            <div class='more_icon'>
+                <img src="{{ url_for('share.static', filename='images/share/more.png') }}">
+            </div>
+        </div>
+    </a>
+    <!-- 邀请链接：复制功能 -->
+    <div class='rows my_manage'>
+        <div class='manage_text'>
+            <text>邀请链接：</text>
+        </div>
+        <textarea class="urlText flex1" id="Url" readonly="readonly">{{ link }}</textarea>
+        <button type="button" class="copyBtn" onClick="copyUrl()">复制</button>
+    </div>
+    <!-- 活动说明 -->
+    <div class="explain">
+        <p class="explainText">活动说明：</p>
+        <pre class="explainText">{{ active_intro }}</pre>
+    </div>
+    <script>
+        //复制功能
+       function copyUrl(){
+            agent.copycontent($('#Url').text());
+        }   
+    </script>
+</body>
+</html>

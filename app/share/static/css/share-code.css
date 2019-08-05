@@ -1,0 +1,68 @@
+ body,html{
+    margin: 0px;
+    padding: 0px;
+    width: 100%;
+    background:#f22d5b;
+}
+*{
+    margin: 0px;
+    padding: 0px;
+    box-sizing:border-box;
+    -moz-box-sizing:border-box;
+    -webkit-box-sizing:border-box;
+}
+.container{
+    width: 100%;
+}
+.share-img{
+    width: 100%;
+    display: block;
+    padding: 0px;
+    margin:0px;
+    overflow: hidden;
+    outline:none;
+    border:0px;
+    /*margin-top: -1px;*/
+}
+.share-style{
+    background:url(../images/share/code-share/icon04.jpg) no-repeat;
+    width: 100%;
+    background-size: cover;
+    text-align: center;
+}
+.load-style{
+    background:url(../images/share/code-share/icon07.jpg) no-repeat;
+    width: 100%;
+    background-size: cover;
+    text-align: center;
+}
+.code-style{
+    background:url(../images/share/code-share/icon10.png) no-repeat;
+    width: 100%;
+    background-size: cover;
+    text-align: left;
+}
+.share-code{
+    background:url(../images/share/code-share/icon09.png) no-repeat;
+    width: 100%;
+    background-size: cover;
+    text-align: left;
+}
+.share-btn{
+    width: 42%;
+}
+a{
+    -webkit-tap-highlight-color:rgba(0,0,0,0);
+}
+.code{
+    color: #f23b64;
+    font-weight: bold;
+    letter-spacing:1.5px;
+    padding-left: 15%;
+}
+.share-code-font{
+    color: #f23b64;
+    font-weight: bold;
+    letter-spacing:1.5px;
+    padding-left: 13%;
+}

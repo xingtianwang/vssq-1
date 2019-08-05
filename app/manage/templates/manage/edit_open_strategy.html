@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block subtitle %} -编辑开屏广告策略{% endblock %}
+
+{% block page_content %}
+    <form action="{{ url_for('manage.edit_open_strategy') }}" method="post" enctype="multipart/form-data">
+        {{ form.csrf_token }}
+        <table align="center" style="font-size:14px;">
+            <tr>
+                <td style="padding-right:5px;">{{ form.display_number.label }}:</td>
+                <td style="padding-bottom:10px;">{{ form.display_number(class="form-control") }}</td>
+                <td><p class="icon-format" style="color:red;">*填几就第几次展示广告</p></td>
+            </tr>
+            <tr>
+                <td style="padding-bottom:100px;">
+                    {{ form.submit(class="btn btn-primary") }}
+                    <a  href="{{url_for('manage.get_open_screen_ads')}}" class="btn btn-primary">返回</a>
+                </td>
+            </tr>
+        </table>
+    </form>
+{% endblock %}

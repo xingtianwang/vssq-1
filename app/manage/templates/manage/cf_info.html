@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+{% import "_macro.html" as macro%}
+
+{% block subtitle %} -邀请素材{% endblock %}
+
+{% block page_content %}
+<form class="form-inline panel panel-default" action="{{url_for('manage.fc_info')}}" method="post">
+
+    {{ form.csrf_token }}
+    <div class="panel-body">
+        {{ macro.time_search(form) }}
+        <div class="form-group" style="padding-right:5px;padding-top:5px;">
+			<a href="{{url_for('manage.fc_info')}}" class="btn btn-primary">重置</a>
+            {{ form.submit(class="btn btn-primary") }}
+            <a type="button" class="btn btn-primary" href="{{ url_for('manage.add_fc_content') }}">新建素材</a>
+        </div>
+    </div>
+</form>
+<div class="tab-content">
+	<div class="tab-pane active">
+		<table id="appinfo" class="table table-striped table-hover table-bordered">
+			<thead>
+				<tr class="info">
+                    <td class="text-center">序号</td>
+					<td class="text-center">创建时间</td>
+					<td class="text-center">内容</td>
+					<td class="text-center">图片</td>
+                    <td class="text-center">操作</td>
+				</tr>
+			</thead>
+			<tbody>
+			{% for item in data %}
+			<tr>
+                <td class="text-center">{% if page == 1 %}{{loop.index}} {% else %}
+                    {{ per_page*(page - 1) + loop.index }}{% endif %}</td>
+                <td class="text-center">{{ item.create_time }}</td>
+				<td class="text-center">{{ item.content }}</td>
+				<td class="text-center">
+                    {% if item.picture1 %}
+                        <img src="{{ file_ser }}{{ item.picture1 }}" width="100" height="100">
+                    {% endif %}
+                    {% if item.picture2 %}
+                            <img src="{{ file_ser }}{{ item.picture2 }}" width="100" height="100">
+                        {% endif %}
+                    {% if item.picture3 %}
+                            <img src="{{ file_ser }}{{ item.picture3 }}" width="100" height="100">
+                    {% endif %}</td>
+                <td align="center">
+                    <a class="btn btn-danger btn-xs" onclick="del_cf({{ item.id }})">删除</a>
+                    <a type="button" class="btn btn-info btn-xs" href="{{ url_for('manage.edit_cf_content', id=item.id) }}">修改</a>
+                </td>
+			</tr>
+			{% endfor %}
+			</tbody>
+		</table>
+	</div>
+</div>
+<script>
+    function del_cf(id){
+        $.ajax({
+            url: "{{url_for('manage.del_cf')}}",
+            data: {"id": id},
+            type: "GET",
+            dataType: "json",
+            async: false,
+            cache: false
+        }).done(function( result ) {
+            if(result["code"] != 0){ //如果出错则为非0
+                alert('操作失败');
+            }else{
+                alert('操作成功');
+                parent.location.reload();
+            }
+        }).fail(function(result){
+            var errmsg = "Error accessing the server：" + str(result);
+            alert(errmsg);
+        });
+    }
+</script>
+{% endblock %}
+{% block page%}
+	{{ macro.pagination_widget(pagination, 'manage.fc_info', start_time=form.start_time.data, end_time=form.end_time.data) }}
+{% endblock %}

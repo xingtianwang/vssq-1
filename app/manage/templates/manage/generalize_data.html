@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+{% import "_macro.html" as macro%}
+{% block subtitle %} -推广数据{% endblock %}
+
+{% block page_content %}
+    <form action="{{ url_for('manage.generalize_data') }}" method="post">
+        {{ form.csrf_token }}
+        <table align="center" style="font-size:14px;">
+            <tr>
+                <td style="padding-right:5px;">{{ form.phone_num.label }}:</td>
+                <td style="padding-bottom:10px;padding-right:10px;">{{ form.phone_num(class="form-control") }}</td>
+                <td style="padding-bottom:10px;padding-right:10px;">
+                    {{ form.submit_search(class="btn btn-primary") }}
+                    <a href="{{url_for('manage.generalize_data')}}" class="btn btn-primary">重置</a>
+                </td>
+                <td style="padding-bottom:10px;padding-left:30px;">
+                    <a href="{{url_for('manage.member_divide')}}" class="btn btn-primary">分成比例设置</a>
+                </td>
+            </tr>
+        </table>
+    </form>
+
+
+    <div class="tab-content">
+	<div class="tab-pane active">
+		<table id="appinfo" class="table table-striped table-hover table-bordered" style="margin-top: 50px">
+			<thead>
+				<tr class="info">
+                    <td class="text-center">序号</td>
+					<td class="text-center">邀请人手机号</td>
+					<td class="text-center">邀请人数</td>
+                    <td class="text-center">注册人数</td>
+                    <td class="text-center">付费人数</td>
+                    <td class="text-center">总收益</td>
+                    <td class="text-center">会员收益</td>
+                    <td class="text-center">激活码收益</td>
+                    <td class="text-center">账户余额</td>
+                    <td class="text-center">操作</td>
+				</tr>
+			</thead>
+			<tbody>
+			{% for item in data %}
+			<tr>
+                <td class="text-center">{{ loop.index }}</td>
+                <td class="text-center">{{ item.phone_num }}</td>
+				<td class="text-center">{{ item.invite_person_num }}</td>
+				<td class="text-center">{{ item.register_person_num }}</td>
+				<td class="text-center">{{ item.pay_person_num }}</td>
+				<td class="text-center">{{ item.all_award }}</td>
+				<td class="text-center">{{ item.member_award }}</td>
+				<td class="text-center">{{ item.active_code_award }}</td>
+				<td class="text-center">{{ item.account_balance }}</td>
+                <td align="center">
+                    <a type="button" class="btn btn-info btn-xs" href="{{ url_for('manage.get_invite_detail',
+                     godin_id=item.godin_id) }}">查看详情</a>
+                    <a type="button" class="btn btn-info btn-xs" href="{{ url_for('manage.alter_balance',
+                     godin_id=item.godin_id, phone_num=item.phone_num, balance=item.account_balance) }}">修改余额</a>
+                    <a type="button" class="btn btn-info btn-xs" href="{{ url_for('manage.alter_detail',
+                     phone_num=item.phone_num) }}">查看修改数据</a>
+                </td>
+			</tr>
+			{% endfor %}
+			</tbody>
+		</table>
+        <a href="{{url_for('manage.export_result', phone_num=form.phone_num.data, export_type = 34)}}"
+           class="btn btn-primary">导出结果为<br/>excel表格</a>
+	</div>
+</div>
+
+{% endblock %}
+{% block page %}
+    {% if pagination is not none %}
+        {{ macro.pagination_widget(pagination, 'manage.generalize_data', phone_num=phone_num) }}
+    {% endif %}
+{% endblock %}

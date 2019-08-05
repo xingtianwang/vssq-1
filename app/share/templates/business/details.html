@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no">
+    <title></title>
+    <link rel="stylesheet" href="{{ url_for('share.static', filename='css/business/details.css') }}">
+    <script src="{{ url_for('share.static', filename='js/jquery.js') }}" type="text/javascript"></script>
+    <script src="{{ url_for('share.static', filename='js/echarts.common.min.js') }}" type="text/javascript"></script>
+</head>
+<body class="bgcolor-white">
+    <div id="codeList" class="card-padding">
+        <!-- 下拉菜单开始 -->
+        <div class="displayFlex marginBtm">
+            <div class="flex1 line selBox">
+                <span class="sel">推广指数</span>
+                <p class="san sanDown"></p>
+                <ul class="options">
+                    <li code="0">推广指数</li>
+                    <li code="1">客源指数</li>
+                    <li code="2">忠粉指数</li>
+                    <li code="3">销售热度</li>
+                    <li code="4">收入指数</li>
+                    <li code="5">成本指数</li>
+                </ul>
+            </div>
+            <div class="flex1 line selBox2">
+                <span class="sel2">最近一周</span>
+                <p class="san2 sanDown"></p>
+                <ul class="options2">
+                    <li code="0">最近一周</li>
+                    <li code="1">最近一月</li>
+                    <li code="2">最近三月</li>
+                    <li code="3">最近半年</li>
+                    <li code="4">最近一年</li>
+                </ul>
+            </div>
+        </div>
+        <!-- 下拉菜单结束 -->
+        <!-- 为ECharts准备一个具备大小（宽高）的Dom -->
+        <div id="main" style="height:180px;margin-bottom:15px;"></div>
+        <!-- 第一组 开始-->
+        <div class="tableStyle">
+            <div class="displayFlex title">
+                <div class="flex1 titleBg01">时间</div>
+                <div class="flex1 titleBg02">{% if c_type == '0'%}推广指数{% elif c_type == '1' %}客源指数
+                    {% elif c_type == '2' %}忠粉指数{% elif c_type == '3' %}销售热度
+                    {% elif c_type == '4' %}收入指数{% elif c_type == '5' %}成本指数{% endif %}(分)</div>
+            </div>
+            {% for data in t_dic %}
+            <div class="displayFlex con-data">
+                <div class="flex1 bg1">{{ data['time'] }}</div>
+                <div class="flex1 bg2">{{ data['value'] }}</div>
+            </div>
+            {% endfor %}
+            <!-- 第一组 结束-->
+        </div>
+    </div>
+
+</body>
+<script>
+    $(function () {
+        var d1 = {{ time_data |safe}} ;
+        var d2 = {{ value_data | safe }};
+
+        // 基于准备好的dom，初始化echarts实例
+        var myChart = echarts.init(document.getElementById('main'));
+        // 指定图表的配置项和数据
+        var option = {
+        xAxis: {
+            type: 'category',
+            data: d1
+        },
+        yAxis: {
+            type: 'value'
+        },
+        grid: {
+            top:'30',
+            left: '1%',
+            right: '2%',
+            bottom: '6%',
+            containLabel: true
+         },
+        color:'#3682EA',
+        backgroundColor:'#EBF4FF',
+        textStyle:{
+        color:'#AAAAAA',
+        fontSize:12
+        },
+        series: [{
+            data: d2,
+            type: 'line'
+        }]
+        };
+        // 使用刚指定的配置项和数据显示图表。
+        myChart.setOption(option);
+        });
+
+// 下拉菜单js：第一份
+window.onload=function() {
+        $(".con-data:odd").find("div:first-child").css("background","#EBF4FF");//奇数行
+        $(".con-data:even").find("div:last-child").css("background","#EBF4FF");//偶数行
+       var selBox= document.querySelector('.selBox');
+       var selSpan= document.querySelector('.sel');
+       var titleData=document.querySelector('.titleBg02');
+       var optionUL=document.querySelector('.options');
+       var iconSan=document.querySelector('.san');
+       var selOptions= document.querySelector('.options').childNodes;
+       var selectedCode='0';
+       var selBox2= document.querySelector('.selBox2');
+       var selSpan2= document.querySelector('.sel2');
+       var optionUL2=document.querySelector('.options2');
+       var iconSan2=document.querySelector('.san2');
+       var selOptions2= document.querySelector('.options2').childNodes;
+       var selectedCode2='0';
+       function getData() {
+           $.ajax({
+            url: "{{url_for('share.bireport_select', id=id)}}",
+            data:{'c_type' : selectedCode, 'time_type' : selectedCode2},
+            type: "GET",
+            async: false,
+            cache: false,
+            success:function(result) {
+              var htmlData = "";
+              for(var i=0;i<result['t_dic'].length;i++){
+                  htmlData +='<div class="displayFlex con-data">'+
+                                '<div class="flex1 bg1">'+result['t_dic'][i]['time']+'</div>'+
+                                '<div class="flex1 bg2">'+result['t_dic'][i]['value']+'</div>'+
+                            '</div>';
+                  }
+                  $(".title").siblings().remove();
+                  $(".title").after(htmlData);
+                  $(".con-data:odd").find("div:first-child").css("background","#EBF4FF");//奇数行
+                  $(".con-data:even").find("div:last-child").css("background","#EBF4FF");//偶数行
+
+                  var d3 = result['time_data'] ;
+                  var d4 = result['value_data'];
+                  // 基于准备好的dom，初始化echarts实例
+                  var myChart = echarts.init(document.getElementById('main'));
+                  // 指定图表的配置项和数据
+                  var option = {
+                  xAxis: {
+                      type: 'category',
+                      data: d3
+                  },
+                  yAxis: {
+                      type: 'value'
+                  },
+                      grid: {
+                      top:'30',
+                      left: '1%',
+                      right: '2%',
+                      bottom: '6%',
+                      containLabel: true
+                 },
+                 color:'#3682EA',
+                 backgroundColor:'#EBF4FF',
+                 textStyle:{
+                     color:'#AAAAAA',
+                     fontSize:12
+                 },
+                 series: [{
+                     data: d4,
+                     type: 'line'
+                 }]
+                };
+                // 使用刚指定的配置项和数据显示图表。
+                myChart.setOption(option);
+            },
+            error:function() {
+
+            }
+
+           });
+       }
+       // 初始化时取数据
+       //     getData();
+           selBox.addEventListener('click',function(e) {
+            optionUL2.style.display='none';
+            iconSan2.className="san sanDown";
+            if(optionUL.style.display=='block'){
+              optionUL.style.display='none';
+               iconSan.className="san sanDown";
+              return;
+            }
+               optionUL.style.display='block';
+               iconSan.className="san sanUp";
+              e.stopPropagation();
+           });
+          var initOption=function() {
+            for (var i = 0; i < selOptions.length; i++) {
+                    if(selOptions[i].nodeName!='#text'){
+                      selOptions[i].className="def";
+                    }
+                  };
+           };
+           for (var n = 0; n < selOptions.length; n++) {
+             selOptions[n].addEventListener('click',function(e) {
+                     initOption();
+                     optionUL.style.display='none';
+                     iconSan.className="san sanDown";
+                     selectedCode=this.getAttribute('code');
+                     selSpan.innerText=this.innerText;
+                     titleData.innerText=this.innerText;
+                     this.className="selected";
+                     // 取数据的方法
+                     getData();
+                     e.stopPropagation();
+               });
+           };
+
+// 下拉菜单js：第2份
+           //
+           selBox2.addEventListener('click',function(e) {
+             optionUL.style.display='none';
+             iconSan.className="san sanDown";
+            if(optionUL2.style.display=='block'){
+              optionUL2.style.display='none';
+               iconSan2.className="san2 sanDown";
+              return;
+            }
+               optionUL2.style.display='block';
+               iconSan2.className="san2 sanUp";
+              e.stopPropagation();
+           });
+          var initOption2=function() {
+            for (var i = 0; i < selOptions2.length; i++) {
+                    if(selOptions2[i].nodeName!='#text'){
+                      selOptions2[i].className="def";
+                    }
+                  };
+           };
+           for (var n = 0; n < selOptions2.length; n++) {
+             selOptions2[n].addEventListener('click',function(e) {
+                     initOption2();
+                     optionUL2.style.display='none';
+                     iconSan2.className="san2 sanDown";
+                     selectedCode2=this.getAttribute('code');
+                     selSpan2.innerText=this.innerText;
+                     this.className="selected";
+                     // 取数据的方法
+                     getData();
+                     e.stopPropagation();
+               });
+           };
+           document.addEventListener('click', function(e) {
+            optionUL.style.display='none';
+            iconSan.className="san sanDown";
+            optionUL2.style.display='none';
+            iconSan2.className="san2 sanDown";
+              e.stopPropagation();
+           });
+     }
+</script>
+</html>

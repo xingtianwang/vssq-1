@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% block subtitle %} -添加key{% endblock %}
+
+{% block page_content %}
+    <form action="{{ url_for('manage.add_key') }}" method="post" enctype="multipart/form-data">
+        {{ form.csrf_token }}
+        <table align="center" style="font-size:14px;">
+            <tr>
+                <td style="padding-right:5px;">{{ form.channel_id.label }}:</td>
+                <td style="padding-bottom:10px;">{{ form.channel_id(class="form-control", placeholder="必填") }}</td>
+            </tr>
+            <tr>
+                <td style="padding-right:5px;">{{ form.count.label }}(个):</td>
+                <td style="padding-bottom:10px;">{{ form.count(class="form-control", placeholder="必填") }}</td>
+            </tr>
+            <tr>
+                <td style="padding-right:5px;">{{ form.vip_time.label }}(天):</td>
+                <td style="padding-bottom:10px;">{{ form.vip_time(class="form-control", placeholder="必填") }}</td>
+            </tr>
+            <tr>
+                <td style="padding-right:5px;">{{ form.vip_gold_ad_time.label }}(天):</td>
+                <td style="padding-bottom:10px;">{{ form.vip_gold_ad_time(class="form-control", placeholder="必填") }}</td>
+            </tr>
+            <tr>
+                <td style="padding-right:5px;">{{ form.vip_ad_time.label }}(天):</td>
+                <td style="padding-bottom:10px;">{{ form.vip_ad_time(class="form-control", placeholder="选填") }}</td>
+            </tr>
+            <tr>
+                <td style="padding-right:5px;">{{ form.vip_ratio.label }}:</td>
+                <td style="padding-bottom:10px;">{{ form.vip_ratio(class="form-control form_pay_price") }}</td>
+                <td><p class="icon-format" id="icon-format" style="color:red;">
+                    分成区间: 0.00 -- 1.00</p></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td style="padding-right:5px;">注：填写后,用户使用此渠道的key购买<br>会员则按照此比例进行分成</td>
+            </tr>
+            <tr>
+                <td style="padding-right:5px;">{{ form.business_ratio.label }}:</td>
+                <td style="padding-bottom:10px;">{{ form.business_ratio(class="form-control form_pay_price") }}</td>
+                <td><p class="icon-format" id="icon-format" style="color:red;">
+                    分成区间: 0.00 -- 1.00</p></td>
+
+            </tr>
+            <tr>
+                <td></td>
+                <td style="padding-right:5px;">注：填写后,用户使用此渠道的key购买<br>第三方会员则按照此比例进行分成</td>
+            </tr>
+            <tr>
+                <td style="padding-right:5px;">{{ form.content.label }}:</td>
+                <td style="padding-bottom:10px;">{{ form.content(class="form-control", placeholder="最多20字") }}</td>
+            </tr>
+            <tr>
+                <td style="padding-bottom:100px;">
+                    <a href="{{url_for('manage.add_key')}}" class="btn btn-primary">重置</a>
+                    {{ form.submit(class="btn btn-primary") }}
+                </td>
+            </tr>
+        </table>
+    </form>
+{% endblock %}

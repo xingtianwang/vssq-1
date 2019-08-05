@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no">
+	<title>邀请好友</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('share.static', filename='css/index.css') }}">
+    <script src="{{ url_for('share.static', filename='js/jquery.js') }}" type="text/javascript"></script>
+    <script src="{{ url_for('share.static', filename='js/fontFlex.js') }}" type="text/javascript"></script>
+</head>
+<body>
+	<div class="container">
+		<div>
+			<img class="img1" src="{{ url_for('share.static', filename='images/invit/wskyqhy2.png') }}" alt="">
+		</div>
+		<div>
+			<img class="img2" src="{{ url_for('share.static', filename='images/invit/wskyqhy3.png') }}" alt="">
+		</div>
+	</div>
+	<div>
+		<img class="img3" src="{{ url_for('share.static', filename='images/invit/wskyqhy4.png') }}" alt="">
+	</div>
+	<div class="container">
+		<div>
+			<a id="invite" onclick="gotoActivity()">
+				<img class="img4" src="{{ url_for('share.static', filename='images/invit/wskyqhy5.png') }}" alt="">
+			</a>
+		</div>
+		<div>
+			<img class="img5" src="{{ url_for('share.static', filename='images/invit/wskyqhy6.png') }}" alt="">
+		</div>						
+		<div>
+			<img class="img6" src="{{ url_for('share.static', filename='images/invit/wskyqhy7.png') }}" alt="">
+		</div>		   	
+		<div>
+			<p class="inviteCode">
+				我的邀请码：<span>{{ share_code }}</span>
+			</p>
+		</div>
+		<div>
+			<img class="img7" src="{{ url_for('share.static', filename='images/invit/wskyqhy9.png') }}" alt="">
+		</div>
+
+		<div>
+			<img class="img8" src="{{ url_for('share.static', filename='images/invit/wskyqhy10.png') }}" alt="">
+			<div class="wz3">
+				<div class="wz4">
+					<p>1. 邀请3位好友下载微商多开分身特权 (新用户)输入邀请码注册, 即可免费获得1个月VIP会员。邀请8位好友免费获得半年VIP会员，邀请15位获得一年VIP会员。</p>
+				</div>
+				<div class="wz8">
+					<p>2. 所有被邀请的用户只能填写一次邀请码。</p>
+					<p>3. 当您邀请好友的数量达到要求后，重新登入后自动升级为VIP会员</p>
+					<p>4. 如有疑问请联系官方客户交流群: 755907633</p>
+					<p>5. 付费会员也可参加分享有奖活动，获得会员后，将自动延长会员的有效期。</p>				
+				</div>
+			</div>
+		</div>
+	</div>	
+    <!--微信浏览器中打开-->
+    <div id="shade" class="shade-style">
+        <div class="dx">
+            <img src="{{ url_for('share.static', filename='images/invit/tip.png') }}" />
+        </div>
+    </div>
+
+	<script>
+		$(function(){
+                  $('p.loadText').fontFlex(50,45,14);
+                  $('p.inviteCode').fontFlex(50,45,14);
+                  $('h4').fontFlex(50,45,14);
+                  $('p.boxText').fontFlex(50,55,12);
+            });
+		//既要判断ios和andriod系统，还要判断微信浏览器
+        window.onload = function(){
+		var browser = {
+			versions: function() {
+				var u = navigator.userAgent, app = navigator.appVersion;
+				return { //移动终端浏览器版本信息
+					trident: u.indexOf('Trident') > -1, //IE内核
+					presto: u.indexOf('Presto') > -1, //opera内核
+					webKit: u.indexOf('AppleWebKit') > -1, //苹果、谷歌内核
+					gecko: u.indexOf('Gecko') > -1 && u.indexOf('KHTML') == -1, //火狐内核
+					mobile: !!u.match(/AppleWebKit.*Mobile.*/), //是否为移动终端
+					ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios终端
+					android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android终端或uc浏览器
+					//              iPhone: u.indexOf('iPhone') > -1 , //是否为iPhone或者QQHD浏览器
+					//              iPad: u.indexOf('iPad') > -1, //是否iPad
+					//              webApp: u.indexOf('Safari') == -1 //是否web应该程序，没有头部与底部
+				};
+			}(),
+			language: (navigator.browserLanguage || navigator.language).toLowerCase()
+			}
+			if (browser.versions.mobile) { //移动端设备
+				if (browser.versions.ios) {
+					$(".btn").click(function(){
+						$("#invite").attr("href", "");
+					});
+				} else if(browser.versions.android) {
+					var ua = window.navigator.userAgent.toLowerCase();
+					if (ua.match(/MicroMessenger/i) == 'micromessenger') { // 微信浏览器
+						$(".btn").click(function(){
+							$("body,html").css({"height":"100%","overflow":"hidden"});
+							$("#shade").css({
+								display:"block",
+								height:$(document).height
+							});
+							return false;
+						});
+
+						$(document).click(function(){
+							$("#shade").hide();
+							$("body,html").css({"height":"auto","overflow":"auto"});
+						});
+					}
+				}
+			} else { //非移动端设备
+			}
+	}
+
+	function gotoActivity() {
+		nativeMethod.shareActivity(); //H5端调用的方法
+	}
+	</script>
+</body>
+</html>

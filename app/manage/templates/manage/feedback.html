@@ -1,0 +1,128 @@
+{% extends "base.html" %}
+{% import "_macro.html" as macro%}
+{% block subtitle %} -用户信息反馈{% endblock %}
+{% block page_content %}
+<form class="form-inline panel panel-default" action="{{url_for('manage.get_feedback')}}", method="post">
+    {{ form.csrf_token }}
+    <div class="panel-body">
+        <div class="form-group">
+            {{ form.imei.label }}:
+            {{ form.imei(class="form-control", placeholder="完整或或部分imei") }}
+        </div>
+        <div class="form-group">
+            {{ form.os_version.label }}:
+            {{ form.os_version(class="form-control") }}
+        </div>
+        <div class="form-group">
+            {{ form.dev_factory.label }}:
+            {{ form.dev_factory(class="form-control") }}
+        </div>
+        <div class="form-group">
+            {{ form.dev_model.label }}:
+            {{ form.dev_model(class="form-control") }}
+        </div>
+        <div class="form-group">
+            {{ form.app_version.label }}:
+            {{ form.app_version(class="form-control") }}
+        </div>
+         <div class="form-group">
+            {{ form.status.label }}:
+            {{ form.status(class="form-control") }}
+        </div>
+         <div class="form-group">
+            {{ form.phone_num.label }}:
+            {{ form.phone_num(class="form-control") }}
+        </div>
+        {{ macro.time_search(form) }}
+        <div class="form-group">
+			<a href="{{url_for('manage.get_feedback')}}" class="btn btn-primary">重置</a>
+            {{ form.submit(class="btn btn-primary") }}
+        </div>
+    </div>
+</form>
+<div class="tab-content">
+	<div class="tab-pane active">
+		<table id="appinfo" class="table table-striped table-hover table-bordered">
+			<thead>
+				<tr class="info">
+					<td class="text-center">用户帐号</td>
+					<td class="text-center">IMEI</td>
+					<td class="text-center">厂商</td>
+					<td class="text-center">型号</td>
+					<td class="text-center">系统版本</td>
+                    <td class="text-center">应用版本</td>
+                    <td class="text-center">联系方式</td>
+                    <td class="text-center">反馈内容</td>
+					<td class="text-center">时间</td>
+					<td class="text-center">状态</td>
+					<td class="text-center">操作</td>
+					<td class="text-center">操作人</td>
+                    {% if current_user.can(Role.USER, Department.DEVELOP_SU) or
+                        current_user.can(Role.USER, Department.PM) %}
+                    <td class="text-center">操作</td>
+                    {% endif %}
+				</tr>
+			</thead>
+			<tbody>
+			{% for item in data %}
+			<tr>
+				<td class="text-center">{{ item.phone_num }}</td>
+				<td class="text-center">{{ item.imei }}</td>
+				<td class="text-center">{{ item.device_factory }}</td>
+				<td class="text-center">{{ item.device_model }}</td>
+				<td class="text-center">{{ item.os_version }}</td>
+				<td class="text-center">{{ item.app_version }}</td>
+                <td class="text-center">{{ item.user_contact }}</td>
+                <td class="text-center">{{ item.content }}</td>
+				<td class="text-center">{{ item.create_time }}</td>
+				<td class="text-center">{% if item.status == 0 %}未回复{% else %}已回复{% endif %}</td>
+				<td align="center">
+                    {% if item.status == 0 %}
+                        <a type="button" class="btn-xs btn btn-info" href="{{ url_for('manage.appeal_edit',
+                     id=item.id) }}">查看</a>
+                    {% else %}
+                        <a type="button" class="btn-xs btn btn-info" href="{{ url_for('manage.appeal_detail',
+                     id=item.id) }}">查看</a>
+                    {% endif %}
+
+                </td>
+				<td class="text-center">{% if item.operator is not none %}{{ item.operator }}{% else %}{% endif %}</td>
+                {% if current_user.can(Role.USER, Department.DEVELOP_SU) or
+                        current_user.can(Role.USER, Department.PM) %}
+                <td class="text-center"><a onclick="del_record('{{item.id}}')" class="btn btn-danger btn-xs">删除</a></td>
+				{% endif %}
+			</tr>
+			{% endfor %}
+			</tbody>
+		</table>
+	</div>
+</div>
+<script>
+	function del_record(id)
+	{
+		$.ajax({
+			  url: "{{url_for('manage.del_feedback')}}",
+			  data: {"id":id},
+			  type: "GET",
+			  dataType: "json",
+			  async: false,
+			  cache: false
+			}).done(function( result ) {
+				if(result["code"] != 0){ //如果出错则为非0
+					alert('删除失败');
+				}else{
+					alert('删除成功!');
+					parent.location.reload();
+				}
+			}).fail(function(result){
+				var errmsg = "访问服务器出错："+fmtJqueryAjaxError(result);
+				alert(errmsg);
+			});
+	}
+</script>
+{% endblock %}
+{% block page%}
+	{{ macro.pagination_widget(pagination, 'manage.get_feedback', imei=form.imei.data, os_version=form.os_version.data,
+dev_factory=form.dev_factory.data, dev_model=form.dev_model.data, app_version=form.app_version.data,
+start_time=form.start_time.data, end_time=form.end_time.data, status=form.status.data, phone_num=form.phone_num.data) }}
+{% endblock %}

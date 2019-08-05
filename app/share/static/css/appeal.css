@@ -1,0 +1,224 @@
+body{font-family: "微软雅黑";}
+*{
+padding: 0px;
+margin: 0px;
+box-sizing:border-box;
+-webkit-box-sizing:border-box;
+-moz-box-sizing:border-box;
+}
+/*index.html*/
+.displayFlex{
+    display: box;
+    display: -webkit-box;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+}
+.flex7 {
+    flex: 7;
+    -ms-flex: 7;
+    -webkit-flex: 7;
+    -moz-box-flex: 7;
+    -webkit-box-flex: 7;
+    box-flex: 7;
+}
+.flex6 {
+    flex: 6;
+    -ms-flex: 6;
+    -webkit-flex: 6;
+    -moz-box-flex: 6;
+    -webkit-box-flex: 6;
+    box-flex: 6;
+}
+.flex5 {
+    flex: 5;
+    -ms-flex: 5;
+    -webkit-flex: 5;
+    -moz-box-flex: 5;
+    -webkit-box-flex: 5;
+    box-flex: 5;
+}
+.flex3 {
+    flex: 3;
+    -ms-flex: 3;
+    -webkit-flex: 3;
+    -moz-box-flex: 3;
+    -webkit-box-flex: 3;
+    box-flex: 3;
+}
+.flex3 {
+    flex: 3;
+    -ms-flex: 3;
+    -webkit-flex: 3;
+    -moz-box-flex: 3;
+    -webkit-box-flex: 3;
+    box-flex: 3;
+}
+.flex2 {
+    flex: 2;
+    -ms-flex: 2;
+    -webkit-flex: 2;
+    -moz-box-flex: 2;
+    -webkit-box-flex: 2;
+    box-flex: 2;
+}
+.flex1 {
+    flex: 1;
+    -ms-flex: 1;
+    -webkit-flex: 1;
+    -moz-box-flex: 1;
+    -webkit-box-flex: 1;
+    box-flex: 1;
+}
+.textRight{
+	text-align:right;
+}
+.card-padding{
+    padding-top: 10px;
+}
+/*buyList.html*/
+.historyStyle{
+    margin-bottom: 10px;
+    padding:13px 11px;
+    color: #333333;
+    font-size: 14px;
+    letter-spacing: 0;
+    background: #ffffff;
+}
+.bgcolor-white{
+    background: #FFFFFF;
+}
+.bgcolor-gray{
+    background: #F7F7F7;
+}
+.bgcolor-grey{
+    background: #fafafa;
+}
+.buy-bottom{
+    margin-bottom: 10px;
+}
+.set-name{
+text-align: left;
+padding-left:10px; 
+}
+/*垂直居中样式*/
+.vertical{
+align-items: flex-start;
+}
+/*群引流页面group.html*/
+.group-name{
+font-size: 14px;
+color: #333333;
+letter-spacing: 0;
+text-align: left;
+padding-bottom: 4px;
+font-weight: bold;
+}
+.group-content{
+font-size: 13px;
+color: #333333;
+letter-spacing: 0;
+text-align: left;    
+}
+/*群引流：申请记录页面group-history.html*/
+.history-time{
+font-size: 12px;
+color: #95A3A7;
+text-align: right;
+}
+.history-state{
+font-size: 14px;
+color: #363C3E;
+text-align: left;
+font-weight: bold;
+}
+.history-top{
+padding-bottom:8px;
+}
+.history-space{
+padding: 5px 0px 12px 0px;
+}
+/*申诉中心首页样式*/
+.indexpadding{
+    padding:15px;
+}
+.indexTitle{
+    font-size:13px;
+    color:#333333;
+    letter-spacing:0.72px;
+    text-align:left;
+    padding-bottom:8px;
+}
+.indexText{
+    font-size:13px;
+    color:#333333;
+    letter-spacing:0.72px;
+    text-align:left;
+    line-height: 22px;
+    text-align: justify;
+}
+.noticeMsg{
+    font-size: 13px;
+    color: #FF5A5A;
+    letter-spacing:0.72px;
+    text-align: left;
+    line-height: 22px;
+}
+.text-bottom{
+    padding-bottom: 20px;
+}
+/*申请记录页面*/
+.checkHref{
+    font-size: 14px;
+    color: #009F54;
+    text-align: left;
+    font-weight: bold;
+    text-decoration: none;
+    padding-left: 10px;
+    tap-highlight-color:rgba(0,0,0,0);
+    -webkit-tap-highlight-color:rgba(0,0,0,0);
+}
+.appealMsg{
+    font-family: PingFangSC-Regular;
+    font-size: 12px;
+    color: #95A3A7;
+    text-align: justify;
+    line-height: 18px;
+}
+.imgTop{
+    margin-top:6px;
+}
+.detailTitle{
+    font-size: 12px;
+    color: #363C3E;
+    text-align: left;
+    padding-bottom: 10px;
+    font-weight: bold;
+}
+.detailText{
+    font-size: 14px;
+    color: #333333;
+    text-align: left;
+    line-height: 20px;
+    padding-bottom: 10px;
+    text-align: justify;
+}
+.detailImg{
+    border-radius:10px;
+    margin-bottom: 10px;
+}
+.wxIcon{
+    vertical-align: middle;
+    margin-right: 5px;
+}
+.detailpadding{
+    padding: 15px 15px 40px 15px;
+}
+.return-empty{
+    font-size: 14px;
+    color: #CCCCCC;
+    text-align: left;
+}
+
+

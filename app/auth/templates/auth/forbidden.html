@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block subtitle %} - Forbidden{% endblock %}
+
+{% block page_content %}
+<div>
+    <h1>
+        Hello, {{ current_user.username }}!
+    </h1>
+    <h3>You have been forbidden by administrator.</h3>
+    {% if req_active %}
+    <p>
+        You have send active request to administrator, please wait patiently.
+    </p>
+    {% else %}
+    <p>
+        Contact administrator to activate your account?
+        <a href="{{ url_for('auth.active_request') }}">Click here</a>
+    </p>
+    {% endif %}
+</div>
+{% endblock %}

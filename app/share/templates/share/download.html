@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black">
+	<meta name="format-detection" content="telephone=no">
+	<meta charset="UTF-8">
+	<meta name="keywords" content="手机隐私,隐私联系人,微信双开,双开游戏,保护隐私,系统分身"/>
+	<meta name="description" content="微商神器下载"/>
+	<script src="{{ url_for('static', filename='js/jquery.js') }}"></script>
+	<link rel="stylesheet" type="text/css" href="{{ url_for('share.static', filename='css/share.css') }}">
+	<title>微商神器</title>
+</head>
+
+<body>
+	<div class="tit">
+		微商神器
+	</div>
+	<div class="details">
+		<p>版本：<span>{{data.version_name}}</span></p>
+		<p>大小：{{data.app_size}} M</p>
+		<p>日期：{{data.release_time}}</p>
+		<p>仅支持Android版本4.4以上设备</p>
+	</div>
+	<div class="logo">
+		<img src="{{ url_for('share.static', filename='images/share/logo.png') }}" alt="logo">
+	</div>
+	<a href="{{data.app_dir}}"><button class="btn" style="margin-top: 15px;">点击安装</button></a>
+	<div class="hint">适用于安卓设备</div>
+	<div class="hint2">暂不支持IOS设备</div>
+	<hr align="center" width="90%" color="#cccccc" size="1">
+	<h2 class="er">或者用手机扫描下面的二维码安装</h2>
+	<div class="two_code">
+		<img src="{{ url_for('share.static', filename='images/share/'+data.qr_code) }}" alt="二维码">
+	</div>
+	<hr align="center" size="1" width="90%" color="#cccccc" style="margin-bottom:45px;">
+	<div class="introduce">
+		<dl>
+			<dt><b>应用介绍</b></dt>
+			<dd>“微商神器”是一款基于安卓系统的微商营销软件。</dd>
+			<dd>一部手机同时管理多个账号；</dd>
+			<dd>足不出户发展世界各地客户；</dd>
+			<dd>智能收取微信红包；</dd>
+			<dd>一键转发、一键集赞，营销宣传更方便；</dd>
+			<dd>账单管理，多账号账单一目了然。</dd>
+		</dl>
+	</div>
+	<footer>北京股鼎科技有限责任公司版权所有@2016-2018</footer>
+
+	<!-- 此处html要放在html代码里 -->
+	<div id="shade" class="shade-style">
+		<div class="dx">
+			<img src="{{ url_for('share.static', filename='images/share/tip.png') }}" />
+		</div>
+	</div>
+</body>
+<script type="text/javascript">
+	window.onload = function(){
+		if(isWeiXin()){
+		$(".btn").click(function(){
+			$("body,html").css({"height":"100%","overflow":"hidden"});
+			$("#shade").css({
+				display:"block",
+				height:$(document).height
+			});
+			return false;
+		});
+		$(document).click(function(){
+			$("#shade").hide();
+			$("body,html").css({"height":"auto","overflow":"auto"});
+		});
+		};
+	};
+	function isWeiXin(){
+		var ua = window.navigator.userAgent.toLowerCase();
+		if(ua.match(/MicroMessenger/i) == 'micromessenger'){
+			return true;
+		}else{
+			return false;
+		};
+	};
+</script>
+</html>

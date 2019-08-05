@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block subtitle %} -添加IMEI白名单{% endblock %}
+
+{% block page_content %}
+<form action="{{ url_for('manage.add_white_imei_list') }}" method="post">
+    {{ form.csrf_token }}
+    <table align="center" style="font-size:14px;">
+        <tr>
+            <td style="padding-right:5px;">{{ form.imei.label }}:</td>
+            <td style="padding-bottom:10px;">{{ form.imei(class="form-control")}}</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td style="padding-bottom:10px;">
+                {{ form.submit(class="btn btn-primary") }}
+            </td>
+        </tr>
+    </table>
+</form>
+{% endblock %}

@@ -1,0 +1,254 @@
+body{font-family: "微软雅黑";}
+*{
+padding: 0px;
+margin: 0px;
+box-sizing:border-box;
+-webkit-box-sizing:border-box;
+-moz-box-sizing:border-box;
+}
+/*index.html*/
+.index-button{
+	position: absolute;
+	bottom: 50px;
+	left: 50%;
+	margin-left: -77px;
+}
+.displayFlex{
+    display: box;
+    display: -webkit-box;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+}
+.flex7 {
+    flex: 7;
+    -ms-flex: 7;
+    -webkit-flex: 7;
+    -moz-box-flex: 7;
+    -webkit-box-flex: 7;
+    box-flex: 7;
+}
+.flex6 {
+    flex: 6;
+    -ms-flex: 6;
+    -webkit-flex: 6;
+    -moz-box-flex: 6;
+    -webkit-box-flex: 6;
+    box-flex: 6;
+}
+.flex5 {
+    flex: 5;
+    -ms-flex: 5;
+    -webkit-flex: 5;
+    -moz-box-flex: 5;
+    -webkit-box-flex: 5;
+    box-flex: 5;
+}
+.flex3 {
+    flex: 3;
+    -ms-flex: 3;
+    -webkit-flex: 3;
+    -moz-box-flex: 3;
+    -webkit-box-flex: 3;
+    box-flex: 3;
+}
+.flex3 {
+    flex: 3;
+    -ms-flex: 3;
+    -webkit-flex: 3;
+    -moz-box-flex: 3;
+    -webkit-box-flex: 3;
+    box-flex: 3;
+}
+.flex2 {
+    flex: 2;
+    -ms-flex: 2;
+    -webkit-flex: 2;
+    -moz-box-flex: 2;
+    -webkit-box-flex: 2;
+    box-flex: 2;
+}
+.flex1 {
+    flex: 1;
+    -ms-flex: 1;
+    -webkit-flex: 1;
+    -moz-box-flex: 1;
+    -webkit-box-flex: 1;
+    box-flex: 1;
+}
+.textRight{
+	text-align:right;
+}
+.contentStyle{
+    border-radius: 5px;
+    padding: 13px 15px;
+    border-bottom: thin solid #e7e7e7;
+    background: #ffffff;
+    margin-bottom: 17px;
+}
+.contentStyle span{
+	line-height: 34px;
+}
+.btn {
+    border: 1px inset #ff8046;
+    border-radius: 2px;
+    background: #ffffff;
+    font-size: 15px;
+    letter-spacing: 0.45px;
+    color: #ff8046;
+    padding: 4px 16px;
+    margin-top: 14px;
+}
+
+/*stateTable.html*/
+.tableTop{
+	margin-bottom: 50px;
+}
+/*new-----------------------------------*/
+/*mycodelist.html*/
+a{
+    text-decoration: none;
+    font-size: 12px;
+    color: #137CC6;
+    letter-spacing: 0;
+}
+.card-name{
+    font-size: 18px;
+    color: #000000;
+}
+.buy-time{
+    font-size: 12px;
+    color: #C5C5C5;
+}
+.card-price{
+    font-size: 18px;
+    color: #000000;
+}
+.size15{
+    font-size: 15px;
+}
+.size20{
+    font-size: 20px;
+}
+.card-padding{
+    padding: 15px 20px;
+}
+.content-top{
+    font-size: 16px;
+    color: rgba(51,51,51,0.95);
+    letter-spacing: 0.19px;
+    line-height: 25px;
+    margin-bottom:15px;
+}
+table{
+    border: 1px solid #eeeeee;
+    border-collapse: collapse;
+    font-size: 14px;
+    color: rgba(51,51,51,0.95);
+    letter-spacing: -0.29px; 
+}
+th,td{
+    padding: 10px 0px
+}
+.copyStyle{
+    font-size: 14px;
+    color: rgba(0,79,134,0.95);
+}
+/*buyList.html*/
+.buy-padding{
+    padding: 15px;
+}
+.buyStyle{
+    background: #ffffff;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    padding:15px;
+    color: #333333;
+}
+.content-padding{
+    padding-bottom: 12px;
+}
+.buy-name{
+    font-size: 16px;
+    word-break: break-all;
+    font-weight: bold;
+}
+
+.describe{
+    font-size: 13px;
+    letter-spacing: 0px;
+}
+.buy-price{
+    font-size: 16px;
+    letter-spacing: -0.62px;
+    font-weight: 100;
+    word-break: break-all;
+    font-weight: bold;
+}
+.code-num{
+    font-size: 13px;
+    color: #333333;
+    letter-spacing: -0.81px;
+}
+.code-num span{
+    text-decoration: line-through;
+}
+.bgcolor-white{
+    background: #F5F5F5;
+}
+.bgcolor-grey{
+    background: #fafafa;
+}
+.buy-bottom{
+    margin-bottom: 10px;
+}
+.buy-bottom p{
+    line-height: 20px;
+    font-size: 14px;
+    color: #333333;
+    letter-spacing: 0;
+    font-weight: bold; 
+    margin-left: 4px;
+}
+.qq-style{
+    color: #6FB8F8;
+}
+.tipRed{
+    background-image: linear-gradient(-133deg, #E25E5E 0%, #EA3737 45%, #C60808 100%);
+    font-size: 8px;
+    color: #FFFFFF;
+    letter-spacing: 0;
+    padding: 2px 7px;
+    border-radius: 4px;
+    margin-left: 10px;
+}
+.refresh{
+    position: fixed;
+    bottom: 50px;
+    right: 20px;
+    text-align: right;
+}
+.money-icon{
+    font-size: 18px;
+    color: #333333;}
+/*vip购买*/
+.vip-icon{
+    background-image: linear-gradient(-120deg, #CA28ED 0%, #5343FF 100%);
+    border-radius: 100px;
+    font-size: 12px;
+    color: #FFFFFF;
+    letter-spacing: 0;
+    padding:0px 10px;
+    margin-right: 4px;
+}
+.deal{
+    text-align: right;
+    font-size: 12px;
+    color: #652BFF;
+    letter-spacing: 0;
+    text-decoration: underline;
+}
+.use-icon{
+    margin-left: 4px;
+}

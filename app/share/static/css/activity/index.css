@@ -1,0 +1,66 @@
+ body,html{
+    margin: 0px;
+    padding: 0px;
+    width: 100%;
+    background:url(../../images/activity/c04.png) no-repeat;
+    background-size: cover;
+    font-family: "微软雅黑";
+}
+*{
+    margin: 0px;
+    padding: 0px;
+    box-sizing:border-box;
+    -moz-box-sizing:border-box;
+    -webkit-box-sizing:border-box;
+}
+a{
+    display: block;
+    -webkit-tap-highlight-color:rgba(0,0,0,0);
+    tap-highlight-color:rgba(0,0,0,0);
+}
+.container{
+    width: 100%;
+    text-align: center;
+    padding:48px 50px;
+}
+.head{
+    width: 100%;
+    margin-bottom: 58px;
+}
+.vipIcon{
+    width: 44%;
+    margin:4% 0% 0% 0%;
+}
+.load-bg{
+    background: url(../../images/activity/VIP02.png) 100%  no-repeat;
+    background-size: cover;
+    padding:0% 0 5% 0;
+    margin-top: -6px;
+
+}
+.load-bg p{
+    font-size: 12px;
+    color: #6CABFF;
+    text-align: center;
+}
+.sign-vip{
+    margin-bottom: 12px;
+}
+.sign-btn{
+    width: 100%;
+    margin-bottom: 29px;
+}
+.rule-img{
+    width: 40%;
+    margin-bottom: 10px;
+}
+.rule-text{
+    font-size: 12px;
+    color: #FFFFFF;
+    letter-spacing: 0.29px;
+    text-align: left;
+    line-height: 200%;
+}
+.VIP{
+    width: 100%;
+}

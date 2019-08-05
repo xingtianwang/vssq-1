@@ -1,0 +1,4 @@
+<a id="clickCaptcha" href="javascript:void(0)">
+<img src="{{ url_for('auth.get_captcha') }}" id="captcha_img" style="width:120px;height:30px;" alt="验证码">
+</a>
+<span>{{ form.captcha(class="form-control", style="width:120px;display:inline;", placeholder="请输入验证码")}}</span>

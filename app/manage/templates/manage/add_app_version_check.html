@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block subtitle %} -添加版本检测{% endblock %}
+
+{% block page_content %}
+    <form action="{{ url_for('manage.add_version_check') }}" method="post" enctype="multipart/form-data">
+        {{ form.csrf_token }}
+        <table align="center" style="font-size:14px;">
+            <tr>
+                <td style="padding-right:5px;">{{ form.versioncode.label }}:</td>
+                <td style="padding-bottom:10px;">{{ form.versioncode(class="form-control", placeholder="必填") }}</td>
+            </tr>
+            <tr>
+                <td style="padding-right:5px;">{{ form.versionname.label }}:</td>
+                <td style="padding-bottom:10px;">{{ form.versionname(class="form-control", placeholder="必填") }}</td>
+            </tr>
+            <tr>
+                <td style="padding-right:5px;">{{ form.md5.label }}:</td>
+                <td style="padding-bottom:10px;">{{ form.md5(class="form-control" , placeholder="必填") }}</td>
+            </tr>
+            <tr>
+                <td style="padding-right:5px;">{{ form.build_time.label }}:</td>
+                <td style="padding-bottom:10px;">{{ form.build_time(class="form-control", placeholder="必填") }}</td>
+            </tr>
+            <tr>
+                <td style="padding-right:5px;">{{ form.build_rev.label }}:</td>
+                <td style="padding-bottom:10px;">{{ form.build_rev(class="form-control", placeholder="必填") }}</td>
+            </tr>
+            <tr>
+                <td style="padding-bottom:100px;">
+                    <a href="{{url_for('manage.add_version_check')}}" class="btn btn-primary">重置</a>
+                    {{ form.submit(class="btn btn-primary") }}
+                </td>
+            </tr>
+        </table>
+    </form>
+{% endblock %}

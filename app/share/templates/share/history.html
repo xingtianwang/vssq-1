@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no">
+    <title></title>
+    <link rel="stylesheet" href="{{ url_for('share.static', filename='css/tixian.css') }}">
+    <script src="{{ url_for('share.static', filename='js/generalize.js') }}" type="text/javascript"></script>
+</head>
+<body class="bgcolor-gray">
+    <div id="codeList" class="card-padding">
+        {% for item in records %}
+            <div class="historyStyle">
+            <div class="displayFlex history-top">
+                <div class="flex1 history-time">{{ item.apply_time }}</div>
+                <div class="history-state">{% if item.status == 2 %}{% else %}-{% endif %}{{ item.withdraw }}</div>
+            </div>
+            <div class="displayFlex vertical history-space">
+                <div class="flex7 set-name">
+                  <p class="group-name">支付宝账号：{{ item.zfb_account }}</p>
+                  <p class="group-name">姓名：{{ item.name }}</p>
+                </div>
+                <div class="group-content">{% if item.status == 0 %}正在提现{% elif item.status == 1 %}提现成功{% else %}提现驳回{% endif %}</div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</body>
+</html>

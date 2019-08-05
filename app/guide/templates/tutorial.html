@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+    	<meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black">
+        <meta name="format-detection" content="telephone=no">
+    	<title>帮助</title>
+        <link rel="stylesheet" type="text/css" href="{{ url_for('guide.static', filename='css/help.css') }}">
+    </head>
+    <body>
+        <div class="container">
+            <a href="{{ url_for('guide.tutorial01') }}">V商神器有什么功能，那些功能在哪？</a>
+            <a href="{{ url_for('guide.tutorial02') }}">自动抢红包</a>
+            <a href="{{ url_for('guide.tutorial03') }}">虚拟定位</a>
+            <a href="{{ url_for('guide.tutorial04') }}">一键转发</a>
+            <a href="{{ url_for('guide.tutorial05') }}">加群好友</a>
+            <a href="{{ url_for('guide.tutorial06') }}">自动打招呼</a>
+            <a href="{{ url_for('guide.tutorial07') }}">清理好友</a>
+            <a href="{{ url_for('guide.tutorial08') }}">自助群发</a>
+            <a href="{{ url_for('guide.tutorial09') }}" style="border:0;">通讯录加粉</a>
+        </div>
+    </body>
+</html>

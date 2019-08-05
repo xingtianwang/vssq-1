@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% import "_macro.html" as macro%}
+{% block subtitle %} -黑名单信息{% endblock %}
+
+{% block page_content %}
+<div class="tab-content">
+	<div class="tab-pane active">
+		<table id="appinfo" class="table table-striped table-hover table-bordered">
+			<thead>
+				<tr class="info">
+					<td class="text-center">ID</td>
+					<td class="text-center">IMEI</td>
+					<td class="text-center">添加时间</td>
+					<td class="text-center">操作</td>
+				</tr>
+			</thead>
+			<tbody>
+			{% for temp in data %}
+			<tr>
+				<td class="text-center">{{temp.id}}</td>
+				<td class="text-center">{{temp.imei}}</td>
+				<td class="text-center">{{temp.create_time}}</td>
+				<td class="text-center"><a onclick="del_record('{{temp.imei}}')" class="btn btn-danger btn-xs">删除</a></td>
+			</tr>
+			{% endfor %}
+			</tbody>
+		</table>
+	</div>
+</div>
+<script>
+	function del_record(imei)
+	{
+		$.ajax({
+			  url: "{{url_for('manage.del_black_list')}}",
+			  data: {"imei":imei},
+			  type: "GET",
+			  dataType: "json",
+			  async: false,
+			  cache: false
+			}).done(function( result ) {
+				if(result["code"] != 0){ //如果出错则为非0
+					alert('删除失败');
+				}else{
+					alert('删除成功!');
+					parent.location.reload();
+				}
+			}).fail(function(result){
+				var errmsg = "访问服务器出错："+fmtJqueryAjaxError(result);
+				alert(errmsg);
+			});
+	}
+</script>
+{% endblock %}
+{% block page %}
+	{{ macro.pagination_widget(pagination, 'manage.get_black_list_info') }}
+{% endblock %}

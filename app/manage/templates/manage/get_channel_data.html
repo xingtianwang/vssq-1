@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% import "_macro.html" as macro%}
+{% block subtitle %} -渠道数据{% endblock %}
+
+{% block page_content %}
+<form class="form-inline panel panel-default" action="{{url_for('manage.get_channel_data')}}"  method="post">
+    {{ form.csrf_token }}
+    <div class="panel-body">
+        <div class="form-group" style="padding-right:5px;padding-top:5px;">
+            {{ form.channel_id.label }}:
+            {{ form.channel_id(class="form-control") }}
+        </div>
+        <div class="form-group" style="padding-right:5px;padding-top:5px;">
+            {{ form.channel_name.label }}:
+            {{ form.channel_name(class="form-control") }}
+        </div>
+        <div class="form-group" style="padding-right:5px;padding-top:5px;">
+			<a href="{{url_for('manage.get_channel_data')}}" class="btn btn-primary">重置</a>
+            {{ form.submit(class="btn btn-primary") }}
+        </div>
+        </div>
+</form>
+
+<div class="tab-content">
+	<div class="tab-pane active">
+		<table id="appinfo" class="table table-striped table-hover table-bordered">
+			<thead>
+				<tr class="info">
+					<td class="text-center">序号</td>
+					<td class="text-center">渠道ID</td>
+					<td class="text-center">渠道名称</td>
+					<td class="text-center">授权码总数</td>
+					<td class="text-center">激活数量</td>
+					<td class="text-center">总分成</td>
+					<td class="text-center">推广分成</td>
+                    <td class="text-center">渠道分成</td>
+                    <td class="text-center">总提现</td>
+                    <td class="text-center">操作</td>
+				</tr>
+			</thead>
+			<tbody>
+			{% for temp in data %}
+			<tr>
+                <td class="text-center">{% if page == 1 %}{{loop.index}}
+                                        {% else %}{{ per_page*(page - 1) + loop.index }}{% endif %}</td>
+				<td class="text-center">{{temp.account.channel_id}}</td>
+				<td class="text-center">{{temp.account.channel_name}}</td>
+				<td class="text-center">{{dic[temp.id][0]}}</td>
+				<td class="text-center">{{dic[temp.id][1]}}</td>
+				<td class="text-center">{{temp.all_divide}}</td>
+				<td class="text-center">{{temp.gener_divide}}</td>
+				<td class="text-center">{{temp.income}}</td>
+				<td class="text-center">{{temp.withdraw_cash}}</td>
+                <td align="center">
+                    <a type="button" class="btn btn-info btn-xs" href="{{ url_for('manage.channel_data_detail', channel_id=temp.account.channel_id) }}">查看详情</a>
+                    <a type="button" class="btn btn-info btn-xs" href="{{ url_for('manage.alter_divide', channel_id=temp.account.channel_id, channel_name=temp.account.channel_name, all_divide=temp.all_divide) }}">修改总分成</a>
+                    <a type="button" class="btn btn-info btn-xs" href="{{ url_for('manage.alter_divide_detail', channel_id=temp.account.channel_id) }}">查看修改数据</a>
+                </td>
+			</tr>
+			{% endfor %}
+			</tbody>
+		</table>
+
+    </div>
+</div>
+
+{% endblock %}
+{% block page%}
+	{{ macro.pagination_widget(pagination, 'manage.get_channel_data', channel_id=form.channel_id.data, channel_name=form.channel_name.data) }}
+{% endblock %}

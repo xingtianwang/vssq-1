@@ -1,0 +1,97 @@
+/* CSS Document */
+@charset "utf-8";
+.nTitle{
+	color: #333333;
+	letter-spacing: 0.75px;
+	font-weight: bold;
+	padding: 10px 0px 14px 0px !important;
+}
+.all{
+	background: #ffffff;
+	text-align: left;
+	padding: 50px 50px;
+	margin:0px auto; 
+}
+
+.head-bg{
+	background: #3a239e;
+	width: 100%;
+	position: relative;
+	background-size: cover;
+}
+.breadNav{
+	/*width: 145px;*/
+	/*border-bottom: 1px solid #e8e8e8;*/
+	/*padding-bottom: 13px;*/
+	font-size: 16px;
+	color: #333333;
+	letter-spacing: 0.46px;
+}
+a.breadNav:hover{
+	color: #ff0000;
+	text-decoration: underline;
+}
+.nTime{
+	font-size: 12px;
+	color: #999999;
+	letter-spacing: 0.5px;
+}
+.xnews h3{
+	margin: 0px !important;
+}
+.nContent{
+	margin-top: 10px;
+}
+.nContent p{
+	font-size: 15px;/*14px修改为15px*/
+	margin: 0px !important;
+	line-height: 24px;
+	color: #333333;
+	letter-spacing: 0.8px;
+	padding-bottom:20px;
+}
+.nContent h5{
+	color: #737373;
+	font-weight: bold;
+}
+.imgMar{
+	padding: 20px 0px !important;
+}
+.firstTitle{
+	font-size: 20px;
+	color: #333333;
+	letter-spacing: 0.9px;
+	line-height: 22px;
+	text-align:center;
+	padding-bottom:20px;
+	font-weight: bold;
+
+}
+.secondTitle{
+	font-size: 16px;
+	color: #333333;
+	letter-spacing: 0.94px;
+	font-weight: bold;
+	padding-bottom:10px;
+}
+.pad-t24{
+	padding-top: 24px;
+}
+.pad-b{
+	padding-bottom: 6px;
+}
+.pad-b2{
+	padding-bottom: 15px;
+}
+/*newlist.html页面代码 start*/
+.newlist a{
+	color: #737373 !important;
+	font-size: 16px;
+	line-height: 35px;
+}
+.newlist a:hover{
+	color: #337ab7!important;
+	font-size: 16px;
+	line-height: 35px;
+}
+/*newlist.html页面代码 end*/

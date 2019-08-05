@@ -1,0 +1,98 @@
+{% extends "base.html" %}
+{% block subtitle %} -渠道应用管理{% endblock %}
+
+{% block page_content %}
+<form action="{{ url_for('manage.channel_upload_app') }}" method="post" enctype="multipart/form-data">
+    {{ form.csrf_token }}
+    <table align="center" style="font-size:14px;">
+        <tr>
+            <td style="padding-right:5px;">{{ form.app_type.label }}:</td>
+            <td style="padding-bottom:10px;">{{ form.app_type(class="form-control", id="app_type")}}</td>
+        </tr>
+        <tr>
+            <td style="padding-right:5px;">{{ form.upload_file.label }}:</td>
+            <td style="padding-bottom:10px;">{{ form.upload_file(class="form-control", id="upload_file")}}</td>
+        </tr>
+        <tr id="spreader">
+            <td style="padding-right:5px;">{{ form.spreader.label }}:</td>
+            <td style="padding-bottom:10px;">{{ form.spreader(class="form-control", placeholder="推广人员", style="width:240px;") }}</td>
+        </tr>
+         <tr id="version_code" hidden="hidden">
+            <td style="padding-right:5px;">{{ form.version_code.label }}:</td>
+            <td style="padding-bottom:10px;">{{ form.version_code(class="form-control", placeholder="当前版本号", style="width:240px;") }}</td>
+        </tr>
+        <tr id="version_name" hidden="hidden">
+            <td style="padding-right:5px;">{{ form.version_name.label }}:</td>
+            <td style="padding-bottom:10px;">{{ form.version_name(class="form-control", placeholder="当前版本名称", style="width:240px;") }}</td>
+        </tr>
+        <tr id="wechat_version_name" hidden="hidden">
+            <td style="padding-right:5px;">{{ form.wechat_version_name.label }}:</td>
+            <td style="padding-bottom:10px;">{{ form.wechat_version_name(class="form-control", placeholder="微信版本名称", style="width:240px;") }}</td>
+        </tr>
+        <tr id="upload_target" hidden="hidden">
+            <td style="padding-right:5px;">{{ form.upload_target.label }}:</td>
+            <td style="padding-bottom:10px;">{{ form.upload_target(class="form-control", style="width:240px;") }}</td>
+        </tr>
+        <tr id="min_frame_code">
+            <td style="padding-right:5px;">{{ form.min_frame_code.label }}:</td>
+            <td style="padding-bottom:10px;">{{ form.min_frame_code(class="form-control", placeholder="兼容框架最小版本号", style="width:240px;") }}</td>
+        </tr>
+        <tr id="max_frame_code">
+            <td style="padding-right:5px;">{{ form.max_frame_code.label }}:</td>
+            <td style="padding-bottom:10px;">{{ form.max_frame_code(class="form-control", placeholder="兼容框架最大版本号", style="width:240px;") }}</td>
+        </tr>
+        <tr id="status" >
+            <td style="padding-right:5px;">{{ form.status.label }}:</td>
+            <td style="padding-bottom:10px;">{{ form.status(class="form-control", style="width:240px;") }}</td>
+        </tr>
+        <tr>
+            <td style="padding-right:5px;">{{ form.update_msg.label }}:</td>
+            <td style="padding-bottom:10px;">{{ form.update_msg(class="form-control", placeholder="更新内容", rows=8) }}</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td style="padding-bottom:10px;">
+                {{ form.submit(class="btn btn-primary") }}
+            </td>
+        </tr>
+    </table>
+</form>
+<script>
+	window.onload = function() {
+	    var obj_select = document.getElementById("app_type");
+	    obj_select.onchange = function() {
+	        if (this.value > 4) {
+	    		$("#max_frame_code").show();
+	    		$("#min_frame_code").show();
+                $("#version_code").hide();
+                $("#version_name").hide();
+                $("#wechat_version_name").hide();
+                $("#upload_target").hide();
+	    		if (this.value == 99) {
+	    		    $("#wechat_version_name").show();
+                    $("#upload_target").show();
+                    $("#version_code").show();
+                }
+                if (this.value == 100) {
+                    $("#version_code").show();
+                    $("#version_name").show();
+                    $("#max_frame_code").hide();
+                    $("#min_frame_code").hide();
+	    		}
+	    	} else {
+	    	    if (this.value == 4) {
+	    	        $("#max_frame_code").show();
+	    		    $("#min_frame_code").show();
+	    	    } else {
+	    	        $("#max_frame_code").hide();
+	    		    $("#min_frame_code").hide();
+	    	    }
+	    		$("#wechat_version_name").hide();
+                $("#upload_target").hide();
+                $("#version_code").hide();
+                $("#version_name").hide();
+	    	}
+	    }
+	}
+</script>
+{% endblock %}

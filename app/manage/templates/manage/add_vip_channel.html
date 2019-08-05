@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block subtitle %} -添加vip渠道{% endblock %}
+
+{% block page_content %}
+    <form action="{{ url_for('manage.add_vip_channel') }}" method="post" enctype="multipart/form-data">
+        {{ form.csrf_token }}
+        <table align="center" style="font-size:14px;">
+            <tr>
+                <td style="padding-right:5px;">{{ form.channel.label }}:</td>
+                <td style="padding-bottom:10px;">{{ form.channel(class="form-control", placeholder="必填") }}</td>
+            </tr>
+            <tr>
+                <td style="padding-right:5px;">{{ form.channel_name.label }}:</td>
+                <td style="padding-bottom:10px;">{{ form.channel_name(class="form-control", placeholder="必填") }}</td>
+            </tr>
+            <tr>
+                <td style="padding-bottom:100px;">
+                    <a href="{{url_for('manage.add_vip_channel')}}" class="btn btn-primary">重置</a>
+                    {{ form.submit(class="btn btn-primary") }}
+                </td>
+            </tr>
+        </table>
+    </form>
+{% endblock %}

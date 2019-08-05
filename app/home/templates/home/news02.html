@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="renderer" content="webkit">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<title>新闻详情</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('home.static', filename='css/btp.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('home.static', filename='css/btp-theme.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('home.static', filename='css/gd-index.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('home.static', filename='css/gd-news.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('home.static', filename='css/index.css') }}">
+</head>
+<body>
+    <!-- 导航开始 -->
+<div class="cd-header headerBg">
+	<div class="cd-header1024">
+		<div class="gd-logo" id="cd-logo"><a href="{{ url_for('home.index') }}"><img class="x-logo" src="{{ url_for('home.static', filename='imgs/index-logo.png')}}" alt="Logo"></a></div>
+		<nav class="cd-main-nav">
+			<ul>
+				<li>
+					<a id="index" href="{{ url_for('home.index') }}">首页</a>
+				</li>
+				<li>
+					<a id="news" href="{{ url_for('home.news_list') }}">新闻中心</a>
+					<p class="spot2">.</p>
+				</li> 
+				<li>
+					<a href="{{ url_for('home.about') }}">关于我们</a>
+				</li>
+            </ul>
+        </nav>
+    </div>
+</div>
+<!-- 导航结束 -->
+<!-- 第一块 -->
+	<div  class="row">
+        <img  src="{{ url_for('home.static', filename='imgs/wsk43.png')}}"  alt="">
+    </div>
+	<div class="container all xnews">
+		<p><a class="breadNav" href="{{ url_for('home.news_list') }}">新闻中心</a><span class="breadNav">>>新闻详情</span></p>
+		<h3 class="nTitle">一键集赞不求人 要多赞有多赞</h3>
+		<p class="nTime">2018-01-08</p>
+        <div  class="row  imgMar">
+            <div  class="col-lg-12  col-md-10  col-sm-12  col-xs-12"  style="padding:0px;">
+                <img  src="{{ url_for('home.static', filename='imgs/wsk39.png')}}"  alt="">
+            </div>
+        </div>
+		<div class="nContent">
+			<p>
+				你有没有经常收到这样的信息“朋友圈第一条点赞，谢谢！”，当时你的内心其实是拒绝的，然而，当某一天，你看到这样的活动：“集满66个赞，送婴儿车一辆。”，“集满88个赞，免费得黄金吊坠。”这时你的内心其实是崩溃的。礼物虽然很诱人，但是我们的点赞数却是惨不忍睹。难道真的就没有办法，获得这“免费大礼”？
+			</p>
+			<p>
+				当然是有的，今天小编，就教给大家一个快速集赞的方法！只需轻轻一点，想要多少赞，就有多少赞。
+			</p>
+			<p>
+				首先下载微商神器软件，各大应用市场都可以搜索，请认准微商神器官方LOGO。
+			</p>
+		</div>
+		<div class="row imgMar">
+			<div class="col-lg-3 col-md-3 col-sm-3 col-xs-3" style="padding:0px;">
+				<img src="{{ url_for('home.static', filename='imgs/wsk38.png')}}" alt="">
+			</div>
+		</div>
+		<div class="nContent">
+			<p>
+				然后制作微信分身，登录你的微信，把你要集赞的内容发送到朋友圈，点击评论，选择一键集赞，输入个数，大功告成。
+			</p>
+			<p>
+				大家，可以试一试，发给商家！是不是可以领到小礼物呢？反正我是成功了。
+			</p>
+			<div class="row imgMar">
+				<div class="col-lg-10 col-md-10 col-sm-12 col-xs-12" style="padding:0px;">
+					<img src="{{ url_for('home.static', filename='imgs/wsk40.png')}}" alt="">
+				</div>
+			</div>
+			<p>
+				PS:这款软件的功能十分强大，不仅可以一键集赞，而且还可以自动抢红包，一键转发朋友圈文字/图片/视频，自动加好友等等诸多功能。大家可以仔细研究一下。
+			</p>
+		</div>
+	</div>
+    <!-- <div class="row pro-footer" style="margin:0px;">
+        <div class="col-md-12 pad-b5">服务热线：010-62926683</div>
+    	<div class="col-md-12">Copyright ©国鼎网络空间安全技术有限公司-京ICP备14046594号</div>
+    </div> -->
+    <script type="text/javascript" src="{{ url_for('home.static', filename='js/jquery-1.11.1.min.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('home.static', filename='js/btp.min.js') }}"></script>
+	<script type="text/javascript" src="{{ url_for('home.static', filename='js/nav.js') }}"></script><!--自适应导航-->
+
+    <!-- 以下注释内容不能删除，兼容IE使用 -->
+		<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+		<!--[if lt IE 9]>
+	    <script src="http://apps.bdimg.com/libs/html5shiv/3.7/html5shiv.min.js"></script>
+	    <script src="http://apps.bdimg.com/libs/respond.js/1.4.2/respond.min.js"></script>
+		<![endif]-->
+    <!-- 以上注释内容不能删除，兼容IE使用 -->
+</body>
+</html>

@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+{% import "_macro.html" as macro%}
+{% block subtitle %} -功能小红点{% endblock %}
+
+{% block page_content %}
+    <form action="{{ url_for('manage.function_hot_dot') }}" method="post">
+        {{ form.csrf_token }}
+        <table align="center" style="font-size:14px;">
+            <tr>
+                <td style="padding-right:5px;">{{ form.function_name.label }}:</td>
+                <td style="padding-bottom:10px;padding-right:10px;">{{ form.function_name(class="form-control") }}</td>
+                <td style="padding-right:5px;">{{ form.function_locate.label }}:</td>
+                <td style="padding-bottom:10px;padding-right:10px;">{{ form.function_locate(class="form-control") }}</td>
+                <td style="padding-bottom:10px;padding-right:10px;">
+                    {{ form.submit_search(class="btn btn-primary") }}
+                    <a href="{{url_for('manage.function_hot_dot')}}" class="btn btn-primary">重置</a>
+                </td>
+            </tr>
+        </table>
+    </form>
+
+    <div class="tab-content">
+	<div class="tab-pane active">
+		<table id="appinfo" class="table table-striped table-hover table-bordered" style="margin-top: 50px">
+			<thead>
+				<tr class="info">
+                    <td class="text-center">序号</td>
+					<td class="text-center">功能位置</td>
+					<td class="text-center">功能名称</td>
+                    <td class="text-center">今日小红点</td>
+                    <td class="text-center">明日小红点</td>
+				</tr>
+			</thead>
+			<tbody>
+			{% for item in data %}
+			<tr>
+                <td class="text-center">{% if page == 1 %}{{loop.index}}
+                                        {% else %}{{ per_page*(page - 1) + loop.index }}{% endif %}</td>
+                <td class="text-center">{% if item.type == 0 %}倒三角{% else %}主应用{% endif %}</td>
+				<td class="text-center">{{ item.function_name }}</td>
+				<td class="text-center">{% if item.today_status == 0 %}<p style="color:#8e8a8a;">不显示</p>{% else %}<p style="color:red;">显示</p>{% endif %}</td>
+				<td class="text-center" >{% if item.tomorrow_status == 0 %}<button type="button" class="btn btn-default btn-xs" onclick="showBox(this, '{{ item.id }}')">不显示</button>{% else %}<button type="button" class="btn btn-danger btn-xs" onclick="showBox(this, '{{ item.id }}')">显示</button>{% endif %}</td>
+			</tr>
+			{% endfor %}
+			</tbody>
+		</table>
+	</div>
+</div>
+<script>
+        function showBox(b, show_id){
+            $.ajax({
+                url: "{{url_for('manage.function_hot_dot')}}",
+                data: {
+                    "show_id": show_id
+                },
+                type: "POST",
+                async: false,
+                success: function(res) {
+                    if ('0000' == res["statuscode"]) {
+                        if($(b).text()=="不显示"){
+                          $(b).removeClass("btn-default").addClass("btn-danger");
+                          $(b).text("显示");
+                        }else{
+                            $(b).removeClass("btn-danger").addClass("btn-default");
+                            $(b).text("不显示");
+                        }
+                    }  else {
+                        alert("操作失败,请稍后再试")
+                    }
+                },
+                cache: false,
+                fail: function() {
+                }
+            })
+
+
+        }
+</script>
+{% endblock %}
+{% block page %}
+    {% if pagination is not none %}
+        {{ macro.pagination_widget(pagination, 'manage.function_hot_dot', function_name=form.function_name.data) }}
+    {% endif %}
+{% endblock %}
+

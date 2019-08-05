@@ -1,0 +1,180 @@
+{% extends "base.html" %}
+{% import "_macro.html" as macro%}
+{% block subtitle %} -key信息{% endblock %}
+
+{% block page_content %}
+<form class="form-inline panel panel-default" action="{{url_for('manage.get_key_record')}}"  method="post">
+    {{ form.csrf_token }}
+    <div class="panel-body">
+        {{ macro.time_search(form) }}
+{#        <div class="form-group" style="padding-right:5px;padding-top:5px;">#}
+{#            {{ form.ex_start_time.label }}:#}
+{#            <div class='input-group date form_datetime' id='start_date_picker'>#}
+{#                {{ form.ex_start_time(class="form-control curser" ,placeholder="请选择日期") }}#}
+{#                <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>#}
+{#            </div>#}
+{#        </div>#}
+{##}
+{#        <br>#}
+{#        <div class="form-group" style="padding-right:5px;padding-top:5px;">#}
+{#            {{ form.ex_end_time.label }}:#}
+{#            <div class='input-group date form_datetime' id='end_date_picker'>#}
+{#                {{ form.ex_end_time(class="form-control curser" ,placeholder="请选择日期") }}#}
+{#                <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>#}
+{#            </div>#}
+{#        </div>#}
+        <div class="form-group" style="padding-right:5px;padding-top:5px;">
+            {{ form.channel_id.label }}:
+            {{ form.channel_id(class="form-control") }}
+        </div>
+        <div class="form-group" style="padding-right:5px;padding-top:5px;">
+            {{ form.channel_name.label }}:
+            {{ form.channel_name(class="form-control") }}
+        </div>
+
+        <br>
+        <div class="form-group" style="padding-right:5px;padding-top:5px;">
+            {{ form.oeprator.label }}:
+            {{ form.oeprator(class="form-control") }}
+        </div>
+        <div class="form-group" style="padding-right:5px;padding-top:5px;">
+            {{ form.content.label }}:
+            {{ form.content(class="form-control") }}
+        </div>
+        <div class="form-group" style="padding-right:5px;padding-top:5px;">
+			<a href="{{url_for('manage.get_key_record')}}" class="btn btn-primary">重置</a>
+            {{ form.submit(class="btn btn-primary") }}
+        </div>
+    </div>
+</form>
+<div class="form-group" style="padding-right:5px;padding-top:5px;text-align:left;">
+<a type="button" class="btn btn-primary" href="{{ url_for('manage.add_key') }}">创建授权码</a>
+{#{% if current_user.can(Role.USER, Department.PM) %}#}
+{#    <a type="button" class="btn btn-primary" href="{{ url_for('manage.order_key') }}">Godin-key</a>#}
+{#{% endif %}#}
+<a type="button" class="btn btn-primary" href="{{ url_for('manage.export_key') }}">导入授权码</a>
+</div>
+<div class="tab-content">
+	<div class="tab-pane active">
+		<table id="appinfo" class="table table-striped table-hover table-bordered">
+			<thead>
+				<tr class="info">
+					<td class="text-center">序号</td>
+					<td class="text-center">渠道ID</td>
+					<td class="text-center">渠道名称</td>
+					<td class="text-center">创建批次</td>
+					<td class="text-center">创建时间</td>
+					<td class="text-center">激活码时长(天)</td>
+					<td class="text-center">创建数量</td>
+					<td class="text-center">已激活</td>
+					<td class="text-center">未激活</td>
+					<td class="text-center">赠送黄金会员(天)</td>
+					<td class="text-center">赠送铂金会员(天)</td>
+                    <td class="text-center">会员分成</td>
+					<td class="text-center">第三方分成</td>
+					<td class="text-center">操作人</td>
+					<td class="text-center">备注</td>
+					<td class="text-center">操作</td>
+				</tr>
+			</thead>
+			<tbody>
+			{% for temp in data %}
+			<tr>
+{#				<td class="text-center">{% if cur_page == 1 %}{{loop.index}}#}
+{#                                        {% else %}{{ page_size*(cur_page - 1) + loop.index }}{% endif %}</td>#}
+                <td class="text-center">{% if page == 1 %}{{loop.index}}
+                                        {% else %}{{ per_page*(page - 1) + loop.index }}{% endif %}</td>
+				<td class="text-center">{{temp.account.channel_id}}</td>
+				<td class="text-center">{{temp.account.channel_name}}</td>
+				<td class="text-center">{{temp.id}}</td>
+				<td class="text-center">{{temp.create_time}}</td>
+				<td class="text-center">{{temp.vip_time}}</td>
+				<td class="text-center">{{temp.count}}</td>
+				<td class="text-center">{{dic[temp.id][1]}}</td>
+				<td class="text-center">{{dic[temp.id][0]}}</td>
+                <td class="text-center">{% if temp.vip_gold_ad_time %}{{temp.vip_gold_ad_time}}{% else %}0{% endif %}</td>
+                <td class="text-center">{% if temp.vip_ad_time %}{{temp.vip_ad_time}}{% else %}0{% endif %}</td>
+				<td class="text-center">{{temp.vip_ratio}}</td>
+				<td class="text-center">{{temp.business_ratio}}</td>
+				<td class="text-center">{{temp.oeprator}}</td>
+				<td class="text-center">{{temp.content}}</td>
+				<td class="text-center">
+{#                {% if dic[temp.id][0] == dic[temp.id][1] %}#}
+{#                {% if current_user.can(Role.USER, Department.PM) %}#}
+                    {% if dic[temp.id][0] == 0%}
+                    <a type="button" class="btn btn-info" href="{{ url_for('manage.key_detail', id= temp.id, oeprator=temp.oeprator) }}">Key详情</a>
+{#                    {% endif %}#}
+{#                {% else %}{{loop.index}}#}
+{#                    {% if temp.id != '00000000000000' %}#}
+{#                    <a type="button" class="btn btn-info" href="{{ url_for('manage.key_detail', id=temp.id, oeprator=temp.oeprator) }}">Key详情</a>#}
+{#                    {% endif %}#}
+{#                    {% if current_user.username == temp.oeprator %}#}
+{#                    {% endif %}#}
+{#                {% endif %}#}
+
+                {% else %}
+{#                {% if current_user.can(Role.USER, Department.PM) %}#}
+{#                    {% if temp.id != '00000000000000' %}#}
+                    <a type="button" class="btn btn-info" href="{{ url_for('manage.key_detail', id= temp.id, oeprator=temp.oeprator) }}">Key详情</a>
+{#                    {% endif %}#}
+                    <a type="button" class="btn btn-info" onclick="set_key_status('{{ temp.id }}', this)">失效key</a>
+{#                {% else %}{{loop.index}}#}
+{#                    {% if temp.id != '00000000000000' %}#}
+{#                    <a type="button" class="btn btn-info" href="{{ url_for('manage.key_detail', id=temp.id, oeprator=temp.oeprator) }}">Key详情</a>#}
+{#                    {% endif %}#}
+{#                    {% if current_user.username == temp.oeprator %}#}
+{#                        <a type="button" class="btn btn-info" onclick="set_key_status('{{ temp.id }}', this)">失效key</a>#}
+{#                    {% endif %}#}
+{#                {% endif %}#}
+                {% endif %}
+
+				</td>
+			</tr>
+			{% endfor %}
+			</tbody>
+		</table>
+        <a href="{{url_for('manage.export_result', start_time = form.start_time.data, end_time = form.end_time.data,
+          channel_id = form.channel_id.data,channel_name = form.channel_name.data, oeprator = form.oeprator.data,
+          content = form.content.data, export_type = 25)}}" class="btn btn-primary">导出<br/>excel表格</a>
+    </div>
+</div>
+<script>
+    function set_key_status(id, that){
+        var close;
+        close = confirm("是否失效所有未激活的key");
+        if (close) {
+            $.ajax({
+                url: "{{url_for('manage.expire_key')}}",
+                data: {"id": id},
+                type: "GET",
+                dataType: "json",
+                async: false,
+                cache: false
+            }).done(function( result ) {
+                if(result["code"] != 0){ //如果出错则为非0
+                    alert('操作失败');
+                }else{
+                    alert('操作成功');
+                    $(that).attr("disabled","disabled");
+
+                }
+            }).fail(function(result){
+                var errmsg = "Error accessing the server：" + str(result);
+                alert(errmsg);
+            });
+        }
+        else {
+            alert("已取消");
+        }
+        parent.location.reload();
+    }
+</script>
+{% endblock %}
+{#{% block page %}#}
+{#{% import "pager.html" as pageinfo %}#}
+{#{{pageinfo.pager(dest_url='manage.get_key_record', page=page, error=data, query=query)}}#}
+{#{% endblock %}#}
+{% block page%}
+	{{ macro.pagination_widget(pagination, 'manage.get_key_record', channel_name=form.channel_name.data, channel_id=form.channel_id.data,
+	oeprator=form.oeprator.data, content=form.content.data, start_time=form.start_time.data, end_time=form.end_time.data)}}
+{% endblock %}

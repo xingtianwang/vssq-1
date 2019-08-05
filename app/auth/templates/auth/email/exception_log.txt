@@ -1,0 +1,12 @@
+异常log汇总信息如下(共{{ logs|length }}条):
+{% for item in logs %}
+应用版本: {{ item.app_version }}
+Android版本: {{ item.os_version }}
+手机型号: {{ item.device_model }}
+MD5: {{ item.md5_value }}
+上报时间: {{ item.create_time }}
+##################这是分割线######################
+{% endfor %}
+Sincerely,
+The Godinsec Server Team
+Notes: please don't reply to this email.

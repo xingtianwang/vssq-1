@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% block subtitle %} -添加商业产品{% endblock %}
+
+{% block page_content %}
+    <form action="{{ url_for('manage.add_bus_ware') }}" method="post" enctype="multipart/form-data">
+        {{ form.csrf_token }}
+        <table align="center" style="font-size:14px;">
+            <tr>
+                <td style="padding-right:5px;">{{ form.category.label }}:</td>
+                <td style="padding-bottom:10px;">{{ form.category(class="form-control", placeholder="必填") }}</td>
+            </tr>
+            <tr>
+                <td style="padding-right:5px;">{{ form.number.label }}:</td>
+                <td style="padding-bottom:10px;">{{ form.number(class="form-control", placeholder="必填") }}</td>
+            </tr>
+            <tr>
+                <td style="padding-right:5px;">{{ form.name.label }}:</td>
+                <td style="padding-bottom:10px;">{{ form.name(class="form-control", placeholder="必填") }}</td>
+                <td><p class="icon-format" id="icon-format" style="color:red;">
+                    不超过10个字</p></td>
+            </tr>
+            <tr>
+                <td style="padding-right:5px;">{{ form.price.label }}:</td>
+                <td style="padding-bottom:10px;">{{ form.price(class="form-control form_pay_price", placeholder="必填") }}</td>
+            </tr>
+            <tr>
+                <td style="padding-right:5px;">{{ form.discount.label }}:</td>
+                <td style="padding-bottom:10px;">{{ form.discount(class="form-control form_pay_price", placeholder="必填") }}</td>
+                <td><p class="icon-format" id="icon-format" style="color:red;">
+                    折扣区间: 0.00 -- 1.00</p></td>
+            </tr>
+            <tr>
+                <td style="padding-right:5px;">{{ form.pay_price.label }}:</td>
+                <td style="padding-bottom:10px;">{{ form.pay_price(class="form-control") }}</td>
+                <td><p class="icon-format" id="icon-format" style="color:red;">
+                    (仅供参考, 数据不存储)</p></td>
+            </tr>
+            <tr>
+                <td style="padding-right:5px;">{{ form.description.label }}:</td>
+                <td style="padding-bottom:10px;">{{ form.description(class="form-control", placeholder="必填") }}</td>
+                <td><p class="icon-format" id="icon-format" style="color:red;">
+                    不超过25个字</p></td>
+            </tr>
+            <tr>
+                <td style="padding-right:5px;">{{ form.status.label }}:</td>
+                <td style="padding-bottom:10px;">{{ form.status(class="form-control", placeholder="必填") }}</td>
+            </tr>
+            <tr>
+                <td style="padding-right:5px;">{{ form.picture.label }}:</td>
+                <td style="padding-bottom:10px;">{{ form.picture(class="form-control") }}</td>
+            </tr>
+{#            <tr>#}
+{#                <td style="padding-right:5px;">{{ form.ads_cate.label }}:</td>#}
+{#                <td style="padding-bottom:10px;">{{ form.ads_cate(class="form-control") }}</td>#}
+{#            </tr>#}
+            <tr>
+                <td style="padding-bottom:100px;">
+                    {{ form.submit(class="btn btn-primary") }}
+                </td>
+            </tr>
+        </table>
+    </form>
+{% endblock %}

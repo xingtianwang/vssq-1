@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% import "_macro.html" as macro%}
+{% block subtitle %} -签到领会员记录{% endblock %}
+
+{% block page_content %}
+<div class="tab-content">
+	<form class="form-inline panel-default" action="{{ url_for('manage.sign_activity_record', activity_id=activity_id, sign_godin_id=sign_godin_id) }}" method="post" enctype="multipart/form-data">
+    	{{ form.csrf_token }}
+    	<div class="panel-body">
+			<div class="form-group" style="padding-right:5px;padding-top:5px;">
+				{{ form.phone.label }}:
+				{{ form.phone(class="form-control", placeholder="支持部分搜索", style="width:220px; height:40px; display:inline-block;")}}
+			</div>
+			<div class="form-group" style="padding-right:5px;padding-top:5px;">
+				<a href="{{url_for('manage.sign_activity_record', activity_id=activity_id, sign_godin_id=sign_godin_id)}}" class="btn btn-primary">重置</a>
+				{{ form.submit(class="btn btn-primary") }}
+			</div>
+    	</div>
+	</form>
+	<td class="tab-pane active">
+		<table id="appinfo" class="table table-striped table-hover table-bordered">
+			<thead>
+				<tr class="info">
+					<td class="text-center" >手机号</td>
+					<td class="text-center" >VIP奖励(天)</td>
+					<td class="text-center" >完成时间</td>
+				</tr>
+			</thead>
+			<tbody>
+
+                {% for temp in sign_data %}
+			<tr>
+				<td class="text-center">{{ temp.SignRecord.phone }}</td>
+				<td class="text-center">{{ temp.SignRecord.reward }}</td>
+				<td class="text-center">{{ temp.SignRecord.sign_time }}</td>
+            </tr>
+			{% endfor %}
+			</tbody>
+		</table>
+	</div>
+</div>
+{% endblock %}
+{% block page %}
+	{{ macro.pagination_widget(pagination, 'manage.sign_activity_record', activity_id=activity_id, sign_godin_id=sign_godin_id, phone=form.phone.data) }}
+{% endblock %}

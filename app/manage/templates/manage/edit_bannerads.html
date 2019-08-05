@@ -1,0 +1,119 @@
+{% extends "base.html" %}
+{% import "_macro.html" as macro%}
+{% block subtitle %} -编辑banner广告{% endblock %}
+
+{% block page_content %}
+
+
+<form class="form-inline panel-default" action="{{ url_for('manage.edit_bannerad', ad_id=ad_id) }}" method="post" enctype="multipart/form-data">
+    {{ form.csrf_token }}
+    <div class="row" style="margin:0 auto; text-align:left;">
+        <div class="col-lg-4 col-md-4 col-lg-offset-4 col-md-offset-4">
+            <div style="margin: 4px auto; padding-bottom:4px;">
+                {{ form.name.label }}
+                {{ form.name(class="form-control", placeholder="广告名称", style="width:220px; display:inline-block;")}}
+            </div>
+            <div style="margin: 4px auto; padding-bottom:4px;">
+                {{ form.position.label }}:
+                {{ form.position(class="form-control", disabled="true", style="width:220px; display:inline-block;")}}
+            </div>
+            <div style="margin: 4px auto; padding-bottom:4px;">
+                {{ form.source.label }}:
+                {{ form.source(class="form-control", disabled="true", style="width:220px; display:inline-block;") }}
+            </div>
+            <div style="margin: 4px auto; padding-bottom:4px;">
+                {{ form.charge_mode.label }}:
+                {{ form.charge_mode(class="form-control", disabled="true", style="width:220px; display:inline-block") }}
+            </div>
+            <div style="margin: 4px auto; padding-bottom:4px;">
+                {{ form.unit_price.label }}:
+                {{ form.unit_price(class="form-control", placeholder="广告单价", style="width:220px; display:inline-block;")}}
+            </div>
+            {{ macro.time_search(form) }}
+            <div style="margin: 4px auto; padding-bottom:4px;">
+                {{ form.advertiser.label }}:&nbsp;&nbsp;&nbsp;
+                {{ form.advertiser(class="form-control", placeholder="广告商", readonly="true", style="width:250px; display:inline-block;")}}
+            </div>
+            <div style="margin: 4px auto; padding-bottom:4px;">
+                {{ form.contacts.label }}:&nbsp;&nbsp;&nbsp;
+                {{ form.contacts(class="form-control", placeholder="联系人", readonly="true", style="width:250px; display:inline-block;")}}
+            </div>
+            <div style="margin: 4px auto; padding-bottom:4px;">
+                {{ form.contact_way.label }}:
+                {{ form.contact_way(class="form-control", placeholder="联系方式", readonly="true", style="width:250px; display:inline-block;") }}
+            </div>
+            <div style="margin: 4px auto; padding-bottom:4px;">
+                {{ form.display_number.label }}:
+                {{ form.display_number(class="form-control", style="width:100px; display:inline-block;") }} 次
+            </div>
+            <div style="margin: 4px auto; padding-bottom:4px;">
+                {{ form.carousel.label }}:
+                {{ form.carousel(style="width:250px; display:inline-block;")}}
+            </div>
+            <div style="margin: 4px auto; padding-bottom:4px;">
+                {{ form.carousel_interval.label }}:
+                {{ form.carousel_interval(class="form-control", style="width:100px; display:inline-block;") }} 秒
+            </div>
+            <div style="margin: 4px auto; padding-bottom:4px;">
+                {{ form.refresh_status.label }}:
+                {{ form.refresh_status(class="form-control", style="width:220px; display:inline-block;")}}
+            </div>
+            <div style="margin: 4px auto; padding-bottom:4px;">
+                {{ form.user_count.label }}:
+                {{ form.user_count(class="form-control", style="width:220px; display:inline-block;")}}
+            </div>
+            <div style="margin: 4px auto; padding-bottom:4px;">
+                {{ form.morning_count.label }}:
+                {{ form.morning_count(class="form-control", style="width:220px; display:inline-block;")}}
+            </div>
+            <div style="margin: 4px auto; padding-bottom:4px;">
+                {{ form.afternoon_count.label }}:
+                {{ form.afternoon_count(class="form-control", style="width:220px; display:inline-block;")}}
+            </div>
+            <div style="margin: 4px auto; padding-bottom:4px;">
+                {{ form.night_count.label }}:
+                {{ form.night_count(class="form-control", style="width:220px; display:inline-block;")}}
+            </div>
+            <div style="margin-bottom:20px;">
+                <img src="{{ photo_url}}{{ photo }}" width="150" height="150">
+            </div>
+            <div style="margin: 4px auto; padding-bottom:4px;">
+                {{ form.icon.label }}:
+                {{ form.icon(class="form-control", placeholder="广告图标", style="width:250px; display:inline-block;") }}
+                {% if form.position.data == 4 %}
+                <br><p class="icon-format" style="color:red;">图片格式(png/jpg) 大小：30—60KB</p>
+                {% elif form.position.data == 5 %}
+                <br><p class="icon-format" style="color:red;">图片格式(png/jpg) 大小：30—60KB</p>
+                {% else %}
+                <br><p class="icon-format" style="color:red;">图片格式(png/jpg) 大小：30—60KB</p>
+                {% endif %}
+            </div>
+            <div style="margin: 4px auto; padding-bottom:4px;">
+                {{ form.icon_dest_link.label }}:
+                {{ form.icon_dest_link(class="form-control", placeholder="请填写以http或https开头的URL地址", style="width:250px; display:inline-block;") }}
+            </div>
+            <div>
+                {{ form.submit(class="btn btn-primary") }}
+                <a href="{{ url_for('manage.edit_bannerad', ad_id=ad_id) }}" class="btn btn-primary">恢复</a>
+                <a href="{{url_for('manage.get_bannerads_details', ad_id=ad_id)}}" class="btn btn-primary">返回</a>
+            </div>
+        </div>
+
+    </div>
+
+</form>
+<script>
+    window.onload = function() {
+         var obj_select = document.getElementById("position");
+         obj_select.onchange = function() {
+             if(this.value == 4) {
+                 $(".icon-format").text('图片格式(png/jpg) 大小：30—60KB');
+             } else if(this.value == 5) {
+                 $(".icon-format").text('图片格式(png/jpg) 大小：30—60KB');
+             } else {
+                 $(".icon-format").text('图片格式(png/jpg) 大小：30—60KB');
+             }
+         }
+    }
+</script>
+{% endblock %}

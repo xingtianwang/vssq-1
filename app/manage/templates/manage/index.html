@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% import "_macro.html" as macro%}
+{% block subtitle %} -Index{% endblock %}
+
+{% block page_content %}
+<div style="color:#f00;padding-top:5px", class="text-center">
+       <span style="font-size: 16px;height:20px;line-height:20px;">欢迎进入微商神器管理系统</span>
+</div>
+<div style="padding-top:15px" class="tab-content">
+	<div class="tab-pane active">
+		<table id="appinfo" class="table table-striped table-hover table-bordered">
+			<thead>
+				<tr class="info">
+					<td class="text-center" >今日新增注册</td>
+					<td class="text-center" >今日新增非注册</td>
+					<td class="text-center" >用户总数</td>
+				</tr>
+			</thead>
+			<tbody>
+			<tr>
+				<td class="text-center">{{ reg_count }}</td>
+				<td class="text-center">{{ un_reg_count }}</td>
+				<td class="text-center">{{ total }}</td>
+            </tr>
+			</tbody>
+		</table>
+	</div>
+</div>
+{% endblock %}

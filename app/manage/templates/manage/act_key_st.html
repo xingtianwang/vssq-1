@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+{% import "_macro.html" as macro%}
+{% block subtitle %} -授权码激活数据{% endblock %}
+
+{% block page_content %}
+<form class="form-inline panel panel-default" action="{{url_for('manage.get_act_key_statistics')}}" method="post">
+    {{ form.csrf_token }}
+    <div class="panel-body">
+        <div class="form-group">
+            {{ form.start_year_m.label }}:
+            {{ form.start_year_m(class="form-control") }}
+        </div>
+        <div class="form-group">
+            {{ form.month_start.label }}:
+            {{ form.month_start(class="form-control") }}
+        </div>
+        <div class="form-group">
+            {{ form.end_year_m.label }}:
+            {{ form.end_year_m(class="form-control") }}
+        </div>
+
+        <div class="form-group">
+            {{ form.month_end.label }}:
+            {{ form.month_end(class="form-control") }}
+        </div>
+        <div class="form-group">
+			<a href="{{url_for('manage.get_act_key_statistics')}}" class="btn btn-primary">重置</a>
+            {{ form.submit(class="btn btn-primary") }}
+            <a href="{{url_for('manage.get_agent')}}" class="btn btn-primary">管理代理人员</a>
+        </div>
+    </div>
+</form>
+<div class="tab-content">
+	<div class="tab-pane active">
+		<table id="appinfo" class="table table-striped table-hover table-bordered">
+			<thead>
+				<tr class="info">
+					<td class="text-center">序号</td>
+					<td class="text-center">年</td>
+					<td class="text-center">月份</td>
+			        <td class="text-center">代理渠道</td>
+					<td class="text-center">诚招代理</td>
+					<td class="text-center">破解赠送</td>
+					<td class="text-center">渠道购买</td>
+					<td class="text-center">总计</td>
+					<td class="text-center">操作</td>
+				</tr>
+			</thead>
+			<tbody>
+			{% for temp in data %}
+			<tr>
+				<td class="text-center">{% if page == 1 %}{{loop.index}}
+                                        {% else %}{{ per_page*(page - 1) + loop.index }}{% endif %}</td>
+                <td class="text-center">{{ temp.year }}</td>
+				<td class="text-center">{{ temp.month }}</td>
+				<td class="text-center">{{ temp.channel_agent }}</td>
+				<td class="text-center">{{ temp.channel_we }}</td>
+				<td class="text-center">{{ temp.channel_crack }}</td>
+				<td class="text-center">{{ temp.channel_buy }}</td>
+				<td class="text-center">{{ temp.channel_agent + temp.channel_buy +temp.channel_we + temp.channel_crack }}</td>
+				<td class="text-center">
+                    <a type="button" class="btn btn-info" href="{{ url_for('manage.agent_statistics',
+					 year= temp.year, month=temp.month) }}">查看</a></td>
+			</tr>
+			{% endfor %}
+			</tbody>
+		</table>
+	</div>
+</div>
+{% endblock %}
+{% block page %}
+	{{ macro.pagination_widget(pagination, 'manage.get_act_key_statistics', start_year_m=form.start_year_m.data,
+	month_start=form.month_start.data, month_end=form.month_end.data, end_year_m=form.end_year_m.data) }}
+{% endblock %}

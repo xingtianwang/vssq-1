@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block subtitle %} -编辑key{% endblock %}
+
+{% block page_content %}
+    <form action="{{ url_for('manage.edit_key', id=id) }}" method="post" enctype="multipart/form-data">
+        {{ form.csrf_token }}
+        <table align="center" style="font-size:14px;">
+            <tr>
+                <td style="padding-right:5px;">{{ form.expire_time.label }}:</td>
+                <td style="padding-bottom:10px;">
+                    <div class='input-group date form_datetime' style="width: 240px;" id='start_date_picker'>
+                        {{ form.expire_time(class="form-control curser" ,placeholder="请选择时间") }}
+                        <span class="input-group-addon"><span class="glyphicon glyphicon-calendar" ></span></span>
+                    </div></td>
+
+            </tr>
+            <tr>
+                <td style="padding-right:5px;">{{ form.vip_ad_time.label }}(天):</td>
+                <td style="padding-bottom:10px;">{{ form.vip_ad_time(class="form-control") }}</td>
+            </tr>
+            <tr>
+                <td style="padding-right:5px;">{{ form.content.label }}:</td>
+                <td style="padding-bottom:10px;">{{ form.content(class="form-control", placeholder="最多20字") }}</td>
+            </tr>
+            <tr>
+                <td style="padding-bottom:100px;">
+                    <a href="{{url_for('manage.edit_key', id=id)}}" class="btn btn-primary">重置</a>
+                    {{ form.submit(class="btn btn-primary") }}
+                </td>
+            </tr>
+        </table>
+    </form>
+{% endblock %}

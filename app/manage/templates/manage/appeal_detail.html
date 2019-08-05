@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block subtitle %} -用户申诉内容{% endblock %}
+
+{% block page_content %}
+        <table align="center" style="font-size:14px;">
+            <tr>
+                <td style="padding-right:15px;"><b>联系方式:</b></td>
+                <td style="padding-bottom:10px;">{{ fb.user_contact }}</td>
+            </tr>
+            <tr>
+                <td style="padding-right:5px;"><b>反馈内容:</b></td>
+                <td style="padding-bottom:10px;">{{ fb.content }}</td>
+            </tr>
+            <tr>
+                <td style="padding-right:5px;"><b>提交时间:</b></td>
+                <td style="padding-bottom:10px;">{{ fb.create_time }}</td>
+            </tr>
+            <tr>
+                <td style="padding-right:5px;"><b>图片</b></td>
+                <td style="padding-bottom:10px;"><img src="{{ file_ser }}{{ fb.picture }}" width="100" height="100"></td>
+            </tr>
+            <tr>
+                <td style="padding-right:5px;"><b>回复:</b></td>
+                <td style="padding-bottom:10px;">{{ fb.back_content }}</td>
+            </tr>
+            <tr>
+                <td style="padding-right:5px;"><b>回复时间:</b></td>
+                <td style="padding-bottom:10px;">{{ fb.back_time }}</td>
+            </tr>
+
+
+            <tr>
+                <td style="padding-bottom:100px;">
+                    <a href="{{url_for('manage.get_feedback')}}" class="btn btn-primary">返回</a>
+                </td>
+            </tr>
+        </table>
+{% endblock %}

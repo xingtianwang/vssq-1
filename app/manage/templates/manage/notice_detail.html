@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% import "_macro.html" as macro%}
+
+{% block subtitle %} -通知详情{% endblock %}
+
+{% block page_content %}
+<div style="text-align: right">
+<a type="button" class="btn btn-primary" href="{{ url_for('manage.get_notice_info') }}">返回</a>
+</div>
+
+<center>
+<div style="width: 500px;" >
+        <h2 class="text-center">通知详情</h2>
+        <div style="text-align: left">
+            <pre style = 'border:none;'>通知标题:{{ notice.title }}</pre>
+            <pre style = 'border:none;'>通知内容：
+{{ notice.content }}</pre>
+            <pre style = 'border:none;'>通知图片：{% if notice.icon != '' %}<img src="{{ photo_url }}{{ notice.icon }}" width="100" height="100">
+                {% else %}{% endif %}</pre>
+            <pre style = 'border:none;'>图片跳转地址：{{ notice.icon_link }}</pre>
+            <pre style = 'border:none;'>时间段：{% if notice.time_quantum == 0 %}0：00 ~ 5：59{% elif notice.time_quantum == 1 %}6：00 ~ 11：59{% elif notice.time_quantum == 2 %}12：00 ~ 17：59{% elif notice.time_quantum == 3 %}18：00 ~ 23：59{% else %}{% endif %}</pre>
+            <pre style = 'border:none;'>开始时间：{{ notice.start_time }}</pre>
+            <pre style = 'border:none;'>结束时间：{{ notice.end_time }}</pre>
+            {% if notice.remarks != '' %}
+            <pre style = 'border:none;'>备注：
+{{ notice.remarks }}</pre>
+            {% endif %}
+        </div>
+</div>
+ </center>
+{% endblock %}
+{% block page%}
+{% endblock %}

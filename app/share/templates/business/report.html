@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no">
+    <title></title>
+    <link rel="stylesheet" href="{{ url_for('share.static', filename='css/business/history.css') }}">
+    <script src="{{ url_for('share.static', filename='js/jquery.js') }}" type="text/javascript"></script>
+</head>
+<body class="bgIndex">
+    <div id="codeList" class="card-padding">
+        <p class="indexTitle">微商指数，记录你的成长之路</p>
+        <!-- 排名 -->
+        <p class="indexRank"><span id="rank" class="rank">{{ report.rank_index }}</span>名</p>
+        <p class="indexIntd">您昨天在20w微商中排名</p>
+         <!-- 分数排名称号 -->
+        <div class="scoreBox">
+            <div class="displayFlex scoreContent" onclick="showBox()">
+                <div class="blueDot"></div>
+                <div class="flex7">
+                    <span>微商精英指数</span>
+                    <img class="seeIcon" src="{{ url_for('share.static', filename='images/business/chakan.png') }}" width="16" height="16">
+                </div>
+                <div id="indexNum" class="flex3 textRight">{{ report.v_webusiness_index }}分</div>
+            </div>
+            <div class="displayFlex scoreContent">
+                <div class="redDot"></div>
+                <div class="flex7">
+                    <span>获得称号</span>
+                </div>
+                <div class="flex3 textRight golden">
+                    {% if report.v_webusiness_index < 21 %}微商小白
+                    {% elif report.v_webusiness_index < 41 %}微商学徒
+                    {% elif report.v_webusiness_index < 61 %}微商小成
+                    {% elif report.v_webusiness_index < 81 %}微商大咖
+                    {% else %}微商Boss
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <!-- 查看按钮 -->
+        <div class="displayFlex">
+            <p class="flex1 indexTime">{{ year }}年{{ month }}月{{ day }}日</p>
+            <a class="seeBtn" href="{{ url_for('share.bireport_detail', id=id) }}">查看详情 》</a>
+        </div>
+        <!-- 指数数据 -->
+        <div class="indexBox">
+            <div class="displayFlex indexContent">
+                <div class="flex7">
+                    <span>推广指数</span>
+                </div>
+                <div class="flex3 textRight">{{ report.extend_work_heat  }}分</div>
+            </div>
+
+            <div class="displayFlex indexContent">
+                <div class="flex7">
+                    <span>客源指数</span>
+                </div>
+                <div class="flex3 textRight">{{ report.latent_consumer_index  }}分</div>
+            </div>
+
+            <div class="displayFlex indexContent">
+                <div class="flex7">
+                    <span>忠粉指数</span>
+                </div>
+                <div class="flex3 textRight">{{ report.activite_consumer_index  }}分</div>
+            </div>
+
+            <div class="displayFlex indexContent">
+                <div class="flex7">
+                    <span>销售指数</span>
+                </div>
+                <div class="flex3 textRight">{{ report.sale_work_heat  }}分</div>
+            </div>
+
+            <div class="displayFlex indexContent">
+                <div class="flex7">
+                    <span>收入指数</span>
+                </div>
+                <div class="flex3 textRight">{{ report.income_index  }}分</div>
+            </div>
+
+            <div class="displayFlex indexContent">
+                <div class="flex7">
+                    <span>成本指数</span>
+                </div>
+                <div class="flex3 textRight">{{ report.pay_index  }}分</div>
+            </div>
+        </div>
+        <!-- 分享按钮 -->
+        <div class="shareBtn" onclick="zf('{{ video_server }}')"><img width="22" height="22" src="{{ url_for('share.static', filename='images/business/share.png') }}" alt=""><span>分享我的指数报告</span></div>
+    </div>
+    <!-- 遮罩层 -->
+    <div id="zhezhaoa"></div>
+    <!-- 说明弹框 -->
+    <div class="explain-box">
+        <div class="explain-title"><p>指数说明</p></div>
+        <div class="explain-content">
+            <div class="displayFlex boxText">
+                <div class="flex7">
+                    <span>微商小白</span>
+                </div>
+                <div class="flex5 textRight">0~20分</div>
+            </div>
+
+            <div class="displayFlex boxText">
+                <div class="flex7">
+                    <span>微商学徒</span>
+                </div>
+                <div class="flex5 textRight">21~40分</div>
+            </div>
+            <div class="displayFlex boxText">
+                <div class="flex7">
+                    <span>微商小成</span>
+                </div>
+                <div class="flex5 textRight">41~60分</div>
+            </div>
+            <div class="displayFlex boxText">
+                <div class="flex7">
+                    <span>微商大咖</span>
+                </div>
+                <div class="flex5 textRight">61~80分</div>
+            </div>
+            <div class="displayFlex boxText">
+                <div class="flex7">
+                    <span>微商BOSS</span>
+                </div>
+                <div class="flex5 textRight">81~100分</div>
+            </div>
+        </div>
+        <div class="knowBtn" onclick="closeBox()">知道了</div>  
+    </div>
+    <script>
+        // 打开说明弹框
+        function showBox(){
+            $(".explain-box").show();
+                $("#zhezhaoa").css({
+                    "display":"block"
+                  });
+                $("html,body").css({"height":"100%","overflow":"hidden"});
+        }
+        // 关闭说明弹框
+        function closeBox(){
+            $(".explain-box").hide();
+                $("#zhezhaoa").css({"display":"none"});
+                $("html,body").css({"height":"auto","overflow":"auto"});
+        }
+
+        var arr_img = ['vs_xb.png', 'vs_xt.png', 'vs_xc.png', 'vs_dk.png', 'vs_boss.png'];
+        function zf(server){
+            var indexNum = parseInt($("#indexNum").text());
+            var img_url = arr_img[0];
+            if(indexNum < 21){
+                img_url = arr_img[0]
+            }else if(indexNum < 41){
+                img_url = arr_img[1]
+            }else if(indexNum < 61){
+                img_url = arr_img[2]
+            }else if(indexNum < 81){
+                img_url = arr_img[3]
+            }else {
+                img_url = arr_img[4]
+            }
+            rank = $("#rank").text();
+            agent.shareReport(indexNum, rank, server + img_url);
+        };
+    </script>
+</body>
+</html>

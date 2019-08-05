@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block subtitle %} -修改总分成{% endblock %}
+
+{% block page_content %}
+    <form action="{{ url_for('manage.alter_divide') }}" method="post" enctype="multipart/form-data">
+        {{ form.csrf_token }}
+        <table align="center" style="font-size:14px;">
+            <tr>
+                <td style="padding-right:5px;">{{ form.channel_id.label }}:</td>
+                <td style="padding-bottom:10px;" >{{ form.channel_id(class="form-control", readonly="readonly") }}</td>
+            </tr>
+            <tr>
+                <td style="padding-right:5px;">{{ form.channel_name.label }}:</td>
+                <td style="padding-bottom:10px;" >{{ form.channel_name(class="form-control", readonly="readonly") }}</td>
+            </tr>
+            <tr>
+                <td style="padding-right:5px;">{{ form.all_divide.label }}:</td>
+                <td style="padding-bottom:10px;" >{{ form.all_divide(class="form-control", readonly="readonly") }}</td>
+            </tr>
+            <tr>
+                <td style="padding-right:5px;">{{ form.type.label }}:</td>
+                <td style="padding-bottom:10px;">{{ form.type(class="form-control") }}</td>
+            </tr>
+            <tr>
+                <td style="padding-right:5px;">{{ form.amount.label }}:</td>
+                <td style="padding-bottom:10px;">{{ form.amount(class="form-control") }}</td>
+                <td style="padding-bottom:10px; padding-left: 10px">必填</td>
+            </tr>
+            <tr>
+                <td style="padding-right:5px;">{{ form.comment.label }}:</td>
+                <td style="padding-bottom:10px;">{{ form.comment(class="form-control") }}</td>
+                <td style="padding-bottom:10px; padding-left: 10px">必填</td>
+            </tr>
+
+            <tr>
+                <td style="padding-bottom:100px;">
+                    {{ form.submit(class="btn btn-primary") }}
+                </td>
+                <td style="padding-bottom:100px; padding-left: 100px">
+                    <a href="{{url_for('manage.get_channel_data')}}" class="btn btn-primary">取消修改</a>
+                </td>
+            </tr>
+        </table>
+    </form>
+{% endblock %}

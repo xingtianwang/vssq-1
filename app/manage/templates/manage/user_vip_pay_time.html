@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% import "_macro.html" as macro%}
+
+{% block subtitle %} -商业充值用户管理{% endblock %}
+
+{% block page_content %}
+<form class="form-inline panel panel-default" action="{{url_for('manage.get_vip_pay_time')}}" method="post">
+    {{ form.csrf_token }}
+    <div class="panel-body">
+        <div class="form-group" style="padding-right:5px;padding-top:5px;">
+            {{ form.phone_num.label }}:
+            {{ form.phone_num(class="form-control", placeholder="请输入手机号") }}
+        </div>
+        {{ macro.time_search(form) }}
+        <div class="form-group" style="padding-right:5px;padding-top:5px;">
+			<a href="{{url_for('manage.get_vip_pay_time')}}" class="btn btn-primary">重置</a>
+            {{ form.submit(class="btn btn-primary") }}
+        </div>
+    </div>
+</form>
+<div class="tab-content">
+	<div class="tab-pane active">
+		<table id="appinfo" class="table table-striped table-hover table-bordered">
+			<thead>
+				<tr class="info">
+                    <td class="text-center">序号</td>
+                    <td class="text-center">手机号</td>
+					<td class="text-center">付费时间</td>
+				</tr>
+			</thead>
+			<tbody>
+			{% for item in data %}
+			<tr>
+                <td class="text-center">{% if page == 1 %}{{loop.index}}
+                                        {% else %}{{ per_page*(page - 1) + loop.index }}{% endif %}</td>
+                <td class="text-center">{{ item.phone_num }}</td>
+				<td class="text-center">{{ item.pay_time }}</td>
+			</tr>
+			{% endfor %}
+			</tbody>
+		</table>
+	</div>
+</div>
+{% endblock %}
+{% block page%}
+	{{ macro.pagination_widget(pagination, 'manage.get_vip_pay_time', phone_num=form.phone_num.data,
+	start_time=form.start_time.data, end_time=form.end_time.data) }}
+{% endblock %}

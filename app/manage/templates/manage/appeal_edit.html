@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% block subtitle %} -用户申诉内容{% endblock %}
+
+{% block page_content %}
+        <table align="center" style="font-size:14px;">
+            <tr>
+                <td style="padding-right:5px;">联系方式:</td>
+                <td style="padding-bottom:10px;">{{ fb.user_contact }}</td>
+            </tr>
+            <tr>
+                <td style="padding-right:5px;">反馈内容:</td>
+                <td style="padding-bottom:10px;">{{ fb.content }}</td>
+            </tr>
+            <tr>
+                <td style="padding-right:5px;">提交时间:</td>
+                <td style="padding-bottom:10px;">{{ fb.create_time }}</td>
+            </tr>
+
+            <tr>
+                <td style="padding-right:5px;"><b>图片</b></td>
+                <td style="padding-bottom:10px;"><img src="{{ file_ser }}{{ fb.picture }}" width="100" height="100"></td>
+            </tr>
+
+            <tr>
+                <td style="padding-right:5px;">{{ form.content.label }}:</td>
+                <td style="padding-bottom:10px;">{{ form.content(class="form-control", maxlength="200", placeholder="1-200字以内") }}</td>
+            </tr>
+
+
+            <tr>
+                <td style="padding-bottom:100px;">
+                    <a type="button" class="btn btn-primary" onclick="set_back_content('{{ fb.id }}')">确认回复</a>
+                    <a href="{{url_for('manage.get_feedback')}}" class="btn btn-primary">返回</a>
+                </td>
+            </tr>
+        </table>
+
+
+<script>
+        function set_back_content(id, priority){
+        var close;
+        var content = $("#content").val()
+        close = confirm("是否确认回复此内容?");
+        if (close) {
+            $.ajax({
+                url: "{{url_for('manage.appeal_edit')}}",
+                data: {"id": id, "content": content},
+                type: "POST",
+                dataType: "json"
+            }).done(function( result ) {
+                if(result["code"] != 0){ //如果出错则为非0
+                    alert('操作失败');
+                }else{
+                    alert('回复成功');
+                    window.location.href = "{{url_for('manage.get_feedback')}}"
+                }
+            }).fail(function(result){
+                var errmsg = "Error accessing the server：" + str(result);
+                alert(errmsg);
+            });
+        }
+        else {
+            alert("已取消");
+        }
+    }
+</script>
+{% endblock %}

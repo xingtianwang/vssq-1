@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+{% import "_macro.html" as macro%}
+
+{% block subtitle %} -查看手动添加vip用户{% endblock %}
+
+{% block page_content %}
+<form class="form-inline panel panel-default" action="{{url_for('manage.get_act_members')}}" method="post">
+    {{ form.csrf_token }}
+    <div class="panel-body">
+        <div class="form-group" style="padding-right:5px;padding-top:5px;">
+            {{ form.phone_num.label }}:
+            {{ form.phone_num(class="form-control", placeholder="请输入手机号") }}
+        </div>
+        <div class="form-group" style="padding-right:5px;padding-top:5px;">
+            {{ form.vip_type.label }}:
+            {{ form.vip_type(class="form-control") }}
+        </div>
+        <div class="form-group" style="padding-right:5px;padding-top:5px;">
+            {{ form.status.label }}:
+            {{ form.status(class="form-control") }}
+        </div>
+        <div class="form-group" style="padding-right:5px;padding-top:5px;">
+            {{ form.channel.label }}:
+            {{ form.channel(class="form-control") }}
+        </div>
+        {{ macro.time_search(form) }}
+        <div class="form-group" style="padding-right:5px;padding-top:5px;">
+			<a href="{{url_for('manage.get_act_members')}}" class="btn btn-primary">重置</a>
+            {{ form.submit(class="btn btn-primary") }}
+        </div>
+    </div>
+</form>
+<div class="tab-content">
+	<div class="tab-pane active">
+		<table id="appinfo" class="table table-striped table-hover table-bordered">
+			<thead>
+				<tr class="info">
+                    <td class="text-center">序号</td>
+                    <td class="text-center">手机号</td>
+                    <td class="text-center">国鼎ID</td>
+					<td class="text-center">渠道</td>
+					<td class="text-center">添加方式</td>
+					<td class="text-center">是否激活</td>
+                    <td class="text-center">商品ID</td>
+                    <td class="text-center">添加时间</td>
+				</tr>
+			</thead>
+			<tbody>
+			{% for item in data %}
+			<tr>
+                <td class="text-center">{% if page == 1 %}{{loop.index}}
+                                        {% else %}{{ per_page*(page - 1) + loop.index }}{% endif %}</td>
+                <td class="text-center">{{ item.GodinAccount.phone_num }}</td>
+				<td class="text-center">{{ item.ActivateMembers.godin_id }}</td>
+				<td class="text-center">{{ item.ActivateMembers.channel }}</td>
+				<td class="text-center">{% if item.ActivateMembers.vip_type == 0 %}手动添加
+                                        {% elif item.ActivateMembers.vip_type == 1 %} 活动添加
+                                        {% endif %}</td>
+				<td class="text-center">{% if item.ActivateMembers.status == 0 %}未激活
+                                        {% elif item.ActivateMembers.status == 1 %} 已激活
+                                        {% endif %}</td>
+				<td class="text-center">{{ item.ActivateMembers.ware_id }}</td>
+				<td class="text-center">{{ item.ActivateMembers.create_time }}</td>
+			</tr>
+			{% endfor %}
+			</tbody>
+		</table>
+        <a href="{{url_for('manage.export_result', phone_num=form.phone_num.data, vip_type=form.vip_type.data,
+        status=form.status.data, start_time=form.start_time.data, end_time=form.end_time.data, channel=form.channel.data,
+        export_type = 27)}}" class="btn btn-primary">导出结果为<br/>excel表格</a>
+	</div>
+</div>
+{% endblock %}
+{% block page%}
+	{{ macro.pagination_widget(pagination, 'manage.get_act_members', phone_num=form.phone_num.data,
+	 vip_type=form.vip_type.data, channel=form.channel.data,
+     status=form.status.data, start_time=form.start_time.data, end_time=form.end_time.data) }}
+{% endblock %}

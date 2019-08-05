@@ -1,0 +1,10 @@
+{% extends "guide_base.html" %}
+{% block content %}
+        <div class="container">
+            <a style="font-weight:bold;" href="{{ url_for('guide.tutorial') }}"><img src="{{ url_for('guide.static', filename='images/v-star.png') }}"
+            style="width:14px;height:13px;margin-right:8px;">V商神器使用教程？</a>
+            <a href="{{ url_for('guide.details01') }}" >V商神器不启动，微信分身无法使用怎么办？</a>
+            <a href="{{ url_for('guide.details02') }}" >新手必读，微信分身接收不到消息怎么办？</a>
+            <a href="{{ url_for('guide.details03') }}" style= "border:0;">为什么创建的微信分身没有桌面图标角标提示？</a>
+        </div>
+{% endblock%}

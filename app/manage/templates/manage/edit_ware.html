@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+{% block subtitle %} -编辑产品{% endblock %}
+
+{% block page_content %}
+    <form action="{{ url_for('manage.edit_ware', ware_id=ware_id) }}" method="post" enctype="multipart/form-data">
+        {{ form.csrf_token }}
+        <table align="center" style="font-size:14px;">
+            <tr style="align-content: center">
+                <td style="padding-right:5px;"> 渠道名: {{ channel }} </td>
+                <td style="padding-right:5px;"> VIP类型: {{ category }}</td>
+            </tr>
+             <tr>
+                <td style="padding-right:5px;">{{ form.name.label }}:</td>
+                <td style="padding-bottom:10px;">{{ form.name(class="form-control", placeholder="必填") }}</td>
+                <td><p class="icon-format" id="icon-format" style="color:red;">
+                    不超过10个字</p></td>
+            </tr>
+            <tr>
+                <td style="padding-right:5px;">{{ form.price.label }}:</td>
+                <td style="padding-bottom:10px;">{{ form.price(class="form-control", placeholder="必填") }}</td>
+            </tr>
+            <tr>
+                <td style="padding-right:5px;">{{ form.common_discount.label }}:</td>
+                <td style="padding-bottom:10px;">{{ form.common_discount(class="form-control", placeholder="必填") }}</td>
+                <td><p class="icon-format" id="icon-format" style="color:red;">
+                    折扣区间: 0.00 -- 1.00</p></td>
+            </tr>
+            <tr>
+                <td style="padding-right:5px;">{{ form.gold_discount.label }}:</td>
+                <td style="padding-bottom:10px;">{{ form.gold_discount(class="form-control", placeholder="必填") }}</td>
+                <td><p class="icon-format" id="icon-format" style="color:red;">
+                    折扣区间: 0.00 -- 1.00</p></td>
+            </tr>
+            <tr>
+                <td style="padding-right:5px;">{{ form.discount.label }}:</td>
+                <td style="padding-bottom:10px;">{{ form.discount(class="form-control", placeholder="必填") }}</td>
+                <td><p class="icon-format" id="icon-format" style="color:red;">
+                    折扣区间: 0.00 -- 1.00</p></td>
+            </tr>
+            <tr>
+                <td style="padding-right:5px;">{{ form.description.label }}:</td>
+                <td style="padding-bottom:10px;">{{ form.description(class="form-control", placeholder="必填") }}</td>
+                <td><p class="icon-format" id="icon-format" style="color:red;">
+                    不超过25个字</p></td>
+            </tr>
+            <tr>
+                <td style="padding-right:5px;">{{ form.status.label }}:</td>
+                <td style="padding-bottom:10px;">{{ form.status(class="form-control", placeholder="必填") }}</td>
+            </tr>
+            <tr>
+                {% if picture != '' %}
+                <td>{{ form.picture.label }}:</td>
+                <td>
+                    <img src="{{ file_url}}{{picture }}">
+                </td>
+                {% endif %}
+            </tr>
+            <tr>
+                <td style="padding-right:5px;">{{ form.picture.label }}:</td>
+                <td style="padding-bottom:10px;">{{ form.picture(class="form-control", placeholder="必填") }}</td>
+            </tr>
+{#            <tr>#}
+{#                <td style="padding-right:5px;">{{ form.ads_cate.label }}:</td>#}
+{#                <td style="padding-bottom:10px;">{{ form.ads_cate(class="form-control", placeholder="必填") }}</td>#}
+{#            </tr>#}
+{#            <tr>#}
+{#                {% if ads_cate != '' %}#}
+{#                    <td style="padding-right:5px;">开放广告已选类型: </td>#}
+{#                    <td style="padding-right:5px;">{{ ads_cate }}</td>#}
+{#                {% endif %}#}
+{#            </tr>#}
+            <tr>
+                <td style="padding-bottom:100px;">
+                    {{ form.submit(class="btn btn-primary") }}
+                </td>
+            </tr>
+        </table>
+    </form>
+{% endblock %}

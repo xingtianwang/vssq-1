@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+{% import "_macro.html" as macro%}
+{% block subtitle %} -版本检测{% endblock %}
+
+{% block page_content %}
+<form class="form-inline panel panel-default" action="{{url_for('manage.get_app_version_check')}}"  method="post">
+    {{ form.csrf_token }}
+    <div class="panel-body">
+        {{ macro.time_search(form) }}
+        <div class="form-group" style="padding-right:5px;padding-top:5px;">
+			<a href="{{url_for('manage.get_app_version_check')}}" class="btn btn-primary">重置</a>
+            {{ form.submit(class="btn btn-primary") }}
+            <a href="{{url_for('manage.add_version_check')}}" class="btn btn-primary">新增版本</a>
+        </div>
+    </div>
+</form>
+<div class="tab-content">
+	<div class="tab-pane active">
+		<table id="appinfo" class="table table-striped table-hover table-bordered">
+			<thead>
+				<tr class="info">
+					<td class="text-center">序号</td>
+					<td class="text-center">创建时间</td>
+					<td class="text-center">versioncode</td>
+					<td class="text-center">versionname</td>
+					<td class="text-center">md5</td>
+					<td class="text-center">build_time</td>
+					<td class="text-center">build_rev</td>
+					<td class="text-center">操作</td>
+				</tr>
+			</thead>
+			<tbody>
+			{% for temp in data %}
+			<tr>
+				<td class="text-center">{% if page == 1 %}{{loop.index}} {% else %}
+                    {{ per_page*(page - 1) + loop.index }}{% endif %}</td>
+				<td class="text-center">{{temp.create_time}}</td>
+				<td class="text-center">{{temp.versioncode}}</td>
+				<td class="text-center">{{temp.versionname}}</td>
+				<td class="text-center">{{temp.md5}}</td>
+				<td class="text-center">{{temp.build_time}}</td>
+				<td class="text-center">{{temp.build_rev}}</td>
+				<td class="text-center">
+                    <a type="button" class="btn btn-info btn-xs" href="{{url_for('manage.edit_version_check', id=temp.id)}}" >修改</a>
+					<a onclick="del_app_version({{temp.id}})" class="btn btn-danger btn-xs">删除</a>
+				</td>
+			</tr>
+			{% endfor %}
+			</tbody>
+		</table>
+	</div>
+</div>
+<script>
+	function del_app_version(id)
+	{
+		$.ajax({
+			  url: "{{url_for('manage.del_app_check')}}",
+			  data: {"id":id},
+			  type: "GET",
+			  dataType: "json",
+			  async: false,
+			  cache: false
+			}).done(function( result ) {
+				if(result["code"] != 0){ //如果出错则为非0
+					alert('删除失败');
+				}else{
+					alert('删除成功!');
+					parent.location.reload();
+				}
+			}).fail(function(result){
+				var errmsg = "访问服务器出错："+fmtJqueryAjaxError(result);
+				alert(errmsg);
+			});
+	}
+</script>
+{% endblock %}
+{% block page %}
+	{{ macro.pagination_widget(pagination, 'manage.get_app_version_check',start_time = form.start_time.data,
+	end_time = form.end_time.data) }}
+{% endblock %}

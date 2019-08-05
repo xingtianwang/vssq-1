@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+    	<meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black">
+        <meta name="format-detection" content="telephone=no">
+        <title>下载</title>
+        <link rel="stylesheet" type="text/css" href="{{ url_for('share.static', filename='css/share-code.css') }}">
+        <script src="{{ url_for('share.static', filename='js/jquery.js') }}"></script>
+        <script src="{{ url_for('share.static', filename='js/fontFlex.js') }}" type="text/javascript"></script>
+    </head>
+    <body>
+        <div class="container">
+            <img class="share-img" src="{{ url_for('share.static', filename='images/share/code-share/icon08.png') }}">
+            <div class="load-style">
+                <!-- 立即下载按钮-->
+                <a href="{{ load_url }}"><img class="share-btn" src="{{ url_for('share.static', filename='images/share/code-share/icon06.png') }}"></a>
+            </div>
+            <img class="share-img" src="{{ url_for('share.static', filename='images/share/code-share/icon11.png') }}">
+            <div class="code-style">
+                <p class="code">邀请码为：<span>{{ share_code }}</span></p>
+            </div>
+            <img class="share-img" src="{{ url_for('share.static', filename='images/share/code-share/icon12.png') }}">
+        </div>
+        <script>
+            $(function(){
+                  $('p').fontFlex(90,35,12);
+            });
+        </script>
+    </body>
+</html>

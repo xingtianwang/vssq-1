@@ -1,0 +1,1397 @@
+#!/usr/bin/env python
+# -*- coding:utf-8 -*-
+# *************************************************************************
+#   Copyright © 2016 Godinsec. All rights reserved.
+#   File Name: forms.py
+#   Author: Allan
+#   Mail: allan.yan@godinsec.com
+#   Created Time: 16/9/27
+# *************************************************************************
+from flask_wtf import Form
+from flask_wtf.file import FileAllowed, FileRequired, FileField
+from wtforms import SelectField, StringField, PasswordField, SubmitField, DateTimeField, FileField, \
+    TextAreaField, DateField, IntegerField, FloatField, RadioField, SelectMultipleField
+from wtforms.validators import DataRequired, Length, Regexp, EqualTo, Email, ValidationError, Optional
+import datetime
+
+from app.api_1_0.models import ActivateMembers
+from app.auth.models import Role, AdminUser, Department
+from app.config.config import Config
+
+
+class CreateAdminUserForm(Form):
+    user_type = SelectField('用户类型', validators=[DataRequired(message='请选择用户类型')], coerce=int,
+                            choices=[(Role.ADMIN, '管理员'), (Role.AUDITOR, '审计员'), (Role.USER, '操作员')])
+    user_department = SelectField('用户部门', validators=[DataRequired(message='请选择用户部门')], coerce=int,
+                                  choices=[(Department.PM, '项目经理'), (Department.OPERATION, '运营部'),
+                                           (Department.PRODUCTION, '产品部'), (Department.QA, '测试部'),
+                                           (Department.DEVELOP, '研发部')])
+    username = StringField('用户名', validators=[DataRequired(message='用户名不能为空'),
+                                              Length(4, 20, message='用户名长度必须在4-20之间'),
+                                              Regexp('^[A-Za-z][A-Za-z0-9_.]*$', 0, '用户名包含非法字符')])
+    email = StringField('邮箱', validators=[DataRequired(message='邮箱不能为空'), Email(message='邮箱格式错误')])
+    password = PasswordField('密码', validators=[DataRequired(message='密码不能为空'),
+                                               Length(8, 30, message='密码长度必须在8-30之间')])
+    password2 = PasswordField('确认密码', validators=[DataRequired(message='确认密码不能为空'),
+                                                  Length(8, 30, message='确认密码长度必须在8-30之间'),
+                                                  EqualTo('password', message='两次密码输入不一致')])
+    submit = SubmitField('添加')
+
+    def validate_username(self, field):
+        if AdminUser.query.filter_by(username=field.data).first() is not None:
+            raise ValidationError('用户名已存在')
+
+    def validate_email(self, field):
+        if AdminUser.query.filter_by(email=field.data).first() is not None:
+            raise ValidationError('邮箱已使用')
+
+
+class AdminLogForm(Form):
+    start_time = DateTimeField('起始时间', validators=[Optional()])
+    end_time = DateTimeField('终止时间', validators=[Optional()])
+    submit = SubmitField('查询')
+
+    def validate_start_time(self, field):
+        if field.data is not None and self.end_time.data is None:
+            raise ValidationError('终止时间不能为空')
+
+    def validate_end_time(self, field):
+        if field.data is not None and self.start_time.data is None:
+            raise ValidationError('起始时间不能为空')
+        if field.data is not None and self.start_time.data is not None and \
+                (self.start_time.data > field.data):
+            raise ValidationError('终止时间不能小于起始时间')
+
+
+class UploadAppForm(Form):
+    app_type = SelectField('应用类型', choices=[(key, val) for key, val in Config.APP_TYPE_DICT.items()], coerce=int)
+    min_frame_code = StringField('最小框架版本号')
+    max_frame_code = StringField('最大框架版本号')
+    upload_file = FileField('应用文件')
+    update_msg = TextAreaField('更新内容', validators=[DataRequired(message='更新内容不能为空')])
+    submit = SubmitField('提交')
+
+
+class ExceptionLogForm(Form):
+    submit = SubmitField('查询')
+
+
+class FeedBackForm(Form):
+    imei = StringField('IMEI', validators=[Optional(), Length(14, 15, message='imei长度不合法')])
+    start_time = DateTimeField('起始时间', validators=[Optional()])
+    end_time = DateTimeField('终止时间', validators=[Optional()])
+    submit = SubmitField('查询')
+
+    def validate_start_time(self, field):
+        if field.data is not None and self.end_time.data is None:
+            raise ValidationError('终止时间不能为空')
+
+    def validate_end_time(self, field):
+        if field.data is not None and self.start_time.data is None:
+            raise ValidationError('起始时间不能为空')
+        if field.data is not None and self.start_time.data is not None and \
+                (self.start_time.data > field.data):
+            raise ValidationError('终止时间不能小于起始时间')
+
+
+class RegisterUserQueryForm(Form):
+    phone_num = StringField('手机号', validators=[Optional(), Length(11, 11, message='手机号长度为11位')])
+    imei = StringField('IMEI', validators=[Optional(), Length(14, 15, message='imei长度不合法')])
+    once_user = SelectField('一次性用户', choices=[('all', '全部'), ('yes', '是'), ('no', '否')])
+    order_time = SelectField('时间属性', choices=[('create_time', '注册时间'), ('last_seen', '活跃时间')],
+                             default='create_time')
+    start_time = DateTimeField('起始时间', validators=[Optional()])
+    end_time = DateTimeField('终止时间', validators=[Optional()])
+    submit = SubmitField('查询')
+
+    def validate_start_time(self, field):
+        if field.data is not None and self.end_time.data is None:
+            raise ValidationError('终止时间不能为空')
+
+    def validate_end_time(self, field):
+        if field.data is not None and self.start_time.data is None:
+            raise ValidationError('起始时间不能为空')
+        if field.data is not None and self.start_time.data is not None and \
+                (self.start_time.data > field.data):
+            raise ValidationError('终止时间不能小于起始时间')
+
+
+class UnRegisterUserQueryForm(Form):
+    imei = StringField('IMEI', validators=[Optional(), Length(14, 15, message='imei长度不合法')])
+    once_user = SelectField('一次性用户', choices=[('all', '全部'), ('yes', '是'), ('no', '否')])
+    order_time = SelectField('时间属性', choices=[('create_time', '注册时间'), ('last_seen', '活跃时间')],
+                             default='create_time')
+    start_time = DateTimeField('起始时间', validators=[Optional()])
+    end_time = DateTimeField('终止时间', validators=[Optional()])
+    submit = SubmitField('查询')
+
+    def validate_start_time(self, field):
+        if field.data is not None and self.end_time.data is None:
+            raise ValidationError('终止时间不能为空')
+
+    def validate_end_time(self, field):
+        if field.data is not None and self.start_time.data is None:
+            raise ValidationError('起始时间不能为空')
+        if field.data is not None and self.start_time.data is not None and \
+                (self.start_time.data > field.data):
+            raise ValidationError('终止时间不能小于起始时间')
+
+
+
+class AddBlackListForm(Form):
+    imei = StringField('imei', validators=[Length(14, 15, message='imei长度不合法')])
+    submit = SubmitField('提交')
+
+
+class AddWhiteImeiListForm(Form):
+    imei = StringField('imei', validators=[Length(14, 15, message='imei长度不合法')])
+    submit = SubmitField('提交')
+
+
+class AddDutyManagerForm(Form):
+    name = StringField('姓名', validators=[DataRequired(message='姓名不能为空'), Length(2, 15, message='长度不合法')])
+    email = StringField('邮箱', validators=[DataRequired(message='邮箱不能为空'), Email(message='邮箱格式错误')])
+    submit = SubmitField('添加')
+
+
+class NextDayStayStatisticsForm(Form):
+    date = DateField('日期', validators=[Optional()])
+    submit = SubmitField('查询')
+
+
+class AddSpreadManagerForm(Form):
+    name = StringField('姓名', validators=[DataRequired(message='姓名不能为空'), Length(2, 15, message='长度不合法')])
+    email = StringField('邮箱', validators=[DataRequired(message='邮箱不能为空'), Email(message='邮箱格式错误')])
+    channel = StringField('渠道', validators=[DataRequired(message='渠道名称不能为空')])
+    suffix = StringField('访问地址后缀', validators=[DataRequired(message='访问后缀不能为空')])
+    submit = SubmitField('添加')
+
+
+class ActivityForm(Form):
+    photo_num = StringField('手机号', validators=[Optional()])
+    start_time = DateTimeField('起始时间', validators=[Optional()])
+    end_time = DateTimeField('终止时间', validators=[Optional()])
+    submit = SubmitField('查询')
+
+
+class AddActivityForm(Form):
+    name = StringField('活动名称', validators=[DataRequired(message='活动名称不能为空'), Length(1, 20,
+                                                                                    message='名称长度最多为20')])
+    photo = FileField('活动图标')
+    start_time = DateTimeField('起始时间', validators=[DataRequired(message='起始时间不能为空')])
+    end_time = DateTimeField('终止时间', validators=[DataRequired(message='终止时间不能为空')])
+    title = StringField('分享标题', validators=[DataRequired(message='分享标题不能为空'), Length(1, 14,
+                                                                                     message='标题长度最多为14')])
+    description = StringField('分享描述', validators=[DataRequired(message='分享描述不能为空'), Length(1, 42,
+                                                                                           message='描述长度最多为42')])
+    share_photo = FileField('分享图片')
+    pop_photo = FileField('弹出框')
+    end_name = StringField('结束图标名称', validators=[DataRequired(message='结束图标名称不能为空')])
+    end_photo = FileField('结束图标')
+
+    submit = SubmitField('确定')
+
+
+class ActivityShareCodeCountForm(Form):
+    phone_num = StringField('手机号', validators=[Optional()])
+    sort_type = SelectField('排序方式', choices=[(0, '----'), (1, '已发送邀请'), (2, '成功注册')], coerce=int, default=0)
+    submit = SubmitField('确定')
+
+
+class ActivityRegisterInfoForm(Form):
+    start_time = DateTimeField('起始时间', validators=[Optional()])
+    end_time = DateTimeField('终止时间', validators=[Optional()])
+    submit = SubmitField('确定')
+
+
+class AddOpenScreenAdsForm(Form):
+    name = StringField('广告名称', validators=[DataRequired(message='名称不能为空'), Length(2, 64, message='长度不合法')])
+    position = SelectField('广告位置', choices=[
+        (key, val) for key, val in Config.OPEN_SCREEN_ADS_POSITION.items()], coerce=int, default=0)
+    source = SelectField('广告来源', choices=[
+        (key, val) for key, val in Config.ADS_SOURCE.items()], coerce=int, default=0)
+    charge_mode = SelectField('计费方式', choices=[(0, 'CPM')], coerce=int, default=0)
+    unit_price = FloatField('单价')
+    advertiser = StringField('合作商', validators=[DataRequired(message='合作商不能为空'),
+                                                Length(2, 64, message='长度不合法')])
+    contacts = StringField('联系人', validators=[DataRequired(message='联系人不能为空'),
+                                              Length(2, 64, message='长度不合法')])
+    contact_way = StringField('联系方式', validators=[DataRequired(message='联系方式不能为空'),
+                                                  Length(2, 128, message='长度不合法')])
+    number = StringField('广告编号')
+    display_number = IntegerField('展示次数')
+    skip_time = IntegerField('跳过倒计时')
+    start_time = DateTimeField('起始时间', validators=[Optional()])
+    end_time = DateTimeField('终止时间', validators=[Optional()])
+    virtual_skip = RadioField('虚拟跳过功能', choices=[(0, '关闭'), (1, '开启')], coerce=int, default=0)
+    control_click_rate = IntegerField('控制点击率(%)', default=0)
+    skip_count = IntegerField('用户点击跳过次数', default=0)
+    user_count = IntegerField('活跃用户数', default=0)
+    refresh_status = SelectField('刷广告开关状态', choices=[(0, '关闭'), (1, '开启')], coerce=int, default=0)
+    morning_count = IntegerField('上午刷新次数 8:00 至 13：00', default=0)
+    afternoon_count = IntegerField('下午刷新次数 13：00 至 18：00', default=0)
+    night_count = IntegerField('晚上刷新次数 18：00 至 24:00', default=0)
+    icon = FileField('编辑广告图(仅限自有广告)')
+    app_link = StringField('应用链接地址')
+    submit = SubmitField('保存')
+
+    def validate_start_time(self, field):
+        if field.data is not None and self.end_time.data is None:
+            raise ValidationError('终止时间不能为空')
+
+    def validate_end_time(self, field):
+        if field.data is not None and self.start_time.data is None:
+            raise ValidationError('起始时间不能为空')
+        if field.data is not None and self.start_time.data is not None and \
+                (self.start_time.data > field.data):
+            raise ValidationError('终止时间不能小于起始时间')
+
+
+class QueryOpenScreenAdsForm(Form):
+    name = StringField('广告名称', validators=[Optional()])
+    position = SelectField('广告位置', choices=[(-1, '全部')] + [
+        (key, val) for key, val in Config.OPEN_SCREEN_ADS_POSITION.items()], coerce=int, default=-1)
+    source = SelectField('广告来源', choices=[(-1, '全部')] + [
+        (key, val) for key, val in Config.ADS_SOURCE.items()], coerce=int, default=-1)
+    status = SelectField('状态', choices=[(-1, '全部')] + [(0, '关闭'), (1, '开启')], coerce=int, default=-1)
+    start_time = DateField('起始时间', validators=[Optional()])
+    end_time = DateField('终止时间', validators=[Optional()])
+    submit = SubmitField('查询')
+
+    def validate_start_time(self, field):
+        if field.data is not None and self.end_time.data is None:
+            raise ValidationError('终止时间不能为空')
+
+    def validate_end_time(self, field):
+        if field.data is not None and self.start_time.data is None:
+            raise ValidationError('起始时间不能为空')
+        day = (field.data - self.start_time.data)
+        day = day.days + 1
+        if day > 30:
+            raise ValidationError('查询天数不能大余30天')
+        if field.data is not None and self.start_time.data is not None and \
+                (self.start_time.data > field.data):
+            raise ValidationError('终止时间不能小于起始时间')
+
+
+class EditOpenScreenAdsForm(Form):
+    name = StringField('广告名称', validators=[DataRequired(message='名称不能为空'), Length(2, 64, message='长度不合法')])
+    position = SelectField('广告位置', choices=[
+        (key, val) for key, val in Config.OPEN_SCREEN_ADS_POSITION.items()], coerce=int, default=0)
+    source = SelectField('广告来源', choices=[
+        (key, val) for key, val in Config.ADS_SOURCE.items()], coerce=int, default=0)
+    charge_mode = SelectField('计费方式', choices=[(0, 'CPM')], coerce=int, default=0)
+    unit_price = FloatField('单价')
+    advertiser = StringField('合作商', validators=[DataRequired(message='合作商不能为空'),
+                                                Length(2, 64, message='长度不合法')])
+    contacts = StringField('联系人', validators=[DataRequired(message='联系人不能为空'),
+                                              Length(2, 64, message='长度不合法')])
+    contact_way = StringField('联系方式', validators=[DataRequired(message='联系方式不能为空'),
+                                                  Length(2, 128, message='长度不合法')])
+    display_number = IntegerField('展示次数')
+    skip_time = IntegerField('跳过倒计时')
+    start_time = DateTimeField('起始时间', validators=[Optional()])
+    end_time = DateTimeField('终止时间', validators=[Optional()])
+    virtual_skip = RadioField('虚拟跳过功能', choices=[(0, '关闭'), (1, '开启')], coerce=int, default=0)
+    control_click_rate = IntegerField('控制点击率(%)', default=0)
+    skip_count = IntegerField('用户点击跳过次数', default=0)
+    user_count = IntegerField('活跃用户数', default=0)
+    refresh_status = SelectField('刷广告开关状态', choices=[(0, '关闭'), (1, '开启')], coerce=int, default=0)
+    morning_count = IntegerField('上午刷新次数 8:00 至 13：00', default=0)
+    afternoon_count = IntegerField('下午刷新次数 13：00 至 18：00', default=0)
+    night_count = IntegerField('晚上刷新次数 18：00 至 24:00', default=0)
+    icon = FileField('编辑广告图(仅限自有广告)')
+    app_link = StringField('应用链接地址')
+    submit = SubmitField('保存编辑')
+
+    def validate_start_time(self, field):
+        if field.data is not None and self.end_time.data is None:
+            raise ValidationError('终止时间不能为空')
+
+    def validate_end_time(self, field):
+        if field.data is not None and self.start_time.data is None:
+            raise ValidationError('起始时间不能为空')
+        if field.data is not None and self.start_time.data is not None and \
+                (self.start_time.data > field.data):
+            raise ValidationError('终止时间不能小于起始时间')
+
+
+class AddBannerAdsForm(Form):
+    name = StringField('广告名称', validators=[DataRequired(message='广告名称不能为空')])
+    position = SelectField('广告位置', choices=[
+        (key, val) for key, val in Config.BANNER_ADS_POSITION.items()], coerce=int, default=0)
+    source = SelectField('广告来源', choices=[
+        (key, val) for key, val in Config.ADS_SOURCE.items()], coerce=int, default=0)
+    charge_mode = SelectField('计费方式', choices=[(0, 'CPC')], coerce=int, default=0)
+    unit_price = FloatField('广告单价', validators=[DataRequired(message='广告单价不能为空')])
+    start_time = DateTimeField('起始时间', validators=[Optional()])
+    end_time = DateTimeField('终止时间', validators=[Optional()])
+    advertiser = StringField('合作商', validators=[DataRequired(message='合作商不能为空'),
+                                                Length(2, 64, message='长度不合法')])
+    contacts = StringField('联系人', validators=[DataRequired(message='联系人不能为空')])
+    contact_way = StringField('联系方式', validators=[DataRequired(message='联系方式不能为空')])
+    number = StringField('广告编号', validators=[DataRequired(message='编号不能为空')])
+    display_number = IntegerField('展示次数', validators=[DataRequired(message='展示次数不能为空')])
+    carousel = RadioField('是否轮播', choices=[(0, '不轮播'), (1, '轮播')], coerce=int, default=0)
+    carousel_interval = IntegerField('轮播间隔')
+    icon = FileField('添加广告图(仅限自有广告)')
+    icon_dest_link = StringField('打开链接(仅限自有广告)')
+    submit = SubmitField('保存')
+
+    def validate_start_time(self, field):
+        if field.data is not None and self.end_time.data is None:
+            raise ValidationError('终止时间不能为空')
+
+    def validate_end_time(self, field):
+        if field.data is not None and self.start_time.data is None:
+            raise ValidationError('起始时间不能为空')
+        if field.data is not None and self.start_time.data is not None and \
+                (self.start_time.data > field.data):
+            raise ValidationError('终止时间不能小于起始时间')
+
+
+class BannertInfoForm(Form):
+    name = StringField('广告名称', validators=[Optional()])
+    position = SelectField('广告位置', choices=[(-1, '全部')] + [
+        (key, val) for key, val in Config.BANNER_ADS_POSITION.items()], coerce=int, default=-1)
+    source = SelectField('广告来源', choices=[(-1, '全部')] + [
+        (key, val) for key, val in Config.ADS_SOURCE.items()], coerce=int, default=-1)
+    status = SelectField('状态', choices=[(-1, '全部'), (0, '关闭'), (1, '开启')], coerce=int, default=-1)
+    start_time = DateField('起始时间', validators=[Optional()])
+    end_time = DateField('终止时间', validators=[Optional()])
+    submit = SubmitField('查询')
+
+    def validate_start_time(self, field):
+        if field.data is not None and self.end_time.data is None:
+            raise ValidationError('终止时间不能为空')
+
+    def validate_end_time(self, field):
+        if field.data is not None and self.start_time.data is None:
+            raise ValidationError('起始时间不能为空')
+        day = (field.data - self.start_time.data)
+        day = day.days + 1
+        if day > 30:
+            raise ValidationError('查询天数不能大余30天')
+        if field.data is not None and self.start_time.data is not None and \
+                (self.start_time.data > field.data):
+            raise ValidationError('终止时间不能小于起始时间')
+
+
+class EditBannerAdsForm(Form):
+    name = StringField('广告名称', validators=[DataRequired(message='广告名称不能为空')])
+    position = SelectField('广告位置', choices=[
+        (key, val) for key, val in Config.BANNER_ADS_POSITION.items()], coerce=int, default=0)
+    source = SelectField('广告来源', choices=[
+        (key, val) for key, val in Config.ADS_SOURCE.items()], coerce=int, default=0)
+    charge_mode = SelectField('计费方式', choices=[(0, 'CPC')], coerce=int, default=0)
+    unit_price = FloatField('广告单价', validators=[DataRequired(message='广告单价不能为空')])
+    start_time = DateTimeField('起始时间', validators=[Optional()])
+    end_time = DateTimeField('终止时间', validators=[Optional()])
+    advertiser = StringField('合作商', validators=[DataRequired(message='合作商不能为空'),
+                                                Length(2, 64, message='长度不合法')])
+    contacts = StringField('联系人', validators=[DataRequired(message='联系人不能为空')])
+    contact_way = StringField('联系方式', validators=[DataRequired(message='联系方式不能为空')])
+    display_number = IntegerField('展示次数', validators=[DataRequired(message='展示次数不能为空')])
+    carousel = RadioField('是否轮播', choices=[(0, '不轮播'), (1, '轮播')], coerce=int, default=0)
+    carousel_interval = IntegerField('轮播间隔')
+    icon = FileField('编辑广告图(仅限自有广告)')
+    icon_dest_link = StringField('打开链接(仅限自有广告)')
+    submit = SubmitField('保存')
+
+    def validate_start_time(self, field):
+        if field.data is not None and self.end_time.data is None:
+            raise ValidationError('终止时间不能为空')
+
+    def validate_end_time(self, field):
+        if field.data is not None and self.start_time.data is None:
+            raise ValidationError('起始时间不能为空')
+        if field.data is not None and self.start_time.data is not None and \
+                (self.start_time.data > field.data):
+            raise ValidationError('终止时间不能小于起始时间')
+
+
+class AppAnalysisForm(Form):
+    sort_choice = [(0, '----'), (1, '总人数'), (2, '总人数占比'), (3, '启动次数'), (4, '平均启动次数'),
+                   (5, '启动次数占比'), (6, '新增人数'), (7, '新增次数'), (8, '活跃人数'), (9, '启动时长'),
+                   (10, '平均启动时长'), (11, '启动时长占比')]
+    query_choices = [(0, '日'), (1, '周'), (2, '月'), (3, '季'), (4, '年')]
+    app_name = StringField('名称', validators=[Optional()])
+    sort_type = SelectField('排序方式', choices=sort_choice, coerce=int, default=0)
+    query_type = SelectField('查询方式', choices=query_choices, coerce=int, default=0)
+    submit = SubmitField('查询')
+
+
+class AppPageAnalysisForm(Form):
+    sort_choice = [(0, '----'), (1, '总人数'), (2, '总人数占比'), (3, '启动次数'), (4, '平均启动次数'),
+                   (5, '启动次数占比'), (6, '新增人数'), (7, '新增次数'), (8, '活跃人数'), (9, '启动时长'),
+                   (10, '平均启动时长'), (11, '启动时长占比')]
+    app_name = StringField('名称', validators=[Optional()])
+    sort_type = SelectField('排序方式', choices=sort_choice, coerce=int, default=0)
+    submit = SubmitField('查询')
+
+
+class AddMemberWareForm(Form):
+    number = StringField('产品ID', validators=[DataRequired(message='产品ID不能为空')])
+    name = StringField('VIP名称', validators=[DataRequired(message='VIP名称不能为空'),
+                                            Length(0, 10, message='VIP名称不超过10个字')])
+    description = TextAreaField('会员描述', validators=[DataRequired(message='会员描述不能为空'),
+                                                    Length(0, 15, message='会员描述不超过15个字')])
+    price = FloatField('会员标价', validators=[DataRequired(message='会员标价不能为空')])
+    discount = FloatField('会员折扣', default=0.0)
+    pay_price = FloatField('会员购买价格')
+    status = SelectField('状态', choices=[(0, '失效'), (1, '有效')], coerce=int, default=1)
+    picture = FileField('会员推荐图标', validators=[Optional()])
+    ads_cate = SelectMultipleField('开屏广告类型', choices=[
+        (key, val) for key, val in Config.EXTERNAL_ADS_CATEGORY.items()])
+    submit = SubmitField('添加')
+
+
+class EditMemberWareForm(Form):
+    name = StringField('VIP名称', validators=[DataRequired(message='VIP名称不能为空'),
+                                            Length(0, 10, message='VIP名称不超过10个字')])
+    description = TextAreaField('会员描述', validators=[DataRequired(message='会员描述不能为空'),
+                                                    Length(0, 15, message='会员描述不超过15个字')])
+    price = FloatField('会员标价', validators=[DataRequired(message='会员标价不能为空')])
+    discount = FloatField('会员折扣', default=0.0)
+    pay_price = FloatField('会员购买价格')
+    status = SelectField('状态', choices=[(0, '失效'), (1, '有效')], coerce=int, default=1)
+    picture = FileField('会员推荐图标', validators=[Optional()])
+    ads_cate = SelectMultipleField('开屏广告类型', choices=[
+        (key, val) for key, val in Config.EXTERNAL_ADS_CATEGORY.items()])
+    submit = SubmitField('修改')
+
+
+class QueryMemberWareForm(Form):
+    status = SelectField('状态', choices=[(-1, '-- 全部 --'), (0, '失效'), (1, '有效')], coerce=int, default=-1)
+    submit = SubmitField('查询')
+
+
+class VipCategoryForm(Form):
+    name = StringField('VIP类型')
+    submit = SubmitField('查询')
+
+
+class AddVipCategoryForm(Form):
+    name = StringField('类型名称')
+    days = IntegerField('类型天数')
+    submit = SubmitField('添加')
+
+
+class VipChannelForm(Form):
+    channel_name = StringField('渠道名称')
+    submit = SubmitField('查询')
+
+
+class AddVipChannelForm(Form):
+    channel = StringField('渠道')
+    channel_name = StringField('渠道名称')
+    submit = SubmitField('添加')
+
+
+class WareStatisticsForm(Form):
+    name = StringField('产品名称')
+    number = StringField('产品ID')
+    start_time = DateTimeField('起始时间', validators=[Optional()])
+    end_time = DateTimeField('终止时间', validators=[Optional()])
+    submit = SubmitField('查询')
+
+    def validate_start_time(self, field):
+        if field.data is not None and self.end_time.data is None:
+            raise ValidationError('终止时间不能为空')
+
+    def validate_end_time(self, field):
+        if field.data is not None and self.start_time.data is None:
+            raise ValidationError('起始时间不能为空')
+        if field.data is not None and self.start_time.data is not None and \
+                (self.start_time.data > field.data):
+            raise ValidationError('终止时间不能小于起始时间')
+
+
+class VipMembersForm(Form):
+    category_choice = [(-1, '-----'), (0, '付费'), (1, '活动'), (2, '其他')]
+    phone_num = StringField('手机号', validators=[Optional()])
+    category = SelectField('会员种类', choices=category_choice, coerce=int, default=-1)
+    status = SelectField('状态', choices=[(-1, '-----'), (0, '已过期'), (1, '正常')], coerce=int, default=-1)
+    start_time = DateTimeField('开始时间', validators=[Optional()])
+    end_time = DateTimeField('结束时间', validators=[Optional()])
+    submit = SubmitField('查询')
+
+    def validate_start_time(self, field):
+        if field.data is not None and self.end_time.data is None:
+            raise ValidationError('终止时间不能为空')
+
+    def validate_end_time(self, field):
+        if field.data is not None and self.start_time.data is None:
+            raise ValidationError('起始时间不能为空')
+        if field.data is not None and self.start_time.data is not None and \
+                (self.start_time.data > field.data):
+            raise ValidationError('终止时间不能小于起始时间')
+
+
+class VipMembersDetailsForm(Form):
+    pay_type_choice = [(-1, '----'), (0, '微信'), (1, '支付宝'), (2, '其他')]
+    add_choice = [(-1, '-----'), (0, '付费'), (1, '活动'), (2, '手动添加'), (3, '其他')]
+
+    pay_type = SelectField('支付方式', choices=pay_type_choice, coerce=int, default=-1)
+    add_type = SelectField('会员途径', choices=add_choice, coerce=int, default=-1)
+    status = SelectField('会员状态', choices=[(-1, '-----'), (0, '已过期'), (1, '服务中'), (2, '未使用')],
+                         coerce=int, default=-1)
+    order_number = StringField('订单编号', validators=[Optional()])
+    start_time = DateTimeField('开始时间', validators=[Optional()])
+    end_time = DateTimeField('结束时间', validators=[Optional()])
+    submit = SubmitField('查询')
+
+    def validate_start_time(self, field):
+        if field.data is not None and self.end_time.data is None:
+            raise ValidationError('终止时间不能为空')
+
+    def validate_end_time(self, field):
+        if field.data is not None and self.start_time.data is None:
+            raise ValidationError('起始时间不能为空')
+        if field.data is not None and self.start_time.data is not None and \
+                (self.start_time.data > field.data):
+            raise ValidationError('终止时间不能小于起始时间')
+
+
+class MemberForm(Form):
+    phone_num = StringField('手机号', validators=[Optional()])
+    submit = SubmitField('查询')
+
+
+class VipServiceProtocolForm(Form):
+    content = TextAreaField('会员服务协议', validators=[DataRequired(message='会员服务协议不能为空')])
+    submit = SubmitField('提交')
+
+
+class VipPayStatisticsForm(Form):
+    year_choice = [(1, 1)]
+    month_choice = [(month, month) for month in range(1, 13)]
+    week_choice = [(week, week) for week in range(1, 53)]
+
+    statistics_way = SelectField('统计方式', choices=[(1, '按月统计'), (2, '按周统计'), (3, '按日统计')],
+                                 coerce=int, default=1)
+    today_now = datetime.date.today()
+    if today_now.month == 1:
+        year_s = today_now.year - 1
+        year_e = today_now.year - 1
+        month_s = 1
+        month_e = 12
+    else:
+        year_s = today_now.year - 1
+        year_e = today_now.year
+        month_s = 12 + (today_now.month - 12)
+        month_e = today_now.month - 1
+    week_now = today_now.isocalendar()[1]
+    if week_now - 4 > 1:
+        year_s_w = today_now.year
+        year_e_w = today_now.year
+        week_s = week_now - 4
+        week_e = week_now - 1
+    else:
+        year_s_w = today_now.year - 1
+        year_e_w = today_now.year
+        week_s = 52 + (week_now - 4)
+        week_e = week_now - 1
+
+    start_year_m = SelectField('开始年份', choices=year_choice, coerce=int, default=year_s)
+    end_year_m = SelectField('结束年份', choices=year_choice, coerce=int, default=year_e)
+    start_year_w = SelectField('开始年份', choices=year_choice, coerce=int, default=year_s_w)
+    end_year_w = SelectField('结束年份', choices=year_choice, coerce=int, default=year_e_w)
+    month_start = SelectField('开始月', choices=month_choice, coerce=int, default=month_s)
+    month_end = SelectField('结束月', choices=month_choice, coerce=int, default=month_e)
+    week_start = SelectField('开始周', choices=week_choice, coerce=int, default=week_s)
+    week_end = SelectField('结束周', choices=week_choice, coerce=int, default=week_e)
+    day_start = DateField('开始日', validators=[Optional()])
+    day_end = DateField('结束日', validators=[Optional()])
+    submit = SubmitField('查询')
+
+    def validate_day_start(self, field):
+        if field.data is not None and self.day_end.data is None:
+            raise ValidationError('终止时间不能为空')
+
+    def validate_day_end(self, field):
+        if field.data is not None and self.day_start.data is None:
+            raise ValidationError('起始时间不能为空')
+        if field.data is not None and self.day_start.data is not None and \
+                (self.day_start.data > field.data):
+            raise ValidationError('终止时间不能小于起始时间')
+
+    def validate_end_year_m(self, field):
+        if field.data is not None and self.start_year_m.data is not None and \
+                (self.start_year_m.data > field.data):
+            raise ValidationError('结束年份不能小于起始年份')
+
+    def validate_end_year_w(self, field):
+        if field.data is not None and self.start_year_w.data is not None and \
+                (self.start_year_w.data > field.data):
+            raise ValidationError('结束年份不能小于起始年份')
+
+    def validate_month_end(self, field):
+        if self.start_year_m.data == self.end_year_m.data and self.statistics_way.data == 1:
+            if self.month_start.data > field.data:
+                raise ValidationError('结束月份不能小于起始月份')
+
+    def validate_week_end(self, field):
+        if self.start_year_w.data == self.end_year_w.data and self.statistics_way.data == 2:
+            if self.week_start.data > field.data:
+                raise ValidationError('结束周数不能小于起始周数')
+
+
+class CommunicationGroupForm(Form):
+    v_group_number = StringField('商业智能交流群', validators=[DataRequired(message='商业智能交流群不能为空')])
+    v_group_key = StringField('商业智能交流群key', validators=[DataRequired(message='商业智能交流群key不能为空')])
+
+    submit = SubmitField('提交')
+
+
+# 针对第三方SDK广告的访问统计
+class OpenScreenAdsDataForm(Form):
+    name = StringField('广告名称', validators=[Optional()])
+    position = SelectField('广告位置', choices=[(-1, '全部')] + [
+        (key, val) for key, val in Config.OPEN_SCREEN_ADS_POSITION.items()], coerce=int, default=-1)
+    source = SelectField('广告来源', choices=[(-1, '全部')] + [
+        (key, val) for key, val in Config.ADS_SOURCE.items()], coerce=int, default=-1)
+    status = SelectField('状态', choices=[(-1, '全部')] + [(0, '关闭'), (1, '开启')], coerce=int, default=-1)
+    start_time = DateField('起始时间', validators=[Optional()])
+    end_time = DateField('终止时间', validators=[Optional()])
+    submit = SubmitField('查询')
+
+    def validate_start_time(self, field):
+        if field.data is not None and self.end_time.data is None:
+            raise ValidationError('终止时间不能为空')
+
+    def validate_end_time(self, field):
+        if field.data is not None and self.start_time.data is None:
+            raise ValidationError('起始时间不能为空')
+        day = (field.data - self.start_time.data)
+        day = day.days + 1
+        if day > 30:
+            raise ValidationError('查询天数不能大余30天')
+        if field.data is not None and self.start_time.data is not None and \
+                (self.start_time.data > field.data):
+            raise ValidationError('终止时间不能小于起始时间')
+
+
+class InteractiveAdsForm(Form):
+    name = StringField('广告名称', validators=[DataRequired(message='名称不能为空'), Length(2, 64, message='长度不合法')])
+    position = SelectField('广告位置', choices=[
+        (key, val) for key, val in Config.INTERACTIVE_ADS_POSITION.items()], coerce=int, default=0)
+    source = SelectField('广告来源', choices=[
+        (key, val) for key, val in Config.INTERACTIVE_ADS_SOURCE.items()], coerce=int, default=0)
+    charge_mode = SelectField('计费方式', choices=[(0, 'CPC')], coerce=int, default=0)
+    user_count = IntegerField('活跃用户数', default=0)
+    refresh_status = SelectField('刷广告开关状态', choices=[(0, '关闭'), (1, '开启')], coerce=int, default=0)
+    morning_count = IntegerField('上午刷新次数 8:00 至 13：00', default=0)
+    afternoon_count = IntegerField('下午刷新次数 13：00 至 18：00', default=0)
+    night_count = IntegerField('晚上刷新次数 18：00 至 24:00', default=0)
+    icon = FileField('添加广告图标')
+    third_link = StringField('打开链接')
+    submit = SubmitField('保存')
+
+
+class QueryInteractiveAdsForm(Form):
+    name = StringField('广告名称', validators=[Optional()])
+    position = SelectField('广告位置', choices=[(-1, '全部')] + [
+        (key, val) for key, val in Config.INTERACTIVE_ADS_POSITION.items()], coerce=int, default=-1)
+    source = SelectField('广告来源', choices=[(-1, '全部')] + [
+        (key, val) for key, val in Config.INTERACTIVE_ADS_SOURCE.items()], coerce=int, default=-1)
+    status = SelectField('状态', choices=[(-1, '全部')] + [(0, '关闭'), (1, '开启')], coerce=int, default=-1)
+    start_time = DateField('起始时间', validators=[Optional()])
+    end_time = DateField('终止时间', validators=[Optional()])
+    submit = SubmitField('查询')
+
+    def validate_start_time(self, field):
+        if field.data is not None and self.end_time.data is None:
+            raise ValidationError('终止时间不能为空')
+
+    def validate_end_time(self, field):
+        if field.data is not None and self.start_time.data is None:
+            raise ValidationError('起始时间不能为空')
+        day = (field.data - self.start_time.data)
+        day = day.days + 1
+        if day > 30:
+            raise ValidationError('查询天数不能大余30天')
+        if field.data is not None and self.start_time.data is not None and \
+                (self.start_time.data > field.data):
+            raise ValidationError('终止时间不能小于起始时间')
+
+
+class EditInteractiveAdsForm(Form):
+    name = StringField('广告名称', validators=[DataRequired(message='名称不能为空'), Length(2, 64, message='长度不合法')])
+    position = SelectField('广告位置', choices=[
+        (key, val) for key, val in Config.INTERACTIVE_ADS_POSITION.items()], coerce=int, default=0)
+    source = SelectField('广告来源', choices=[
+        (key, val) for key, val in Config.INTERACTIVE_ADS_SOURCE.items()], coerce=int, default=0)
+    charge_mode = SelectField('计费方式', choices=[(0, 'CPC')], coerce=int, default=0)
+    user_count = IntegerField('活跃用户数', default=0)
+    refresh_status = SelectField('刷广告开关状态', choices=[(0, '关闭'), (1, '开启')], coerce=int, default=0)
+    morning_count = IntegerField('上午刷新次数 8:00 至 13：00', default=0)
+    afternoon_count = IntegerField('下午刷新次数 13：00 至 18：00', default=0)
+    night_count = IntegerField('晚上刷新次数 18：00 至 24:00', default=0)
+    icon = FileField('添加广告图标')
+    third_link = StringField('打开链接')
+    submit = SubmitField('保存编辑')
+
+
+class AdsConfigForm(Form):
+    channel = StringField('渠道', validators=[Optional()])
+    version = SelectField('版本', choices=[(-1, '全部'), (0, '历史版本'), (1, '最新版本')], coerce=int, default=-1)
+    submit = SubmitField('筛选')
+
+
+class AdsIconForm(Form):
+    position = SelectField('广告位置', choices=[
+        (key, val) for key, val in Config.ADS_ICON.items()], coerce=int, default=1)
+    icon = FileField('广告默认图')
+    third_link = StringField('广告默认跳转链接')
+    submit = SubmitField('保存')
+
+
+# 设置开屏广告展示策略
+class OpenStrategyForm(Form):
+    display_number = IntegerField('广告展示策略', default=0)
+    submit = SubmitField('提交')
+
+
+class AddAvatarAppForm(Form):
+    number = IntegerField('编号', validators=[DataRequired(message='编号不能为空')])
+    upload_file = FileField('应用文件')
+    update_msg = TextAreaField('更新内容', validators=[DataRequired(message='更新内容不能为空')])
+    submit = SubmitField('添加')
+
+
+class MakeAvatarForm(Form):
+    app_name = StringField('应用名称', validators=[DataRequired(message='应用名称不能为空')])
+    submit = SubmitField('添加')
+
+
+class AvatarMakeAnalysisForm(Form):
+    app_name = StringField('名称')
+    start_time = DateField('开始时间', validators=[Optional()])
+    end_time = DateField('结束时间', validators=[Optional()])
+    submit = SubmitField('查询')
+
+    def validate_start_time(self, field):
+        if field.data is not None and self.end_time.data is None:
+            raise ValidationError('终止时间不能为空')
+
+    def validate_end_time(self, field):
+        if field.data is not None and self.start_time.data is None:
+            raise ValidationError('起始时间不能为空')
+        if field.data is not None and self.start_time.data is not None and \
+                (self.start_time.data > field.data):
+            raise ValidationError('终止时间不能小于起始时间')
+
+
+class ActivityShareForm(Form):
+    act_id = StringField('活动编号', validators=[Optional()])
+    submit = SubmitField('查询')
+
+
+class InviteForm(Form):
+    phone_num = StringField('手机号', validators=[Optional()])
+    submit = SubmitField('查询')
+
+
+class ShareForm(Form):
+    phone_num = StringField('手机号', validators=[Optional()])
+    start_time = DateTimeField('起始时间', validators=[Optional()])
+    end_time = DateTimeField('终止时间', validators=[Optional()])
+    submit = SubmitField('查询')
+
+    def validate_start_time(self, field):
+        if field.data is not None and self.end_time.data is None:
+            raise ValidationError('终止时间不能为空')
+
+    def validate_end_time(self, field):
+        if field.data is not None and self.start_time.data is None:
+            raise ValidationError('起始时间不能为空')
+        if field.data is not None and self.start_time.data is not None and \
+                (self.start_time.data > field.data):
+            raise ValidationError('终止时间不能小于起始时间')
+
+
+class AddKeyForm(Form):
+    count = IntegerField('创建数量', validators=[DataRequired(message='创建数量不能为空')])
+    expire_time = DateField('有效期截止', validators=[DataRequired(message='有效期截止不能为空')])
+    vip_time = IntegerField('会员时长', validators=[DataRequired(message='会员时长不能为空')])
+    content = TextAreaField('备注',  validators=[DataRequired(message='备注不能为空'),
+                                               Length(1, 20, message='备注长度必须在1-20之间')])
+    submit = SubmitField('创建')
+
+
+class EditKeyForm(Form):
+    expire_time = DateField('有效期截止', validators=[DataRequired(message='有效期截止不能为空')])
+    content = TextAreaField('备注',  validators=[DataRequired(message='备注不能为空'),
+                                               Length(1, 20, message='备注长度必须在1-20之间')])
+    submit = SubmitField('确定')
+
+
+class KeyRecordForm(Form):
+    oeprator = StringField('操作人', validators=[Optional()])
+    content = StringField('备注检索', validators=[Optional()])
+    start_time = DateTimeField('创建起始时间', validators=[Optional()])
+    end_time = DateTimeField('创建终止时间', validators=[Optional()])
+    ex_start_time = DateField('截止起始时间', validators=[Optional()])
+    ex_end_time = DateField('截止终止时间', validators=[Optional()])
+    submit = SubmitField('查询')
+
+    def validate_start_time(self, field):
+        if field.data is not None and self.end_time.data is None:
+            raise ValidationError('创建终止时间不能为空')
+
+    def validate_end_time(self, field):
+        if field.data is not None and self.start_time.data is None:
+            raise ValidationError('创建起始时间不能为空')
+        if field.data is not None and self.start_time.data is not None and \
+                (self.start_time.data > field.data):
+            raise ValidationError('创建终止时间不能小于起始时间')
+
+    def validate_ex_start_time(self, field):
+        if field.data is not None and self.ex_end_time.data is None:
+            raise ValidationError('截止终止时间不能为空')
+
+    def validate_ex_end_time(self, field):
+        if field.data is not None and self.ex_start_time.data is None:
+            raise ValidationError('截止起始时间不能为空')
+        if field.data is not None and self.ex_start_time.data is not None and \
+                (self.ex_start_time.data > field.data):
+            raise ValidationError('截止终止时间不能小于起始时间')
+
+
+class KeyDetailForm(Form):
+    status = SelectField('状态', choices=[(-1, '全部'), (0, '未激活'), (1, '已激活'), (2, '过期'), (3, '使用结束')],
+                         coerce=int, default=-1)
+    submit = SubmitField('查询')
+
+
+class OrderKeyForm(Form):
+    status = SelectField('状态', choices=[(-1, '全部'), (0, '未激活'), (1, '已激活'), (2, '过期'), (3, '使用结束')],
+                         coerce=int, default=-1)
+    submit = SubmitField('查询')
+
+
+class ChannelUploadAppForm(Form):
+    app_type = SelectField('应用类型', choices=[(key, val) for key, val in Config.APP_TYPE_DICT.items()],
+                           coerce=int, default=4)
+    wechat_version_name = StringField('微信版本名称')
+    version_code = StringField('版本号')
+    version_name = StringField('版本名称')
+    upload_target = SelectField('上传文件目的', choices=[(0, "添加新文件"), (1, "更新文件")], coerce=int)
+    spreader = SelectField()
+    min_frame_code = StringField('最小框架版本号')
+    max_frame_code = StringField('最大框架版本号')
+    upload_file = FileField('应用文件')
+    update_msg = TextAreaField('更新内容', validators=[DataRequired(message='更新内容不能为空')])
+    status = SelectField('状态', choices=[(0, '普通更新'), (1, '强制更新')], coerce=int, default=0)
+    submit = SubmitField('提交')
+
+
+class ChannelUploadAppForm(Form):
+
+    app_type = SelectField('应用类型', choices=[(key, val) for key, val in Config.APP_TYPE_DICT.items() if key != 100],
+                           coerce=int, default=8)
+    wechat_version_name = StringField('微信版本名称')
+    version_code = StringField('版本号')
+    version_name = StringField('版本名称')
+    upload_target = SelectField('上传文件目的', choices=[(0, "添加新文件"), (1, "更新文件")], coerce=int)
+    min_frame_code = StringField('最小框架版本号')
+    max_frame_code = StringField('最大框架版本号')
+    upload_file = FileField('应用文件')
+    update_msg = TextAreaField('更新内容', validators=[DataRequired(message='更新内容不能为空')])
+    status = SelectField('状态', choices=[(0, '普通更新'), (1, '强制更新')], coerce=int, default=0)
+    submit = SubmitField('提交')
+
+
+class KeyChannelForm(Form):
+
+    channel_name = StringField('渠道名称')
+    price = FloatField('授权码价格', validators=[DataRequired(message='授权码价铬不能为空')])
+    msg = TextAreaField('说明', validators=[DataRequired(message='说明不能为空')])
+    status = SelectField('状态', choices=[(0, '无效状态'), (1, '立即生效')], coerce=int, default=0)
+    submit = SubmitField('提交')
+
+
+class EditKeyChannelForm(Form):
+
+    channel_name = StringField('渠道名称')
+    price = FloatField('授权码价格', validators=[DataRequired(message='授权码价铬不能为空')])
+    msg = TextAreaField('说明', validators=[DataRequired(message='说明不能为空')])
+    status = SelectField('状态', choices=[(0, '无效状态'), (1, '立即生效')], coerce=int, default=0)
+    submit = SubmitField('提交')
+
+
+class GetKeyChannelForm(Form):
+
+    channel_name = StringField('渠道名称')
+    submit = SubmitField('查询')
+
+
+class GetKeyInfoForm(Form):
+
+    key_id = StringField('KEY-ID')
+    submit = SubmitField('查询')
+
+
+class AddKeyImeiForm(Form):
+
+    imei = StringField('imei', validators=[DataRequired(message='imei不能为空')])
+    submit = SubmitField('提交')
+
+
+class WeKeyRecordForm(Form):
+    phone_num = StringField('操作人', validators=[Optional()])
+    operator = StringField('操作人', validators=[Optional()])
+    we_key_number = StringField('微商客对应编号', validators=[Optional()])
+    start_time = DateTimeField('创建起始时间', validators=[Optional()])
+    end_time = DateTimeField('创建终止时间', validators=[Optional()])
+    submit = SubmitField('查询')
+
+    def validate_start_time(self, field):
+        if field.data is not None and self.end_time.data is None:
+            raise ValidationError('创建终止时间不能为空')
+
+    def validate_end_time(self, field):
+        if field.data is not None and self.start_time.data is None:
+            raise ValidationError('创建起始时间不能为空')
+        if field.data is not None and self.start_time.data is not None and \
+                (self.start_time.data > field.data):
+            raise ValidationError('创建终止时间不能小于起始时间')
+
+
+class WeKeyDetailForm(Form):
+    status = SelectField('状态', choices=[(-1, '全部'), (0, '未激活'), (1, '已激活'), (2, '过期'), (3, '使用结束')],
+                         coerce=int, default=-1)
+    submit = SubmitField('查询')
+
+
+class NoticeForm(Form):
+    oeprator = StringField('操作人', validators=[Optional()])
+    start_time = DateTimeField('开始时间', validators=[Optional()])
+    end_time = DateTimeField('结束时间', validators=[Optional()])
+    submit = SubmitField('查询')
+
+    def validate_start_time(self, field):
+        if field.data is not None and self.end_time.data is None:
+            raise ValidationError('结束时间不能为空')
+
+    def validate_end_time(self, field):
+        if field.data is not None and self.start_time.data is None:
+            raise ValidationError('开始时间不能为空')
+        if field.data is not None and self.start_time.data is not None and \
+                (self.start_time.data > field.data):
+            raise ValidationError('结束时间不能小于开始时间')
+
+
+class AddNoticeForm(Form):
+    title = StringField('通知标题', validators=[DataRequired(message='通知标题不能为空'),
+                                            Length(1, 12, message='活动名称长度最多为12')])
+    content = TextAreaField('通知内容', validators=[DataRequired(message='通知内容不能为空'),
+                                                Length(1, 150, message='活动名称长度最多为150')])
+    remarks = TextAreaField('备注', validators=[Optional()])
+    start_time = DateField('开始时间', validators=[DataRequired(message='开始时间不能为空')])
+    end_time = DateField('结束时间', validators=[DataRequired(message='结束时间不能为空')])
+    submit = SubmitField('确定')
+
+    def validate_start_time(self, field):
+        if field.data is not None and self.end_time.data is None:
+            raise ValidationError('结束时间不能为空')
+
+    def validate_end_time(self, field):
+        if field.data is not None and self.start_time.data is None:
+            raise ValidationError('开始时间不能为空')
+        if field.data is not None and self.start_time.data is not None and \
+                (self.start_time.data > field.data):
+            raise ValidationError('结束时间不能小于开始时间')
+
+
+class AppProtocolForm(Form):
+    content = TextAreaField('软件服务使用协议', validators=[DataRequired(message='软件服务使用协议不能为空')])
+    submit = SubmitField('提交')
+
+
+class KeyForm(Form):
+    key = StringField('key', validators=[Optional()])
+    submit = SubmitField('查询')
+
+
+class GetImeiInfoForm(Form):
+    imei = StringField('imei')
+    submit = SubmitField('查询')
+
+
+class ActKeyStForm(Form):
+    start_year_m = IntegerField('开始年份', validators=[Optional()])
+    end_year_m = IntegerField('结束年份', validators=[Optional()])
+    month_start = IntegerField('开始月份', validators=[Optional()])
+    month_end = IntegerField('结束月份', validators=[Optional()])
+    submit = SubmitField('查询')
+
+    def validate_end_year_m(self, field):
+        if field.data is not None and self.start_year_m.data is not None and \
+                (self.start_year_m.data > field.data):
+            raise ValidationError('结束年份不能小于起始年份')
+
+    def validate_month_end(self, field):
+        if self.start_year_m.data == self.end_year_m.data:
+            if self.month_start.data > field.data:
+                raise ValidationError('结束月份不能小于开始月份')
+
+
+class AgentStForm(Form):
+    name = StringField('name')
+    submit = SubmitField('查询')
+
+
+class AddAgentForm(Form):
+    name = StringField('代理名称', validators=[DataRequired(message='代理名称不能为空')])
+    submit = SubmitField('添加')
+
+
+class AppVersionCheckForm(Form):
+    start_time = DateTimeField('开始时间', validators=[Optional()])
+    end_time = DateTimeField('结束时间', validators=[Optional()])
+    submit = SubmitField('查询')
+
+    def validate_start_time(self, field):
+        if field.data is not None and self.end_time.data is None:
+            raise ValidationError('结束时间不能为空')
+
+    def validate_end_time(self, field):
+        if field.data is not None and self.start_time.data is None:
+            raise ValidationError('开始时间不能为空')
+        if field.data is not None and self.start_time.data is not None and \
+                (self.start_time.data > field.data):
+            raise ValidationError('结束时间不能小于开始时间')
+
+
+class AddVersionCheckForm(Form):
+    versioncode = StringField('versioncode', validators=[DataRequired(message='versioncode不能为空')])
+    versionname = StringField('versionname', validators=[DataRequired(message='versionname不能为空')])
+    md5 = StringField('md5', validators=[DataRequired(message='md5不能为空')])
+    build_time = StringField('build_time', validators=[DataRequired(message='build_time不能为空')])
+    build_rev = StringField('build_rev', validators=[DataRequired(message='build_rev不能为空')])
+    submit = SubmitField('提交')
+
+
+class AddMembersForm(Form):
+    upload_file = FileField('上传文件', validators=[DataRequired(message='文件不能为空')])
+    vip_days = IntegerField('会员天数', validators=[DataRequired(message='会员天数不能为空或小于0')])
+    submit = SubmitField('提交')
+
+
+class ActMemebrForm(Form):
+    phone_num = StringField('手机号', validators=[Optional()])
+    channel = StringField('')
+    vip_type = SelectField('添加方式', choices=[(-1, '全部'), (0, '手动添加'), (1, '活动添加')], coerce=int, default=-1)
+    status = SelectField('是否激活', choices=[(-1, '全部'), (0, '未激活'), (1, '已激活')], coerce=int, default=-1)
+    start_time = DateTimeField('起始时间', validators=[Optional()])
+    end_time = DateTimeField('终止时间', validators=[Optional()])
+    submit = SubmitField('查询')
+
+    def validate_start_time(self, field):
+        if field.data is not None and self.end_time.data is None:
+            raise ValidationError('终止时间不能为空')
+
+    def validate_end_time(self, field):
+        if field.data is not None and self.start_time.data is None:
+            raise ValidationError('起始时间不能为空')
+        if field.data is not None and self.start_time.data is not None and \
+                (self.start_time.data > field.data):
+            raise ValidationError('终止时间不能小于起始时间')
+
+
+class CheckKeyForm(Form):
+    key = StringField('Key-ID', validators=[Optional()])
+    submit = SubmitField('查询')
+
+class BusinessCategoryForm(Form):
+    name = StringField('VIP类型')
+    submit = SubmitField('查询')
+
+
+class AddBusinessCategoryForm(Form):
+    name = StringField('类型名称', validators=[DataRequired(message='类型名称不能为空')])
+    days = IntegerField('类型天数', validators=[DataRequired(message='类型天数不能为空')])
+    submit = SubmitField('添加')
+
+
+class AddBusinessWareForm(Form):
+    number = StringField('产品ID', validators=[DataRequired(message='产品ID不能为空')])
+    name = StringField('VIP名称', validators=[DataRequired(message='VIP名称不能为空'),
+                                            Length(0, 10, message='VIP名称不超过10个字')])
+    description = TextAreaField('会员描述', validators=[DataRequired(message='会员描述不能为空'),
+                                                    Length(0, 15, message='会员描述不超过15个字')])
+    price = FloatField('会员标价', validators=[DataRequired(message='会员标价不能为空')])
+    discount = FloatField('会员折扣', default=0.0)
+    pay_price = FloatField('会员购买价格')
+    status = SelectField('状态', choices=[(0, '失效'), (1, '有效')], coerce=int, default=1)
+    picture = FileField('会员推荐图标', validators=[Optional()])
+    ads_cate = SelectMultipleField('开屏广告类型', choices=[
+        (key, val) for key, val in Config.EXTERNAL_ADS_CATEGORY.items()])
+    submit = SubmitField('添加')
+
+
+class EditBusinessWareForm(Form):
+    name = StringField('VIP名称', validators=[DataRequired(message='VIP名称不能为空'),
+                                            Length(0, 10, message='VIP名称不超过10个字')])
+    description = TextAreaField('会员描述', validators=[DataRequired(message='会员描述不能为空'),
+                                                    Length(0, 15, message='会员描述不超过15个字')])
+    price = FloatField('会员标价', validators=[DataRequired(message='会员标价不能为空')])
+    discount = FloatField('会员折扣', default=0.0)
+    pay_price = FloatField('会员购买价格')
+    status = SelectField('状态', choices=[(0, '失效'), (1, '有效')], coerce=int, default=1)
+    picture = FileField('会员推荐图标', validators=[Optional()])
+    ads_cate = SelectMultipleField('开屏广告类型', choices=[
+        (key, val) for key, val in Config.EXTERNAL_ADS_CATEGORY.items()])
+    submit = SubmitField('修改')
+
+
+class QueryBusinessWareForm(Form):
+    status = SelectField('状态', choices=[(-1, '-- 全部 --'), (0, '失效'), (1, '有效')], coerce=int, default=-1)
+    submit = SubmitField('查询')
+
+
+class BusStatisticsForm(Form):
+    name = StringField('产品名称')
+    number = StringField('产品ID')
+    start_time = DateTimeField('起始时间', validators=[Optional()])
+    end_time = DateTimeField('终止时间', validators=[Optional()])
+    submit = SubmitField('查询')
+
+    def validate_start_time(self, field):
+        if field.data is not None and self.end_time.data is None:
+            raise ValidationError('终止时间不能为空')
+
+    def validate_end_time(self, field):
+        if field.data is not None and self.start_time.data is None:
+            raise ValidationError('起始时间不能为空')
+        if field.data is not None and self.start_time.data is not None and \
+                (self.start_time.data > field.data):
+            raise ValidationError('终止时间不能小于起始时间')
+
+
+class BusMembersForm(Form):
+    phone_num = StringField('手机号', validators=[Optional()])
+    status = SelectField('状态', choices=[(-1, '-----'), (0, '已过期'), (1, '正常')], coerce=int, default=-1)
+    start_time = DateTimeField('开始时间', validators=[Optional()])
+    end_time = DateTimeField('结束时间', validators=[Optional()])
+    submit = SubmitField('查询')
+
+    def validate_start_time(self, field):
+        if field.data is not None and self.end_time.data is None:
+            raise ValidationError('终止时间不能为空')
+
+    def validate_end_time(self, field):
+        if field.data is not None and self.start_time.data is None:
+            raise ValidationError('起始时间不能为空')
+        if field.data is not None and self.start_time.data is not None and \
+                (self.start_time.data > field.data):
+            raise ValidationError('终止时间不能小于起始时间')
+
+
+class BusinessForm(Form):
+    phone_num = StringField('手机号', validators=[Optional()])
+    submit = SubmitField('查询')
+
+
+class BusMembersDetailsForm(Form):
+    pay_type_choice = [(-1, '----'), (0, '微信'), (1, '支付宝'), (2, '其他')]
+
+    pay_type = SelectField('支付方式', choices=pay_type_choice, coerce=int, default=-1)
+    status = SelectField('会员状态', choices=[(-1, '-----'), (0, '已过期'), (1, '服务中'), (2, '未使用')],
+                         coerce=int, default=-1)
+    order_number = StringField('订单编号', validators=[Optional()])
+    start_time = DateTimeField('开始时间', validators=[Optional()])
+    end_time = DateTimeField('结束时间', validators=[Optional()])
+    submit = SubmitField('查询')
+
+    def validate_start_time(self, field):
+        if field.data is not None and self.end_time.data is None:
+            raise ValidationError('终止时间不能为空')
+
+    def validate_end_time(self, field):
+        if field.data is not None and self.start_time.data is None:
+            raise ValidationError('起始时间不能为空')
+        if field.data is not None and self.start_time.data is not None and \
+                (self.start_time.data > field.data):
+            raise ValidationError('终止时间不能小于起始时间')
+
+
+class BusPayStatisticsForm(Form):
+    today_now = datetime.date.today()
+    year_choice = [(year, year) for year in range(today_now.year - 5, today_now.year + 1)]
+    month_choice = [(month, month) for month in range(1, 13)]
+    week_choice = [(week, week) for week in range(1, 53)]
+
+    statistics_way = SelectField('统计方式', choices=[(1, '按月统计'), (2, '按周统计'), (3, '按日统计')],
+                                 coerce=int, default=1)
+
+    if today_now.month == 1:
+        year_s = today_now.year - 1
+        year_e = today_now.year - 1
+        month_s = 1
+        month_e = 12
+    else:
+        year_s = today_now.year - 1
+        year_e = today_now.year
+        month_s = 12 + (today_now.month - 12)
+        month_e = today_now.month - 1
+    week_now = today_now.isocalendar()[1]
+    if week_now - 4 > 1:
+        year_s_w = today_now.year
+        year_e_w = today_now.year
+        week_s = week_now - 4
+        week_e = week_now - 1
+    else:
+        year_s_w = today_now.year - 1
+        year_e_w = today_now.year
+        week_s = 52 + (week_now - 4)
+        week_e = week_now - 1
+
+    start_year_m = SelectField('开始年份', choices=year_choice, coerce=int, default=year_s)
+    end_year_m = SelectField('结束年份', choices=year_choice, coerce=int, default=year_e)
+    start_year_w = SelectField('开始年份', choices=year_choice, coerce=int, default=year_s_w)
+    end_year_w = SelectField('结束年份', choices=year_choice, coerce=int, default=year_e_w)
+    month_start = SelectField('开始月', choices=month_choice, coerce=int, default=month_s)
+    month_end = SelectField('结束月', choices=month_choice, coerce=int, default=month_e)
+    week_start = SelectField('开始周', choices=week_choice, coerce=int, default=week_s)
+    week_end = SelectField('结束周', choices=week_choice, coerce=int, default=week_e)
+    day_start = DateField('开始日', validators=[Optional()])
+    day_end = DateField('结束日', validators=[Optional()])
+    submit = SubmitField('查询')
+
+    def validate_day_start(self, field):
+        if field.data is not None and self.day_end.data is None:
+            raise ValidationError('终止时间不能为空')
+
+    def validate_day_end(self, field):
+        if field.data is not None and self.day_start.data is None:
+            raise ValidationError('起始时间不能为空')
+        if field.data is not None and self.day_start.data is not None and \
+                (self.day_start.data > field.data):
+            raise ValidationError('终止时间不能小于起始时间')
+
+    def validate_end_year_m(self, field):
+        if field.data is not None and self.start_year_m.data is not None and \
+                (self.start_year_m.data > field.data):
+            raise ValidationError('结束年份不能小于起始年份')
+
+    def validate_end_year_w(self, field):
+        if field.data is not None and self.start_year_w.data is not None and \
+                (self.start_year_w.data > field.data):
+            raise ValidationError('结束年份不能小于起始年份')
+
+    def validate_month_end(self, field):
+        if self.start_year_m.data == self.end_year_m.data and self.statistics_way.data == 1:
+            if self.month_start.data > field.data:
+                raise ValidationError('结束月份不能小于起始月份')
+
+    def validate_week_end(self, field):
+        if self.start_year_w.data == self.end_year_w.data and self.statistics_way.data == 2:
+            if self.week_start.data > field.data:
+                raise ValidationError('结束周数不能小于起始周数')
+
+
+class AddFriendsForm(Form):
+    add_user = FileField('添加者', validators=[DataRequired(message='添加者文件不能为空')])
+    by_add_user = FileField('被添加者', validators=[DataRequired(message='被添加者文件不能为空')])
+    capita_add = IntegerField('人均添加', validators=[DataRequired(message='人均添加不能为空')])
+    add_count = IntegerField('每日添加数量', validators=[DataRequired(message='每日添加数量不能为空')])
+    submit = SubmitField('确定')
+
+
+class EditActivityForm(Form):
+    name = StringField('活动名称', validators=[DataRequired(message='活动名称不能为空'),
+                                           Length(1, 15, message='活动名称长度最多为6')])
+    award_period = IntegerField('领奖周期(天)', default=0)
+    reward = IntegerField('VIP奖励(天)', default=0)
+    photo = FileField('活动图片')
+    link = StringField('活动链接', validators=[DataRequired(message='活动链接不能为空')])
+    content = StringField('备注')
+    title = StringField('分享标题')
+    description = StringField('分享描述')
+    share_photo = FileField('分享图片')
+    share_link = StringField('分享链接')
+
+    start_time = DateTimeField('起始时间', validators=[DataRequired(message='起始时间不能为空')])
+    end_time = DateTimeField('终止时间', validators=[DataRequired(message='起始时间不能为空')])
+
+    def validate_start_time(self, field):
+        if field.data is not None and self.end_time.data is None:
+            raise ValidationError('终止时间不能为空')
+
+    def validate_end_time(self, field):
+        if field.data is not None and self.start_time.data is None:
+            raise ValidationError('起始时间不能为空')
+        if field.data is not None and self.start_time.data is not None and \
+                (self.start_time.data > field.data):
+            raise ValidationError('终止时间不能小于起始时间')
+    submit = SubmitField('提交')
+
+
+class SignDataActivityForm(Form):
+    phone = StringField('手机号', validators=[Optional()])
+    sort_type = SelectField('排序方式', choices=[(-1, '----'), (0, '领奖数降序'), (1, '领奖数升序')], coerce=int, default=-1)
+    submit = SubmitField('查询')
+
+
+class ExportKeyForm(Form):
+    count = IntegerField('创建数量', validators=[DataRequired(message='创建数量不能为空')])
+    expire_time = DateField('有效期截止', validators=[DataRequired(message='有效期截止不能为空')])
+    vip_time = IntegerField('会员时长', validators=[DataRequired(message='会员时长不能为空')])
+    content = TextAreaField('备注',  validators=[DataRequired(message='备注不能为空'),
+                                               Length(1, 20, message='备注长度必须在1-20之间')])
+    vip_ad_time = IntegerField('免广告', validators=[Optional()])
+    upload_file = FileField('上传文件', validators=[DataRequired(message='文件不能为空'), FileRequired('请上传文件'),
+                                                FileAllowed(['xlsx', 'xls'], '文件只能上传xlxs, xls')])
+
+    submit = SubmitField('创建')
+
+
+class FreeVipDaysForm(Form):
+    days = IntegerField('免费会员天数', validators=[Optional()])
+    submit = SubmitField('确定')
+
+
+class FreeVipForm(Form):
+    phone_num = StringField('手机号', validators=[Optional()])
+    start_time = DateTimeField('开始时间', validators=[Optional()])
+    end_time = DateTimeField('结束时间', validators=[Optional()])
+    submit = SubmitField('查询')
+
+    def validate_start_time(self, field):
+        if field.data is not None and self.end_time.data is None:
+            raise ValidationError('终止时间不能为空')
+
+    def validate_end_time(self, field):
+        if field.data is not None and self.start_time.data is None:
+            raise ValidationError('起始时间不能为空')
+        if field.data is not None and self.start_time.data is not None and \
+                (self.start_time.data > field.data):
+            raise ValidationError('终止时间不能小于起始时间')
+
+
+class BusRecommendForm(Form):
+    picture = FileField('显示图片', validators=[])
+    ware_id = StringField('商品ID', validators=[DataRequired(message='商品ID不能为空')])
+    tip_time = IntegerField('提示时间', validators=[DataRequired(message='提示时间不能为空')])
+    submit = SubmitField('提交')
+
+
+class SecondDaysForm(Form):
+    days = IntegerField('秒通过添加天数设置', validators=[Optional()])
+    count = IntegerField('秒通过添加人数设置', validators=[Optional()])
+    submit = SubmitField('确定')
+
+
+class BusAssistantForm(Form):
+    we_id = StringField('客服微信号', validators=[DataRequired(message='客服微信号不能为空')])
+    we_public = StringField('公众号', validators=[DataRequired(message='公众号不能为空')])
+    link = StringField('跳转链接', validators=[Optional()])
+    submit = SubmitField('提交')
+
+
+class AddLinkForm(Form):
+    link = StringField('跳转链接', validators=[Optional()])
+    submit = SubmitField('提交')

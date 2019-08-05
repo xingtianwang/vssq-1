@@ -1,0 +1,103 @@
+body{
+	background:#F7F7F7;
+	font-family:"微软雅黑";
+}
+*{
+	padding: 0px;
+	margin: 0px;
+	box-sizing:border-box;
+	-webkit-box-sizing:border-box;
+	-moz-box-sizing:border-box;
+}
+.container{
+	background: #ffffff;
+}
+.container a{
+	color: #363C3E;
+	font-size: 14px;
+	padding:18px 0px;
+	margin: 0 16px;
+	border-bottom:1px solid #E6E8E9;
+	display: block;
+	text-decoration:none;
+	-webkit-tap-highlight-color:rgba(255,255,255,0);
+	-webkit-user-select:none;
+	-moz-user-focus:none;
+	-moz-user-select:none;
+}
+.details-title{
+	font-size: 14px;
+    color: #363C3E;
+    border-bottom: 1px solid #E6E8E9;
+    padding-bottom: 12px;
+    font-weight: bold;
+}
+.con-padding{
+	padding:30px 19px;
+}
+.margin-b30{
+	margin-bottom:13px;
+}
+.explain{
+	font-size: 14px;
+	color: #363C3E;
+	letter-spacing: 0.2px;
+	line-height: 22px;
+	text-align:justify;
+	word-break:break-all;
+	padding:4px 0px; 
+}
+.flex-box{
+	display: box;
+	display: -webkit-box;
+	display: -moz-box;
+	display: -ms-flexbox;
+	display: -webkit-flex;
+	display: flex;
+	width: 100%;
+}
+.flex1{
+	flex: 1;
+	-ms-flex:1;
+	-webkit-flex:1;
+	-moz-box-flex:1;
+	-webkit-box-flex:1;
+	box-flex:1;
+	width: 50%;	
+}
+img{
+	width: 100%;
+}
+.margin-top27{
+	margin-top:17px;
+}
+.padding-r5{
+	padding-right:5px;
+}
+.padding-l5{
+	padding-left:5px;
+}
+/*新添加2017/0704*/
+.sub-title{
+	font-size: 15px;
+    color: #c5cbea;
+    margin: 16px 0px 6px 0px;
+    letter-spacing: 0.7px;
+    line-height: 27px;
+    text-align: justify;
+    word-break: break-all;
+}
+.margin-b16{
+	margin-bottom:16px;
+}
+.red-tip{
+	font-size: 14px;
+	letter-spacing:0.7px;
+	line-height:27px;
+	color: #f62446;
+	text-align:justify;
+	word-break:break-all;
+}
+.bold{
+	font-weight: bold;
+}

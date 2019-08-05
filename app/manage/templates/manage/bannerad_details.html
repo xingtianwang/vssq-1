@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+{% import "_macro.html" as macro%}
+
+{% block subtitle %} -banner广告信息{% endblock %}
+
+{% block page_content %}
+
+
+<div class="tab-content">
+    <div class="form-group" style="padding-right:5px;padding-top:5px;text-align:right;">
+        <a href="{{ url_for('manage.edit_bannerad', ad_id=bannerad.id) }}"  class="btn btn-primary">编辑</a>
+        {% if bannerad.status == 1 %}
+        <a onclick="bannerad_status('{{ bannerad.id }}')" class="btn btn-primary">关闭广告</a>
+        {% else %}
+        <a onclick="bannerad_status('{{ bannerad.id }}')" class="btn btn-primary">开启广告</a>
+        {% endif %}
+        <a  href="{{url_for('manage.get_bannerads_info')}}" class="btn btn-primary">返回</a>
+    </div>
+	<div class="tab-pane active">
+		<table style="height:600px;" class="table table-striped table-hover table-bordered">
+				<tr>
+					<td class="text-center">广告名称：{{ bannerad.name }}</td>
+					<td class="text-center">广告位置：{{ BANNER_ADS_POSITION[bannerad.position] }}</td>
+                    <td class="text-center">广告来源：{{ ADS_SOURCE[bannerad.source] }}</td>
+                </tr>
+                <tr>
+					<td class="text-center">计费方式：{% if bannerad.charge_mode == 0 %}CPC{% endif %}</td>
+					<td class="text-center">广告单价：{{ bannerad.unit_price/100 }}</td>
+					<td class="text-center">合作时间：{{ bannerad.start_time }}</td>
+				</tr>
+			<tr>
+				<td class="text-center">广告商：{{ bannerad.advertiser }}</td>
+				<td class="text-center">联系人：{{ bannerad.contacts }}</td>
+                <td class="text-center">联系方式：{{ bannerad.contact_way }}</td>
+            </tr>
+            <tr>
+				<td class="text-center">广告编号：{{ bannerad.number }}</td>
+				<td class="text-center">是否轮播：{% if bannerad.carousel == 0 %}不轮播
+                                                {% elif bannerad.carousel ==1 %}轮播{% endif %}</td>
+				<td class="text-center">轮播间隔：{{ bannerad.carousel_interval }}秒</td>
+            </tr>
+            <tr>
+                <td class="text-center">刷广告开关：{% if bannerad.refresh_status == 0 %}关闭{% else %}开启{% endif %}</td>
+				<td class="text-center">活跃用户数：{{ bannerad.user_count }}</td>
+				<td class="text-center">上午刷新次数 8:00 至 13：00：{{ bannerad.morning_count }}</td>
+            </tr>
+            <tr>
+                <td class="text-center">下午刷新次数 13：00 至 18：00：{{ bannerad.afternoon_count }}</td>
+                <td class="text-center">晚上刷新次数 18：00 至 24：00：{{ bannerad.night_count }}</td>
+                <td class="text-center">展示次数: {{ bannerad.display_number }}</td>
+            </tr>
+            {% if bannerad.icon != '' %}
+            <tr>
+                <td class="text-center"><img src="{{ photo_url }}{{ bannerad.icon }}" width="150" height="150"></td>
+                {% if bannerad.icon_dest_link!= "" %}
+				<td class="text-center">打开链接：{{ bannerad.icon_dest_link }}</td>
+                {% endif %}
+			</tr>
+            {% else %}
+            {% endif %}
+		</table>
+	</div>
+</div>
+<script>
+    function bannerad_status(id) {
+       $.ajax({
+           url: "{{ url_for('manage.edit_bannerad_status') }}",
+           data: {"id":id},
+           type: 'GET',
+           dataType: 'json',
+           async: false,
+           cache: false
+        }).done(function ( result) {
+            if (result['code'] < 0){
+               alert('开启失败');
+            }else{
+                if (result['code'] == 1){
+                    alert('开启成功!');
+                }
+                if (result['code'] == 0){
+                    alert('关闭成功!');
+                }
+                parent.location.reload();
+            }
+        }).fail(function (result) {
+            var errmsg = "访问服务器出错："+fmtJqueryAjaxError(result);
+				alert(errmsg);
+			});
+    }
+</script>
+{% endblock %}
+{% block page%}
+{% endblock %}

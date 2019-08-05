@@ -1,0 +1,123 @@
+ body,html{
+    margin: 0px;
+    padding: 0px;
+    width: 100%;
+    background:#febd1c;
+}
+*{
+    margin: 0px;
+    padding: 0px;
+    box-sizing:border-box;
+    -moz-box-sizing:border-box;
+    -webkit-box-sizing:border-box;
+}
+.container{
+    width: 100%;
+}
+.share-img{
+    width: 100%;
+    display: block;
+    padding: 0px;
+    margin:0px;
+    overflow: hidden;
+    outline:none;
+    border:0px;
+    /*margin-top: -1px;*/
+}
+.load-style{
+    background:#febd1c;
+    width: 100%;
+    background-size: cover;
+    text-align: center;
+}
+.code-style{
+    background:#febd1c;
+    width: 100%;
+    background-size: cover;
+    text-align: center;
+}
+.share-btn{
+    width: 42%;
+}
+a{
+    -webkit-tap-highlight-color:rgba(0,0,0,0);
+}
+.code{
+    color: #4d3b09;
+    font-weight: bold;
+    letter-spacing:1.5px;
+    padding: 12px 0px;
+}
+.code2{
+    color: #4d3b09;
+    font-weight: bold;
+    letter-spacing:1.5px;
+    padding: 9px 0px;
+}
+.code-take-part{
+    color: #f1f3f5;
+    font-weight: bold;
+    letter-spacing:1.5px;
+    border-radius:10px;
+    border: 2px solid #212121;
+    background:#dc2712;
+    display: inline-block;
+    padding:10px;
+}
+
+/*微信浏览器中打开*/
+.shade-style{
+    background-color:#000;
+    position:fixed;z-index:0;
+    left:0;
+    top:0;
+    display:none;
+    width:100%;
+    height:100%;
+    min-height:100%;
+    opacity:0.8;
+    filter: alpha(opacity=80);
+    -moz-opacity: 0.8;}
+.dx{
+    width:80%;
+    margin: 0px auto;
+}
+.dx img{
+    width:100%;
+}
+/*提示：暂不支持ios*/
+.five {
+    display: none;
+    position: absolute;
+    z-index: 2;
+    top: 50%;
+    left: 50%;
+    margin-left: -116px;
+    margin-top: -75px;
+    background: #ffffff;
+    width: 234px;
+    border-radius: 5px;
+    text-align: center;
+}
+/*遮罩层*/
+#zhezhaoa{display:none;position:fixed;z-index:1;left:0;top:0;
+          background-color:#000;width:100%;height:100%; min-height:100%; opacity:0.5;
+          filter: alpha(opacity=50);-moz-opacity: 0.5;}
+.five-con{font-size: 14px !important; color: #000000; letter-spacing:0.42px;padding:20px 0px; border-bottom:1px solid #cccccc; }
+.five-btn{background:#ffffff; color:#ff7d43;font-size:15px;letter-spacing:0.45px;text-align:center;
+          padding:12px 97px;border-radius:3px; border:none; margin:0px;}
+.new-style{
+    background:url(../images/share/code-share1/new05.png) no-repeat;
+    width: 100%;
+    background-size: cover;
+    text-align: center;
+}
+.new-code{
+    color: #ffffff;
+    font-weight: bold;
+    letter-spacing:1.5px;
+    padding: 2px 0px;
+}
+.new-share-btn{
+    width: 47%;
+}

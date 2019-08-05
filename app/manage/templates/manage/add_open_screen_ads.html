@@ -1,0 +1,120 @@
+{% extends "base.html" %}
+{% block subtitle %} -添加开屏广告{% endblock %}
+
+{% block page_content %}
+    <form action="{{ url_for('manage.add_open_screen_ads') }}" method="post" enctype="multipart/form-data">
+        {{ form.csrf_token }}
+        <table align="center" style="font-size:14px;">
+            <tr>
+                <td style="padding-right:5px;">{{ form.name.label }}:</td>
+                <td style="padding-bottom:10px;">{{ form.name(class="form-control", placeholder="必填") }}</td>
+            </tr>
+            <tr>
+                <td style="padding-right:5px;">{{ form.position.label }}:</td>
+                <td style="padding-bottom:10px;">{{ form.position(class="form-control") }}</td>
+            </tr>
+            <tr>
+                <td style="padding-right:5px;">{{ form.source.label }}:</td>
+                <td style="padding-bottom:10px;">{{ form.source(class="form-control") }}</td>
+            </tr>
+            <tr>
+                <td style="padding-right:5px;">{{ form.charge_mode.label }}:</td>
+                <td style="padding-bottom:10px;">{{ form.charge_mode(class="form-control") }}</td>
+            </tr>
+            <tr>
+                <td style="padding-right:5px;">{{ form.unit_price.label }}元:</td>
+                <td style="padding-bottom:10px;">{{ form.unit_price(class="form-control", placeholder="必填") }}</td>
+            </tr>
+            <tr>
+                <td style="padding-right:5px;">{{ form.advertiser.label }}:</td>
+                <td style="padding-bottom:10px;">{{ form.advertiser(class="form-control", placeholder="必填") }}</td>
+            </tr>
+            <tr>
+                <td style="padding-right:5px;">{{ form.contacts.label }}:</td>
+                <td style="padding-bottom:10px;">{{ form.contacts(class="form-control", placeholder="必填") }}</td>
+            </tr>
+            <tr>
+                <td style="padding-right:5px;">{{ form.contact_way.label }}:</td>
+                <td style="padding-bottom:10px;">{{ form.contact_way(class="form-control", placeholder="必填") }}</td>
+            </tr>
+            <tr>
+                <td style="padding-right:5px;">{{ form.number.label }}:</td>
+                <td style="padding-bottom:10px;">{{ form.number(class="form-control", placeholder="必填") }}</td>
+            </tr>
+            <tr>
+                <td style="padding-right:5px;">{{ form.display_number.label }}:</td>
+                <td style="padding-bottom:10px;">{{ form.display_number(class="form-control", placeholder="必填") }}</td>
+            </tr>
+            <tr>
+                <td style="padding-right:5px;">{{ form.skip_time.label }}:</td>
+                <td style="padding-bottom:10px;">{{ form.skip_time(class="form-control", placeholder="必填") }}</td>
+            </tr>
+            <tr>
+                <td>{{ form.start_time.label }}:</td>
+                <td>
+                    <div class='input-group date form_datetime' id='start_time_picker'>
+                        {{ form.start_time(class="form-control curser" ,placeholder="请选择时间") }}
+                        <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>{{ form.end_time.label }}:</td>
+                <td>
+                    <div class='input-group date form_datetime' id='end_time_picker'>
+                        {{ form.end_time(class="form-control curser" ,placeholder="请选择时间") }}
+                        <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td style="padding-right:5px;">{{ form.virtual_skip.label }}:</td>
+                <td style="padding-bottom:10px;">{{ form.virtual_skip }}</td>
+            </tr>
+            <tr>
+                <td style="padding-right:5px;">{{ form.control_click_rate.label }}:</td>
+                <td style="padding-bottom:10px;">{{ form.control_click_rate(class="form-control", placeholder="必填") }}</td>
+            </tr>
+            <tr>
+                <td style="padding-right:5px;">{{ form.skip_count.label }}:</td>
+                <td style="padding-bottom:10px;">{{ form.skip_count(class="form-control") }}</td>
+            </tr>
+            <tr>
+                <td style="padding-right:5px;">{{ form.refresh_status.label }}:</td>
+                <td style="padding-bottom:10px;">{{ form.refresh_status(class="form-control")}}</td>
+            </tr>
+            <tr>
+                <td style="padding-right:5px;">{{ form.user_count.label }}:</td>
+                <td style="padding-bottom:10px;">{{ form.user_count(class="form-control")}}</td>
+            </tr>
+            <tr>
+                <td style="padding-right:5px;">{{ form.morning_count.label }}:</td>
+                <td style="padding-bottom:10px;">{{ form.morning_count(class="form-control")}}</td>
+            </tr>
+            <tr>
+                <td style="padding-right:5px;">{{ form.afternoon_count.label }}:</td>
+                <td style="padding-bottom:10px;">{{ form.afternoon_count(class="form-control")}}</td>
+            </tr>
+            <tr>
+                <td style="padding-right:5px;">{{ form.night_count.label }}:</td>
+                <td style="padding-bottom:10px;">{{ form.night_count(class="form-control")}}</td>
+            </tr>
+            <tr>
+                <td style="padding-right:5px;">{{ form.icon.label }}:</td>
+                <td style="padding-bottom:10px;">{{ form.icon(class="form-control", id="icon") }}</td>
+                <td><p class="icon-format" id="icon-format" style="color:red;">
+                    图片格式(png/jpg) 1080*1920 px 大小：70—100KB</p></td>
+            </tr>
+            <tr>
+                <td style="padding-right:5px;">{{ form.app_link.label }}:</td>
+                <td style="padding-bottom:10px;">{{ form.app_link(class="form-control") }}</td>
+            </tr>
+            <tr>
+                <td style="padding-bottom:100px;">
+                    {{ form.submit(class="btn btn-primary") }}
+                    <a href="{{url_for('manage.add_open_screen_ads')}}" class="btn btn-primary">重置</a>
+                </td>
+            </tr>
+        </table>
+    </form>
+{% endblock %}

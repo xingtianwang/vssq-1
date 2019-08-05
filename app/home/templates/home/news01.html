@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="renderer" content="webkit">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<title>新闻详情</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('home.static', filename='css/btp.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('home.static', filename='css/btp-theme.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('home.static', filename='css/gd-news.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('home.static', filename='css/gd-index.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('home.static', filename='css/index.css') }}">
+</head>
+<body>
+    <!-- 导航开始 -->
+<div class="cd-header headerBg">
+	<div class="cd-header1024">
+		<div class="gd-logo" id="cd-logo"><a href="index.html"><img class="x-logo" src="{{ url_for('home.static', filename='imgs/index-logo.png')}}" alt="Logo"></a></div>
+		<nav class="cd-main-nav">
+			<ul>
+				<li>
+					<a id="index" href="{{ url_for('home.index') }}">首页</a>
+				</li>
+				<li>
+					<a id="news" href="{{ url_for('home.news_list') }}">新闻中心</a>
+					<p class="spot2">.</p>
+				</li> 
+				<li>
+					<a href="{{ url_for('home.about') }}">关于我们</a>
+				</li>
+            </ul>
+        </nav>
+    </div>
+</div>
+<!-- 导航结束 -->
+<!-- 第一块 -->
+	<div  class="row">
+        <img  src="{{ url_for('home.static', filename='imgs/wsk43.png')}}"  alt="">
+    </div>
+	<div class="container all xnews">
+		<p><a class="breadNav" href="{{ url_for('home.news_list') }}">新闻中心</a><span class="breadNav">>>新闻详情</span></p>
+		<h3 class="nTitle">唯密：首家个人数据货币化的电商平台</h3>
+		<p class="nTime">2017-12-22</p>
+
+		<div class="row imgMar">
+			<div class="col-lg-12 col-md-10 col-sm-12 col-xs-12" style="padding:0px;">
+				<img src="{{ url_for('home.static', filename='imgs/wsk37.png')}}" alt="">
+			</div>
+		</div>
+		<div class="nContent">
+			<p>
+				2017年12月15日，微商神器1.0.1版本正式发布。微商神器是高效的微信营销神器，帮助微商创业者以及微信营销者，快速获取高质量的客源，高效的处理日常工作，是微商生意必备的营销助手。
+			</p>
+			<p>
+				微商神器在内测期间，受到用户的一致好评，纷纷称赞是一款良心软件。软件安全稳定，直接官方微信操作，杜绝封号的风险。一键转发、虚拟定位，一键集赞等实用功能，让微信营销者快速获取更多客户，提高工作效率。我们专业的技术团队保证软件内在质量要和可扩充性，以及专业的人工客服，提供5*8小时在线指导。
+			</p>
+		</div>
+		<div class="nContent">
+			<div class="firstTitle">产品功能</div>
+			<div class="secondTitle">1、微信多开</div>
+			<p>
+				不止是一个微信分身，可以做出多个分身，一台手机同时登陆多个账号接收信息无须来回切换。满足微商、推广、大小号等多方面需求。
+			</p>
+			<div class="secondTitle">2、虚拟定位</div>
+			<p>
+				可以定位全球任何地方，配合查看附近人，添加更多目标客户。配合各地风景图片，可以去各地旅游，营造高端大气的氛围。
+			</p>
+			<div class="secondTitle">3、一键转发</div>
+			<p>
+				无需保存到本地，只需轻轻点击一键转发，即可同步转发朋友圈文字/图片/视频，省时省力，方便又快捷。
+			</p>
+			<div class="secondTitle">4、一键集赞</div>
+			<p>
+				朋友圈动态一键集赞，轻松方便不求人。
+			</p>
+			<div class="secondTitle">5、自动抢红包</div>
+			<p>
+				开启后，自动抢红包，解放双手，让红包不再错过。
+			</p>
+			<div class="secondTitle">6、更多功能</div>
+			<p>
+				自动加好友，自动打招呼等更多功能陆续开发中，敬请期待。
+			</p>
+			<p>
+				微商神器，您身边的微信营销神器，欢迎大家去各大应用市场搜索下载。如果您喜欢，记得分享给身边的朋友哦。在您使用的过程中，如遇问题，请联系我们，您的意见和建议将促进我们不断改进向前。微商神器官方客户交流群：597143090
+			</p>
+			
+		</div>
+	</div>
+    <!-- <div class="row pro-footer" style="margin:0px;">
+        <div class="col-md-12 pad-b5">服务热线：010-62926683</div>
+    	<div class="col-md-12">Copyright ©国鼎网络空间安全技术有限公司-京ICP备14046594号</div>
+    </div> -->
+    <script type="text/javascript" src="{{ url_for('home.static', filename='js/jquery-1.11.1.min.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('home.static', filename='js/btp.min.js') }}"></script>
+	<script type="text/javascript" src="{{ url_for('home.static', filename='js/nav.js') }}"></script><!--自适应导航-->
+    <!-- 以下注释内容不能删除，兼容IE使用 -->
+		<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+		<!--[if lt IE 9]>
+	    <script src="http://apps.bdimg.com/libs/html5shiv/3.7/html5shiv.min.js"></script>
+	    <script src="http://apps.bdimg.com/libs/respond.js/1.4.2/respond.min.js"></script>
+		<![endif]-->
+    <!-- 以上注释内容不能删除，兼容IE使用 -->
+</body>
+</html>

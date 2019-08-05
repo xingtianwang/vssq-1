@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no">
+	<title></title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('share.static', filename='css/business/common.css') }}">
+    <script src="{{ url_for('share.static', filename='js/jquery.js') }}" type="text/javascript"></script>
+</head>
+<body style="background:#ffffff;">
+	<div class="container">
+		<img class="iconStyle gap" src="{{ url_for('share.static', filename='images/business/N01.png') }}">
+		<img class="iconStyle gap" src="{{ url_for('share.static', filename='images/business/N02.png') }}">
+		<img class="iconStyle gap" src="{{ url_for('share.static', filename='images/business/N03.png') }}">
+		<img class="iconStyle gap" src="{{ url_for('share.static', filename='images/business/N04.png') }}">
+	</div>
+	<div class="bottom">
+		<div class="v-btn" id="vssqLoad" onclick="vssqDown('{{ full_apk_path }}')">点击下载V商神器</div>
+	</div>
+<!-- 此处html要放在html代码里 -->
+	<div id="shade" class="shade-style">
+		<div class="dx">
+			<img src="{{ url_for('share.static', filename='images/share/tip.png') }}" />
+		</div>
+	</div>
+</body>
+<script type="text/javascript">
+	function vssqDown(full_apk_path){
+		if(isWeiXin()){
+            $("body,html").css({"height":"100%","overflow":"hidden"});
+            $("#shade").css({
+                display:"block",
+                height:$(document).height
+            });
+		}else {
+            window.location.href=full_apk_path;
+        }
+	};
+	function isWeiXin(){
+		var ua = window.navigator.userAgent.toLowerCase();
+		if(ua.match(/MicroMessenger/i) == 'micromessenger'){
+			return true;
+		}else{
+			return false;
+		};
+	};
+</script>
+</html>             

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no">
+	<title></title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('share.static', filename='css/frame_ad/join.css') }}">
+    <script src="{{ url_for('share.static', filename='js/jquery.js') }}" type="text/javascript"></script>
+</head>
+<body style="background:#ffffff;text-align: center;">
+    <div class="container">
+		<img class="iconStyle gap" src="{{ url_for('share.static', filename='images/frame_ad/1.png') }}">
+        <!-- 视频播放代码如下 -->
+        <video class="videoStyle" src="{{ url_for('share.static', filename='images/frame_ad/meijia.mp4') }}" controls="controls" autoplay="autoplay" width="62%" webkit-playsinline>
+			您的浏览器不支持 video 播放。
+		</video>
+		<img class="iconStyle gap" src="{{ url_for('share.static', filename='images/frame_ad/2.png') }}">
+		<img class="iconStyle gap" src="{{ url_for('share.static', filename='images/frame_ad/3.png') }}">
+		<img class="iconStyle gap" src="{{ url_for('share.static', filename='images/frame_ad/4.png') }}">
+		<img class="iconStyle gap" src="{{ url_for('share.static', filename='images/frame_ad/5.png') }}">
+		<div class="empty"></div>
+	</div>
+
+    <div class="bottom">
+        <p class="starStyle"><img src="{{ url_for('share.static', filename='images/frame_ad/star.png') }}" width="15" height="15" alt="">网红爆款，月销过万</p >
+		<p class="starStyle"><img src="{{ url_for('share.static', filename='images/frame_ad/star.png') }}" width="15" height="15" alt="">零囤货，零压款</p>
+		<div class="displayFlex">
+			<a class="flex1 leftBtn" href="https://shop43305603.youzan.com/v2/feature/i5TK0Wefrh">直接采购</a>
+			<!-- 如需隐藏“进群咨询按钮”，请注释以下一行即可 -->
+			<div class="flex1 rightBtn" onclick="join('{{ data }}')">进群咨询</div>
+		</div>
+	</div>
+
+	<script>
+        function join(ids){
+            agent.FrameAd(ids)
+    }
+	</script>
+</body>
+</html>             

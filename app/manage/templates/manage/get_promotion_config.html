@@ -1,0 +1,114 @@
+{% extends "base.html" %}
+{% import "_macro.html" as macro%}
+
+{% block subtitle %} -CPA配置{% endblock %}
+
+{% block page_content %}
+<form class="form-inline panel panel-default" action="{{url_for('manage.get_promotion_config', ad_id=ad_id)}}" method="post">
+    {{ form.csrf_token }}
+    <div class="panel-body">
+        <div class="form-group" style="padding-right:5px;padding-top:5px;">
+            {{ form.channel.label }}:
+            {{ form.channel(class="form-control", placeholder="渠道") }}
+        </div>
+        <div class="form-group" style="padding-right:5px;padding-top:5px;">
+            {{ form.version.label }}:
+            {{ form.version(class="form-control") }}
+        </div>
+        <div class="form-group" style="padding-right:5px;padding-top:5px;">
+			<a href="{{url_for('manage.get_promotion_config', ad_id=ad_id)}}" class="btn btn-primary">重置</a>
+            {{ form.submit(class="btn btn-primary") }}
+            <button type="button" class="btn btn-primary" onClick="export_conf({{ ad_id }})">导入渠道</button>
+            <a  href="{{url_for('manage.get_app_promotion_info')}}" class="btn btn-primary">返回</a>
+        </div>
+    </div>
+</form>
+<div class="tab-content">
+	<div class="tab-pane active">
+		<table id="appinfo" class="table table-striped table-hover table-bordered">
+			<thead>
+				<tr class="info">
+                    <td class="text-center">id</td>
+					<td class="text-center">渠道</td>
+                    <td class="text-center">版本</td>
+                    <td class="text-center">操作</td>
+				</tr>
+			</thead>
+			<tbody>
+			{% for item in data %}
+			<tr>
+				<td class="text-center">{{ item.id }}</td>
+                <td class="text-center">{{ item.channel }}</td>
+                <td class="text-center">{% if item.version == 0 %}历史版本{% else %}当前版本{% endif %}</td>
+                {% if item.status == 1 %}
+                <td> <input type="checkbox" name="subBox" checked="checked">开启广告</td>
+                {% else %}
+                <td> <input type="checkbox" name="subBox">开启广告</td>
+                {% endif %}
+			</tr>
+			{% endfor %}
+			</tbody>
+		</table>
+	</div>
+    <div class="btnMar">
+        <input type="checkbox" id="checkAll" value="全选"><span>全选</span>
+        <button type="button" class="btn btn-primary" onClick="promotion_conf({{ ad_id }})">提交</button>
+    </div>
+</div>
+<script>
+    function promotion_conf(ad_id){
+        var data_value = [];
+        var no_value = [];
+        $('input[name="subBox"]:checked').each(function(){
+            var value = $(this).parent().siblings().first().text();
+            data_value.push(value);
+        });
+
+        $('input[name="subBox"]').not("input:checked").each(function(){
+            var value = $(this).parent().siblings().first().text();
+            no_value.push(value);
+        });
+        $.ajax({
+            url: "{{url_for('manage.ads_config')}}",
+                data: {"ids": data_value, "no_ids": no_value, "ad_id": ad_id, "type": 3},
+                type: "POST",
+                dataType: "json",
+                async: false,
+                traditional: true,
+                cache: false
+            }).done(function( result ) {
+                if(result["code"] != 0){ //如果出错则为非0
+                    alert('配置失败');
+                }else{
+                    alert('配置成功');
+                }
+            }).fail(function(result){
+                var errmsg = "访问服务器出错："+fmtJqueryAjaxError(result);
+                alert(errmsg);
+        });
+        parent.location.reload();
+    }
+
+    function export_conf(ad_id){
+        $.ajax({
+            url: "{{url_for('manage.export_channel')}}",
+                data: {"type": 3, "ad_id": ad_id},
+                type: "POST",
+                dataType: "json",
+                async: false,
+                traditional: true,
+                cache: false
+            }).done(function( result ) {
+                if(result["code"] != 0){ //如果出错则为非0
+                    alert('失败');
+                }else{
+                    alert('成功');
+                }
+            }).fail(function(result){
+                var errmsg = "访问服务器出错："+fmtJqueryAjaxError(result);
+                alert(errmsg);
+        });
+        parent.location.reload();
+    }
+</script>
+{% endblock %}

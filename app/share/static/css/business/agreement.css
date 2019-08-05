@@ -1,0 +1,87 @@
+*{
+ 	margin:0 auto;
+}
+html,body{ 
+	text-align:center;
+	font-family:"微软雅黑";
+	color: #333333;
+	margin: 0;
+	padding: 0;
+	background: #ffffff !important;}
+*, *:after, *:before {
+  	-webkit-box-sizing: border-box;
+  	-moz-box-sizing: border-box;
+ 	box-sizing: border-box;
+}
+.container {
+    margin-top: 15px;
+}
+.con-padding {
+    padding: 0px 20px;
+}
+pre {
+    font-size: 13px;
+	text-align: left;
+	letter-spacing:0.33px;
+	line-height:22px;
+	text-align:justify;
+	word-break:break-all;
+	white-space: pre-wrap;
+}
+.margin-top{
+	margin-top:20px;
+}
+/*v商报告服务条款*/
+.bottom{
+	position: fixed;
+	bottom: 0;
+	left: 0;
+	background: #ffffff;
+	font-size: 13px;
+	color: #4991F4;
+	letter-spacing: 0;
+	text-align: left;
+	width: 100%;
+	margin:0 auto;
+	padding:20px;
+}
+.rdo:before {
+    width: 15px;
+    height: 15px;
+    background-color: #4328D0;
+    border: 1px solid #ffffff;
+}
+.btn{
+	display: block;
+	margin-top:15px;
+	border: none;
+	background: #4991F4;
+	border-radius: 100px;
+	font-size: 14px;
+	color: #FFFFFF;
+	padding:12px 59px;
+}
+input[type="checkbox"] + label::before {
+    content: "\a0";
+    display: inline-block;
+    vertical-align: .2em;
+    width: 1.2em;
+    height: 1.2em;
+    margin-right: .2em;
+    border-radius: .2em;
+    border: 1px solid #4991F4;
+    background-color: #ffffff;
+    text-indent: .15em;
+    line-height: .65; 
+}
+input[type="checkbox"]:checked + label::before {
+    content: "\2713";
+    background-color: #EBF4FF;
+}
+input {
+    position: absolute;
+    clip: rect(0, 0, 0, 0);
+}
+a{
+	text-decoration: none;
+}

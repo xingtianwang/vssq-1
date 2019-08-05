@@ -1,0 +1,140 @@
+{% extends "base.html" %}
+{% import "_macro.html" as macro%}
+
+{% block subtitle %} -获取商业产品信息{% endblock %}
+
+{% block page_content %}
+<form class="form-inline panel panel-default" action="{{url_for('manage.get_bus_info')}}" method="post">
+    {{ form.csrf_token }}
+    <div class="panel-body">
+        <div class="form-group" style="padding-right:5px;padding-top:5px;">
+            {{ form.category.label }}:
+            {{ form.category(class="form-control") }}
+        </div>
+        <div class="form-group" style="padding-right:5px;padding-top:5px;">
+            {{ form.status.label }}:
+            {{ form.status(class="form-control") }}
+        </div>
+
+        <div class="form-group" style="padding-right:5px;padding-top:5px;">
+			<a href="{{url_for('manage.get_bus_info')}}" class="btn btn-primary">重置</a>
+            {{ form.submit(class="btn btn-primary") }}
+            <a type="button" class="btn btn-primary" href="{{ url_for('manage.add_bus_ware') }}">添加商业会员产品</a>
+        </div>
+    </div>
+</form>
+<div class="tab-content">
+	<div class="tab-pane active">
+		<table id="appinfo" class="table table-striped table-hover table-bordered">
+			<thead>
+				<tr class="info">
+                    <td class="text-center">序号</td>
+					<td class="text-center">商品ID</td>
+					<td class="text-center">VIP类型</td>
+					<td class="text-center">VIP名称</td>
+					<td class="text-center">显示状态</td>
+                    <td class="text-center">操作</td>
+				</tr>
+			</thead>
+			<tbody>
+			{% for item in data %}
+			<tr>
+                <td class="text-center">{% if page == 1 %}{{loop.index}} {% else %}
+                    {{ per_page*(page - 1) + loop.index }}{% endif %}</td>
+				<td class="text-center">{{ item.id }}</td>
+				<td class="text-center">{{ data_cate[item.id] }}</td>
+				<td class="text-center">{{ item.name }}</td>
+				<td class="text-center">{%  if item.status == 1%} 有效{%  elif item.status == 0 %}无效 {% endif %}</td>
+                <td align="center">
+                    <a type="button" class="btn btn-info btn-xs" href="{{ url_for('manage.get_bus_details', ware_id=item.id) }}">详情</a>
+                    <a type="button" class="btn btn-info btn-xs" href="{{ url_for('manage.edit_bus_ware', ware_id=item.id) }}">编辑</a>
+                    {% if item.priority == 0 %}
+                    <a type="button" class="btn btn-info btn-xs" onclick="set_bus_priority('{{ item.id }}', 1)">未推荐</a>
+                    {% else %}
+                    <a type="button" class="btn btn-info btn-xs" onclick="set_bus_priority('{{ item.id }}', 0)">已推荐</a>
+                    {% endif %}
+                    {% if item.status == 0 %}
+                    <a type="button" class="btn btn-info btn-xs" onclick="set_bus_status('{{ item.id }}', 1)">打开显示</a>
+                    {% else %}
+                    <a type="button" class="btn btn-info btn-xs" onclick="set_bus_status('{{ item.id }}', 0)">关闭显示</a>
+                    {% endif %}
+                </td>
+			</tr>
+			{% endfor %}
+			</tbody>
+		</table>
+        <a href="{{url_for('manage.export_result', category=form.category.data,status=form.status.data,
+         export_type = 30)}}" class="btn btn-primary">导出结果为<br/>excel表格</a>
+        <a href="{{ url_for('manage.bus_recommend') }}" class="btn btn-primary">配置推荐会员</a>
+</div>
+</div>
+<script>
+    function set_bus_priority(id, priority){
+        var close;
+        if (priority == 0){
+            close = confirm("确认不推荐吗?");
+        } else {
+            close = confirm("确认推荐吗?");
+        }
+        if (close) {
+            $.ajax({
+                url: "{{url_for('manage.set_bus_priority')}}",
+                data: {"id": id, "priority": priority},
+                type: "GET",
+                dataType: "json",
+                async: false,
+                cache: false
+            }).done(function( result ) {
+                if(result["code"] != 0){ //如果出错则为非0
+                    alert('操作失败');
+                }else{
+                    alert('操作成功');
+                }
+            }).fail(function(result){
+                var errmsg = "Error accessing the server：" + str(result);
+                alert(errmsg);
+            });
+        }
+        else {
+            alert("已取消");
+        }
+        parent.location.reload();
+    }
+
+    function set_bus_status(id, status){
+        var close;
+        if (status == 0){
+            close = confirm("确认关闭?");
+        } else {
+            close = confirm("确认打开?");
+        }
+        if (close) {
+            $.ajax({
+                url: "{{url_for('manage.set_bus_status')}}",
+                data: {"id": id, "status": status},
+                type: "GET",
+                dataType: "json",
+                async: false,
+                cache: false
+            }).done(function( result ) {
+                if(result["code"] != 0){ //如果出错则为非0
+                    alert('操作失败');
+                }else{
+                    alert('操作成功');
+                }
+            }).fail(function(result){
+                var errmsg = "Error accessing the server：" + str(result);
+                alert(errmsg);
+            });
+        }
+        else {
+            alert("已取消");
+        }
+        parent.location.reload();
+    }
+</script>
+{% endblock %}
+{% block page%}
+	{{ macro.pagination_widget(pagination, 'manage.get_bus_info', category=form.category.data,
+            status=form.status.data) }}
+{% endblock %}

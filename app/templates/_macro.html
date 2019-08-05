@@ -1,0 +1,100 @@
+{% macro login(form) %}
+{% import 'bootstrap/wtf.html' as wtf%}
+<form action="{{ url_for('auth.login') }}" method=post>
+    {{ form.csrf_token }}
+    <table align="center" style="font-size:14px;">
+        <tr>
+            <td style="padding-right:5px;">{{ form.username.label }}:</td>
+            <td style="padding-bottom:10px;">{{ form.username(class="form-control", placeholder="用户名", style="width:240px;") }}</td>
+        </tr>
+        <tr>
+            <td style="padding-right:5px;">{{ form.password.label }}:</td>
+            <td style="padding-bottom:10px;">{{ form.password(class="form-control", placeholder="密码", style="width:240px;") }}</td>
+        </tr>
+        <tr>
+            <td style="padding-right:5px;">{{ form.captcha.label }}:</td>
+            <td colspan="2" style="padding-bottom:10px;">
+                {% include 'auth/captcha.html' %}
+            </td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>{{ form.remember_me }} {{ form.remember_me.label }}</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td style="padding-bottom:10px;">
+                {{ form.submit(class="btn btn-primary") }}
+            </td>
+        </tr>
+    </table>
+</form>
+
+{% endmacro %}
+
+{% macro time_search(form)%}
+<div class="form-group" style="padding-right:5px;padding-top:5px;">
+    {{ form.start_time.label }}:
+    <div class='input-group date form_datetime' id='start_time_picker'>
+        {{ form.start_time(class="form-control curser" ,placeholder="请选择时间") }}
+        <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+    </div>
+</div>
+
+<div class="form-group" style="padding-right:5px;padding-top:5px;">
+    {{ form.end_time.label }}:
+    <div class='input-group date form_datetime' id='end_time_picker'>
+        {{ form.end_time(class="form-control curser" ,placeholder="请选择时间") }}
+        <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+    </div>
+</div>
+{% endmacro %}
+
+{% macro date_search(form)%}
+<div class="form-group" style="padding-right:5px;padding-top:5px;">
+    {{ form.start_time.label }}:
+    <div class='input-group date form_datetime' id='start_date_picker'>
+        {{ form.start_time(class="form-control curser" ,placeholder="请选择日期") }}
+        <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+    </div>
+</div>
+
+<div class="form-group" style="padding-right:5px;padding-top:5px;">
+    {{ form.end_time.label }}:
+    <div class='input-group date form_datetime' id='end_date_picker'>
+        {{ form.end_time(class="form-control curser" ,placeholder="请选择日期") }}
+        <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+    </div>
+</div>
+{% endmacro %}
+
+{% macro pagination_widget(pagination, endpoint) %}
+{% if pagination.total != 0 %}
+<ul class="pagination">
+    <li{% if pagination.page == 1 %} class="disabled"{% endif %}>
+    <a href="{% if pagination.page != 1 %}{{ url_for(endpoint, page=1, **kwargs) }}
+    {% else %}#{% endif %}">&laquo;&laquo;</a>
+    </li>
+    <li{% if not pagination.has_prev %} class="disabled"{% endif %}>
+    <a href="{% if pagination.has_prev %}{{ url_for(endpoint, page=pagination.page - 1, **kwargs) }}
+    {% else %}#{% endif %}">&laquo;</a>
+    </li>
+    {% for p in pagination.iter_pages() %}
+    {% if p %}
+        <li {% if p == pagination.page %} class="active"{% endif %}>
+            <a href="{{ url_for(endpoint, page = p, **kwargs) }}">{{ p }}</a>
+        </li>
+    {% endif %}
+    {% endfor %}
+    <li{% if not pagination.has_next %} class="disabled"{% endif %}>
+        <a href="{% if pagination.has_next %}{{ url_for(endpoint, page=pagination.page+1, **kwargs) }}
+        {% else %}#{% endif %}">&raquo;</a>
+    </li>
+    <li{% if pagination.page == pagination.pages %} class="disabled"{% endif %}>
+    <a href="{% if pagination.page != pagination.pages %}{{ url_for(endpoint, page=pagination.pages, **kwargs) }}
+    {% else %}#{% endif %}">&raquo;&raquo;</a>
+    </li>
+    <li style="line-height:30px;height:30px;color: #337ab7;">&nbsp;&nbsp;共{{ pagination.total }}条记录</li>
+</ul>
+{% endif %}
+{% endmacro %}

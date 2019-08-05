@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no">
+	<title>签到领会员</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('share.static', filename='css/activity/index.css') }}">
+    <script src="{{ url_for('share.static', filename='js/jquery.js') }}" type="text/javascript"></script>
+    <script src="{{ url_for('share.static', filename='js/fontFlex.js') }}" type="text/javascript"></script>
+</head>
+<body>
+	<div class="container">
+		<img class="head" src="{{ url_for('share.static', filename='images/activity/c05.png') }}" alt="">
+		<div class="sign-vip">
+			<img class="VIP" src="{{ url_for('share.static', filename='images/activity/VIP01.png') }}" alt="">
+			<div class="load-bg">
+				<p class="loadText">已连续签到<span>{{ scount }}</span>天</p>
+			</div>
+		</div>
+		<!-- 签到按钮 -->
+		{% if flag_s == 1 %}
+		<img class="sign-btn" src="{{ url_for('share.static', filename='images/activity/c15.png') }}">
+		{% elif flag_s == 0 %}
+		<img class="sign-btn" src="{{ url_for('share.static', filename='images/activity/c06.png') }}" onclick="sign_d({{ data['activity_id'] }})" alt="签到">
+		{% endif %}
+		<!-- 活动规则 -->
+		<img class="rule-img" src="{{ url_for('share.static', filename='images/activity/c07.png') }}" alt="">
+		<div class="rule-text">
+			<p>1. 所有用户均可参加</p>
+			<p>2. 每个用户每10天可获得一次奖励，可无限参与</p>
+			<p>3. 签到不能中断（如连续签到了3天，签到次数为3，第4天没有签到，第5天签到则签到次数为1）</p>
+			<p>4. 活动奖励将在签到第10天自动赠送</p>
+		</div>
+	</div>
+	<script>
+		$(function(){
+                  $('p.loadText').fontFlex(80,30,12);
+                  $('p.inviteCode').fontFlex(50,45,14);
+                  $('h4').fontFlex(50,45,14);
+                  $('p.boxText').fontFlex(50,55,12);
+                  $('.rule-text').fontFlex(50,30,12)
+            });
+        function sign_d(id){
+            FreeVIP.dailyAttendance(id);
+        }
+	</script>
+</body>
+</html>

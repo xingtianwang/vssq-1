@@ -1,0 +1,107 @@
+ body,html{
+    margin: 0px;
+    padding: 0px;
+    width: 100%;
+    background: #4936B9;
+    font-family: "微软雅黑";
+}
+*{
+    margin: 0px;
+    padding: 0px;
+    box-sizing:border-box;
+    -moz-box-sizing:border-box;
+    -webkit-box-sizing:border-box;
+}
+a{
+    text-decoration: none;
+    display: block;
+    -webkit-tap-highlight-color:rgba(0,0,0,0);
+    tap-highlight-color:rgba(0,0,0,0);
+}
+.container{
+  position: relative;
+}
+.iconStyle{
+    width: 100%;
+}
+/*新用户弹框跳转页面*/
+.gap{
+    margin-top:-5px;
+}
+/*v商神器下载页面*/
+.bottom{
+    background: #ffffff;
+    width: 100%;
+    position: fixed;
+    bottom: 0px;
+    left: 0px;
+}
+.v-btn{
+    background:#EB709F;
+    padding: 10px 0px;
+    width: 50%;
+    color: #ffffff;
+    font-size: 16px;
+    border-radius:100px; 
+    margin: 0 auto;
+    text-align: center;
+}
+.empty{
+    width: 100%;
+    height: 65px;
+}
+.videoStyle{
+    padding:12px 0px;
+}
+.displayFlex{
+    display: box;
+    display: -webkit-box;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+}
+.flex1 {
+    flex: 1;
+    -ms-flex: 1;
+    -webkit-flex: 1;
+    -moz-box-flex: 1;
+    -webkit-box-flex: 1;
+    box-flex: 1;
+}
+/*.fontStyle{
+    font-size: 18px;
+    color: #ffffff;
+    letter-spacing:1.3px;
+    text-align: center;
+}*/
+.leftBtn{
+    background: #D3565E;
+    padding:20px 0px;
+    text-decoration: none;
+    font-size: 18px;
+    color: #ffffff;
+    letter-spacing:1.3px;
+    text-align: center;
+}
+.rightBtn{
+    background: #E66E76;
+    padding:20px 0px;
+    font-size: 18px;
+    color: #ffffff;
+    letter-spacing:1.3px;
+    text-align: center;
+}
+.starStyle{
+    padding:4px 0px;
+    background: #F5F5F5;
+    font-size: 20px;
+    color: #D3565E;
+    letter-spacing: 1.1px;
+    text-align: center;
+    font-weight: bold;
+}
+.starStyle img{
+    vertical-align: middle;
+    margin-right: 5px;
+}

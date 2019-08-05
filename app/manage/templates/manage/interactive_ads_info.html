@@ -1,0 +1,119 @@
+{% extends "base.html" %}
+{% import "_macro.html" as macro%}
+{% block subtitle %} -互动广告详情{% endblock %}
+
+{% block page_content %}
+<div class="tab-content">
+	<div class="tab-pane active">
+        <p style="float:left;">广告位变更</p>
+        <div class="form-group" style="padding-right:5px;padding-top:5px;text-align:right;">
+            <a type="button" class="btn btn-info btn-xs" href="{{url_for('manage.edit_interactive_ads',
+             ad_id=ad_id)}}">编辑</a>&nbsp&nbsp&nbsp
+            {% if data.status == 0 %}
+            <a type="button" class="btn btn-info btn-xs" onclick="set_status({{ ad_id }}, 1)">开启广告</a>
+            {% else %}
+            <a type="button" class="btn btn-info btn-xs" onclick="set_status({{ ad_id }}, 0)">关闭广告</a>
+            {% endif %}&nbsp&nbsp&nbsp
+            <a type="button" class="btn btn-info btn-xs" href="{{url_for('manage.get_interactive_ads')}}">返回</a>
+        </div>
+		<table id="appinfo" class="table table-striped table-hover table-bordered">
+			<thead>
+				<tr class="info">
+					<td class="text-center">广告名称</td>
+					<td class="text-center">广告位置</td>
+					<td class="text-center">广告来源</td>
+                    <td class="text-center">状态</td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+				    <td class="text-center">{{ data.name }}</td>
+				    <td class="text-center">{{ INTERACTIVE_ADS_POSITION[data.position] }}</td>
+				    <td class="text-center">{{ INTERACTIVE_ADS_SOURCE[data.source] }}</td>
+                    <td class="text-center"><font size="3" color="red">{% if data.status == 0 %}关闭
+                        {% else %}开启{% endif %}</font></td>
+                </tr>
+            </tbody>
+            <thead>
+                <tr class="info">
+                    <td class="text-center">打开链接</td>
+                    <td class="text-center">计费方式</td>
+                    <td class="text-center">活跃用户数</td>
+                    <td class="text-center">刷广告开关</td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="text-center">{{ data.third_link }}</td>
+                    <td class="text-center"><font size="3" color="red">{% if data.charge_mode == 0 %}CPC
+                        {% else %}未知{% endif %}</font></td>
+                    <td class="text-center">{{ data.user_count}}</td>
+                    <td class="text-center">{% if data.refresh_status == 0 %}关闭
+                        {% else %}开启{% endif %}</td>
+                </tr>
+            </tbody>
+            <thead>
+                <tr class="info">
+                    <td class="text-center">上午刷新次数 8:00 至 13：00</td>
+                    <td class="text-center">下午刷新次数 13：00 至 18：00</td>
+                    <td class="text-center">晚上刷新次数 18：00 至 24：00</td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="text-center">{{ data.morning_count }}%</td>
+                    <td class="text-center">{{ data.afternoon_count }}</td>
+                    <td class="text-center">{{ data.night_count }}</td>
+                </tr>
+            </tbody>
+            {% if data.icon != '' %}
+            <thead>
+                <tr class="info">
+                    <td class="text-center">广告图</td>
+                </tr>
+			</thead>
+			<tbody>
+                <tr>
+                    <td class="text-center"><img src="{{ base_url }}{{ data.icon }}" width="150" height="150" ></td>
+			    </tr>
+            </tbody>
+            {% else %}
+            {% endif %}
+		</table>
+	</div>
+</div>
+<script>
+    function set_status(id, status){
+        var close;
+        if (status == 0){
+            close = confirm("确认关闭广告吗?");
+        } else {
+            close = confirm("确认开启广告吗?");
+        }
+        if (close) {
+            $.ajax({
+                url: "{{url_for('manage.set_interactive_status')}}",
+                data: {"id": id, "status": status},
+                type: "GET",
+                dataType: "json",
+                async: false,
+                cache: false
+            }).done(function( result ) {
+                if(result["code"] != 0){ //如果出错则为非0
+                    alert('操作失败');
+                }else{
+                    alert('操作成功');
+                }
+            }).fail(function(result){
+                var errmsg = "Error accessing the server：" + str(result);
+                alert(errmsg);
+            });
+        }
+        else {
+            alert("已取消");
+        }
+        parent.location.reload();
+    }
+
+</script>
+{% endblock %}

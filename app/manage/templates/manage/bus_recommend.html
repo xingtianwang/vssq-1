@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% import "_macro.html" as macro%}
+{% block subtitle %} -推荐会员{% endblock %}
+
+{% block page_content %}
+
+<form action="{{ url_for('manage.bus_recommend') }}" method="post" enctype="multipart/form-data">
+        {{ form.csrf_token }}
+        <table align="center" style="font-size:14px;">
+            <tr>
+                <td style="padding-right:5px;">{{ form.picture.label }}:</td>
+                <td style="padding-bottom:10px;">{{ form.picture(class="form-control", placeholder="必填") }}</td>
+            </tr>
+            <tr>
+                <td style="padding-right:5px;">{{ form.ware_id.label }}:</td>
+                <td style="padding-bottom:10px;">{{ form.ware_id(class="form-control", placeholder="必填") }}</td>
+            </tr>
+            <tr>
+                <td style="padding-right:5px;">{{ form.tip_time.label }}:</td>
+                <td style="padding-bottom:10px;">{{ form.tip_time(class="form-control", placeholder="必填") }}</td>
+                <td><p class="icon-format" id="icon-format" style="color:red;">
+                    注：如果填4，则会员到期最后4天，每个通知下方都会出现会员推荐提示.</p></td>
+            </tr>
+            <tr>
+                <td style="padding-bottom:100px;">
+                    <a href="{{url_for('manage.del_bus_recommend', bus_id=bus_id)}}" class="btn btn-primary">清除</a>
+                    {{ form.submit(class="btn btn-primary") }}
+                </td>
+            </tr>
+        </table>
+    </form>
+{% endblock %}

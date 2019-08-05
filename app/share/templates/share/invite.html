@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no">
+	<title></title>
+    <link rel="stylesheet" href="{{ url_for('share.static', filename='css/invite.css') }}">
+    <script src="{{ url_for('share.static', filename='js/generalize.js') }}" type="text/javascript"></script>
+</head>
+<body>
+	<!-- 复制链接 新增开始-->
+	<div class='rows my_manage'>
+        <div class='manage_text'>
+            <text>邀请链接：</text>
+        </div>
+        <textarea class="urlText flexOne" id="Url" readonly="readonly">{{ link }}</textarea>
+        <div class="copyBtn" id="linkCopy">复制</div>
+    </div>
+	<!-- 复制链接 新增结束-->
+	<div class="container">
+		{% for item in query %}
+		<div class="box">
+			<span class="time">{{ item.create_time.year }}年{{ item.create_time.month }}月{{ item.create_time.day }}日</span>
+			<div class="article">
+                <pre class="text">{{ item.content }}{{ link }}</pre>
+				<div class="img">
+                    {% if item.picture1 %}
+					<p class="imgSyle active ">
+						<img src="{{ photo_url }}{{ item.picture1 }}" alt="">
+					</p>
+                    {% endif %}
+                    {% if item.picture2 %}
+					<p class="imgSyle active">
+						<img src="{{ photo_url }}{{ item.picture2 }}" alt="">
+					</p>
+                    {% endif %}
+                    {% if item.picture3 %}
+					<p class="imgSyle active ">
+						<img src="{{ photo_url }}{{ item.picture3 }}" alt="">
+					</p>
+                    {% endif %}
+				</div>
+				<div class="clearFloat"></div>
+				<div class="button rows">
+					<!-- 按钮修改开始 -->
+					<div class="rows flexOne alignL alignItem copy">
+						<img src="{{ url_for('share.static', filename='images/share/T3.png') }}" width="18" height="18">
+						<text class="buttonTitle">复制<text/>
+					</div>
+
+					<div class="rows flexOne alignL alignItem"  onclick="zf(this, {{data[item.id]}}, 0)">
+						<img src="{{ url_for('share.static', filename='images/share/T1.png') }}" width="18" height="18">
+						<span class="buttonTitle">转发</span>
+					</div>
+
+					<div class="rows flexOne alignR alignItem send" onclick="zf(this, {{data[item.id]}}, 1)">
+						<img src="{{ url_for('share.static', filename='images/share/T2.png') }}" width="18" height="18">
+						<span class="buttonTitle">转发朋友圈</span>
+					</div>
+					<!-- 按钮修改结束 -->
+				</div>
+			</div>
+		</div>
+        {% endfor %}
+	</div>
+	   <script type="text/javascript">
+
+            {#$('.img img').zoomify();#}
+
+            {#复制链接#}
+            $('#linkCopy').on('click', function(){
+                agent.copycontent($('#Url').text());
+            });
+
+            {#复制文案#}
+            $('.copy').on('click', function(){
+                agent.copycontent($(this).parent().siblings("pre").text());
+            });
+
+            {#转发#}
+            function zf(one, attch, type){
+                value = $(one).parent().siblings("pre").text();
+                agent.transmit(value, attch, type);
+            };
+	   </script>
+</body>
+</html>

@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block subtitle %} -修改channel_account{% endblock %}
+
+{% block page_content %}
+
+    <form action="{{ url_for('manage.edit_channel_account', cur_id=cur_id) }}" method="post" enctype="multipart/form-data">
+        {{ form.csrf_token }}
+        <table align="center" style="font-size:14px;">
+            <tr style="align-content: center">
+                <td style="padding-right:5px;"> 渠道名称: {{ channel_name }} </td>
+            </tr>
+            <tr style="align-content: center">
+                <td style="padding-right:5px;"> 账号: {{ account_id }} </td>
+            </tr>
+            <tr>
+                <td style="padding-right:5px;">{{ form.channel_manager.label }}:</td>
+                <td style="padding-bottom:10px;">{{ form.channel_manager(class="form-control") }}</td>
+            </tr>
+            <tr>
+                <td style="padding-right:5px;">{{ form.content.label }}:</td>
+                <td style="padding-bottom:10px;">{{ form.content(class="form-control", placeholder="最多20字") }}</td>
+            </tr>
+            <tr>
+                <td style="padding-bottom:100px;">
+                    {{ form.submit(class="btn btn-primary") }}
+                </td>
+            </tr>
+
+        </table>
+    </form>
+{% endblock %}

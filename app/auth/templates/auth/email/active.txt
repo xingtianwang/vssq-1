@@ -1,0 +1,11 @@
+Dear {{ admin_user.username }},
+
+User {{ user.username }} request you to re-activate his account.
+
+To activate it {{ url_for('auth.login', _external=True) }}
+
+Sincerely,
+
+The Godinsec Team
+
+Notes: please don't reply to this email

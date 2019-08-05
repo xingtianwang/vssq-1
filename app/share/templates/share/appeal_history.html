@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no">
+    <title></title>
+    <link rel="stylesheet" href="{{ url_for('share.static', filename='css/appeal.css') }}">
+    <script src="{{ url_for('static', filename='js/jquery.js') }}"></script>
+</head>
+<body class="bgcolor-gray">
+    <div id="codeList">
+       {% for item in feed_backs %}
+         <div class="historyStyle">
+            <div class="displayFlex vertical">
+                <img class="imgTop" src="{{ url_for('share.static', filename='images/share/appeal_logo.png') }}" width="36" height="36" alt="">
+                <div class="flex7 set-name">
+                    <div class="displayFlex history-top">
+                        <div class="history-state">{% if item.status == 0 %}未回复{% else %}已回复{% endif %}</div>
+                        <a class="checkHref" href="{{ url_for('share.appeal_details', id = item.id) }}">点击查看</a>
+                        <div class="flex1 history-time">{{ item.create_time }}</div>
+                    </div>
+                    <p class="appealMsg">申诉内容：{{ item.content }}</p>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+
+    </div>
+</body>
+</html>

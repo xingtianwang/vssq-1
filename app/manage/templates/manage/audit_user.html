@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% import "_macro.html" as macro%}
+{% block subtitle %} -审计{% endblock %}
+{% block page_content %}
+<form class="form-inline panel panel-default" action="{{url_for('manage.audit_user')}}", method="post">
+    {{ form.csrf_token }}
+    <div class="panel-body">
+        <div class="form-group" style="padding-right:5px;padding-top:5px;">
+            {{ form.username.label }}:
+            {{ form.username(class="form-control") }}
+        </div>
+        <div class="form-group" style="padding-right:5px;padding-top:5px;">
+            {{ form.actions.label }}:
+            {{ form.actions(class="form-control") }}
+        </div>
+        <div class="form-group" style="padding-right:5px;padding-top:5px;">
+            {{ form.client_ip.label }}:
+            {{ form.client_ip(class="form-control") }}
+        </div>
+        {{ macro.time_search(form) }}
+        <div class="form-group" style="padding-right:5px;padding-top:5px;">
+			<a href="{{url_for('manage.audit_user')}}" class="btn btn-primary">重置</a>
+            {{ form.submit(class="btn btn-primary") }}
+        </div>
+    </div>
+</form>
+<div class="tab-content">
+	<div class="tab-pane active">
+		<table id="appinfo" class="table table-striped table-hover table-bordered">
+			<thead>
+				<tr class="success">
+					<td class="text-center">ID</td>
+					<td class="text-center">用户名</td>
+					<td class="text-center">操作</td>
+					<td class="text-center">操作结果</td>
+					<td class="text-center">访问地址</td>
+					<td class="text-center">操作时间</td>
+				</tr>
+			</thead>
+			<tbody>
+			{% for log in logs %}
+			<tr>
+				<td class="text-center">{{ log.id }}</td>
+				<td class="text-center">{{ log.username }}</td>
+				<td class="text-center">{{ log.actions }}</td>
+				<td class="text-center">{{ log.results }}</td>
+				<td class="text-center">{{ log.client_ip }}</td>
+				<td class="text-center">{{ log.log_time}}</td>
+			</tr>
+			{% endfor %}
+			</tbody>
+		</table>
+	</div>
+</div>
+{% endblock %}
+{% block page%}
+	{{ macro.pagination_widget(pagination, 'manage.audit_user', username=form.username.data, actions=form.actions.data,
+client_ip=form.client_ip.data, start_time=form.start_time.data, end_time=form.end_time.data) }}
+{% endblock %}

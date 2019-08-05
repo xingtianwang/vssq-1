@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% import "_macro.html" as macro%}
+
+{% block subtitle %} -手动添加会员{% endblock %}
+
+{% block page_content %}
+<form class="form-inline panel panel-default" action="{{url_for('manage.get_member_info')}}" method="post">
+    {{ form.csrf_token }}
+    <div class="panel-body">
+        <div class="form-group" style="padding-right:5px;padding-top:5px;">
+            {{ form.phone_num.label }}:
+            {{ form.phone_num(class="form-control") }}
+        </div>
+        <div class="form-group" style="padding-right:5px;padding-top:5px;">
+            {{ form.channel.label }}:
+            {{ form.channel(class="form-control") }}
+        </div>
+        <div class="form-group" style="padding-right:5px;padding-top:5px;">
+			<a href="{{url_for('manage.get_member_info')}}" class="btn btn-primary">重置</a>
+            {{ form.submit(class="btn btn-primary") }}
+        </div>
+    </div>
+</form>
+<div class="tab-content">
+	<div class="tab-pane active">
+		<table id="appinfo" class="table table-striped table-hover table-bordered">
+			<thead>
+				<tr class="info">
+                    <td class="text-center">序号</td>
+                    <td class="text-center">手机号码</td>
+                    <td class="text-center">渠道</td>
+					<td class="text-center">操作</td>
+				</tr>
+			</thead>
+			<tbody>
+			{% for item in data %}
+			<tr>
+
+                <td class="text-center">{% if page == 1 %}{{loop.index}}
+                                        {% else %}{{ per_page*(page - 1) + loop.index }}{% endif %}</td>
+                <td class="text-center">{{ item.godin_account.phone_num }}</td>
+                <td class="text-center">{{ item.device_info.market }}</td>
+                <td class="text-center"><a type="button" class="btn btn-warning btn-xs"
+                                           href="{{ url_for('manage.vip_wares_info', godin_id=item.godin_id,
+                                           gold_or_platinum=0, channel=item.device_info.market)}}">选择黄金vip产品</a>
+                                        <a type="button" class="btn btn-info btn-xs"
+                                           href="{{ url_for('manage.vip_wares_info', godin_id=item.godin_id,
+                                           gold_or_platinum=1, channel=item.device_info.market)}}">选择铂金vip产品</a>
+                </td>
+
+            </tr>
+			{% endfor %}
+			</tbody>
+        </table>
+        <a href="{{url_for('manage.vip_wares_all_info',  channel=channel)}}"
+           class="btn btn-primary">全部加入会员</a>
+        <a href="{{url_for('manage.add_phone_member')}}" class="btn btn-primary">批量赠送会员</a>
+
+    </div>
+</div>
+{% endblock %}
+{% block page%}
+	{{ macro.pagination_widget(pagination, 'manage.get_member_info', phone_num=form.phone_num.data,
+	 channel = form.channel.data) }}
+{% endblock %}

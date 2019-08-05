@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+    	<meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black">
+        <meta name="format-detection" content="telephone=no">
+        <title>分享</title>
+        <link rel="stylesheet" type="text/css" href="{{ url_for('share.static', filename='css/share-code.css') }}">
+        <script src="{{ url_for('share.static', filename='js/jquery.js') }}" type="text/javascript"></script>
+        <script src="{{ url_for('share.static', filename='js/fontFlex.js') }}" type="text/javascript"></script>
+    </head>
+    <body>
+        <div class="container">
+            <img class="share-img" src="{{ url_for('share.static', filename='images/share/code-share/icon01.png') }}">
+            <img class="share-img" src="{{ url_for('share.static', filename='images/share/code-share/icon02.png') }}">
+            <div class="share-code">
+                <p class="share-code-font">邀请码为：<span>{{ share_code }}</span></p>
+            </div>
+            <img class="share-img" src="{{ url_for('share.static', filename='images/share/code-share/icon03.png') }}">
+        </div>      
+        <script>
+            $(function(){
+                  $('p').fontFlex(90,35,12);
+            });
+        </script>
+    </body>
+</html>

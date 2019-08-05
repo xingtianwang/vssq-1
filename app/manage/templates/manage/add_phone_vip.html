@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% import "_macro.html" as macro%}
+{% block subtitle %} -批量赠送会员{% endblock %}
+
+{% block page_content %}
+
+<form action="{{ url_for('manage.add_phone_member') }}" method="post" enctype="multipart/form-data">
+    {{ form.csrf_token }}
+    <table align="center" style="font-size:14px;">
+        <tr>
+            <td style="padding-right:5px;">{{ form.upload_file.label }}:</td>
+            <td style="padding-bottom:10px;">{{ form.upload_file }}<font size="2" color="red"> # 最多上传一千人</font></td>
+
+        </tr>
+        <tr>
+            <td style="padding-right:5px;">{{ form.vip_id.label }}:</td>
+            <td style="padding-bottom:10px;">{{ form.vip_id(class="form-control") }}</td>
+        </tr>
+        <tr>
+            <td style="padding-bottom:100px;">
+                <a href="{{url_for('manage.add_phone_member')}}" class="btn btn-primary">重置</a>
+                {{ form.submit(class="btn btn-primary") }}
+            </td>
+        </tr>
+    </table>
+</form>
+{% endblock %}

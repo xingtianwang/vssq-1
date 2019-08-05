@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no">
+    <title></title>
+    <link rel="stylesheet" href="{{ url_for('share.static', filename='css/generalize.css') }}">
+    <script src="{{ url_for('share.static', filename='js/generalize.js') }}" type="text/javascript"></script>
+</head>
+<body>
+    <div class="total">可提余额：<span id="balance">{{ account_balance }}</span></div>
+    <form action="">
+        <div class="drawMoney">
+            <p>提现金额</p>
+            <div class="rows">
+                <img class="moneyIcon" src="{{ url_for('share.static', filename='images/share/money.png') }}" width="14" height="14">
+                <!-- 提现金额输入框 -->
+                <input id="importBalance" class="flex1 moneyInput" type="text">
+            </div>
+        </div>
+        <div class='rows drawTitle'>
+            <div class='flex1 draw_text'>
+                <text>最低提现需达1元,且是整数</text>
+            </div>
+            <div class="totalBtn" onClick="drawTotal()">全部提现</div>
+        </div>
+        <p class="payTitle">请输入支付宝信息</p>
+    
+        <div class='rows Alipay_manage bottomLine' bindtap='coupon'>
+            <div class='Alipay_text'>
+                <text>账号</text>
+            </div>
+            <input id="accountNum" class="flex1 AlipayInput" type="text" placeholder="请输入支付宝账号">
+        </div>
+    
+        <div class='rows Alipay_manage'>
+            <div class='Alipay_text'>
+                <text>姓名</text>
+            </div>
+            <input id="Name" class="flex1 AlipayInput" type="text" placeholder="与支付宝实名一致">
+        </div>
+        <p class="drawTip">提现金额将于48小时内到账，双休日、法定节假日顺延</p>
+        <p class="errorMsg"></p>
+        <div class="betweenLR">
+            <button type="button" class="drawSubmit" onclick="showBox()">申请提现</button>
+        </div>
+    </form>
+
+    <!-- 遮罩层 -->
+    <div id="zhezhaoa"></div>
+    <!-- 提现确认弹框 -->
+    <div class="explain-box">
+        <div class="box-top">
+            <div class="box-title">提现确认</div>
+            <p class="box-text">支付宝账号：<span id="accountNum2">xxxxx</span></p>
+            <p class="box-text">姓名：<span id="Name2">xxxxx</span></p>
+        </div>
+        <div class="rows">
+            <div class="box-btnL lineL" onclick="closeBox()">取消</div>
+            <div class="box-btnR" onclick="successBox('{{ godin_id }}')">确认提现</div>
+        </div>
+    </div>
+     <!-- 提现成功弹框 -->
+    <div class="successBox">
+        <div class="box-top">
+            <div class="box-title">提现成功</div>
+            <p class="box-text">提现金额将于48小时内到账，双休日、法定节假日顺延</p>
+        </div>
+        <div class="successBottom">
+            <div class="successBtn" onclick="closeSuccessBox()">好的</div>
+        </div>
+    </div>
+    <!-- 请勿重复提现弹框 -->
+    <div class="infoBox">
+        <div class="box-top">
+            <p class="box-text2"></p>
+        </div>
+        <div class="successBottom">
+            <div class="successBtn" onclick="closeinfoBox()">好的</div>
+        </div>
+    </div>
+    <script>
+        // 打开“提现确认”弹框---并验证信息
+        function showBox(){
+            if($("#importBalance").val()==""||$("#importBalance").val()==undefined){
+                $(".errorMsg").text("提现金额不能为空")
+            }else if(parseFloat($("#importBalance").val())>parseFloat($("#balance").text())){
+                $(".errorMsg").text("提现金额不能大于可用余额")
+            }else if($("#importBalance").val()<1){
+                $(".errorMsg").text("最低金额需达1元")
+            }else if(Number.isInteger($("#importBalance").val()-0)==false){
+                $(".errorMsg").text("提现金额需是整数")
+            }else if($("#accountNum").val()==""||$("#accountNum").val()==undefined){
+                $(".errorMsg").text("支付宝账号不能为空")
+            }else if($("#Name").val()==""||$("#Name").val()==undefined){
+                $(".errorMsg").text("支付宝姓名不能为空")
+            }else{
+                var  accountNum = $("#accountNum").val();
+                var  Name = $("#Name").val();
+                $("#accountNum2").text(accountNum);
+                $("#Name2").text(Name);
+                $(".explain-box").show();
+                $("#zhezhaoa").css({
+                    "display":"block"
+                  });
+                $("html,body").css({"height":"100%","overflow":"hidden"});
+            }
+        }
+        // 取消“提现确认”弹框
+        function closeBox(){
+            $(".explain-box").hide();
+            $("#zhezhaoa").css({"display":"none"});
+            $("html,body").css({"height":"auto","overflow":"auto"});
+            // location.reload();//刷新页面
+        }
+        //打开提现成功弹框
+        function successBox(godin_id){
+            var money = $("#importBalance").val();
+            var zfb_account = $("#accountNum").val();
+            var name = $("#Name").val();
+
+
+            $.ajax({
+                url: "{{url_for('share.withdraw')}}",
+                data: {
+                    "money": money,
+                    "zfb_account": zfb_account,
+                    "name": name,
+                    "godin_id": godin_id
+
+                },
+                type: "POST",
+                async: false,
+                success: function(res) {
+                    if ('0000' == res["statuscode"]) {
+                        closeBox();
+                        $(".successBox").show();
+                        $("#zhezhaoa").css({
+                            "display":"block"
+                        });
+                        $("html,body").css({"height":"100%","overflow":"hidden"});
+                    } else if ('0001' == res["statuscode"]) {
+                        {#alert("已有提现订单，请勿重复申请")#}
+                         closeBox();
+                         $(".box-text2").text("已有提现订单，请勿重复申请");
+                         $(".infoBox").show();
+                         $("#zhezhaoa").css({
+                             "display":"block"
+                           });
+                         $("html,body").css({"height":"100%","overflow":"hidden"});
+                        {#location.reload();//刷新页面#}
+                    } else {
+                        {#alert("提现失败,请稍后再试")#}
+                        closeBox();
+                        $(".box-text2").text("提现失败,请稍后再试");
+                        $(".infoBox").show();
+                        $("#zhezhaoa").css({
+                            "display":"block"
+                        });
+                        $("html,body").css({"height":"100%","overflow":"hidden"});
+                        {#location.reload();//刷新页面#}
+                    }
+                },
+                cache: false,
+                fail: function() {
+                }
+            })
+
+
+        }
+         // 关闭提现成功弹框
+        function closeSuccessBox(){
+            $(".successBox").hide();
+            $("#zhezhaoa").css({"display":"none"});
+            $("html,body").css({"height":"auto","overflow":"auto"});
+            location.reload();//刷新页面
+        }
+        // 关闭请勿重复提现弹框
+        function closeinfoBox(){
+            $(".infoBox").hide();
+            $("#zhezhaoa").css({"display":"none"});
+            $("html,body").css({"height":"auto","overflow":"auto"});
+             location.reload();//刷新页面
+        }
+        //全部体现按钮功能
+        function drawTotal(){
+            var  balance = $("#balance").text();
+            $("#importBalance").val(balance);
+        }
+    </script>
+</body>
+</html>

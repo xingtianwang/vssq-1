@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block subtitle %} -每日一淘{% endblock %}
+
+{% block page_content %}
+    <form action="{{ url_for('manage.every_wash') }}" method="post" enctype="multipart/form-data">
+        {{ form.csrf_token }}
+        <table align="center" style="font-size:14px;">
+            <tr>
+                <td style="padding-right:5px;">{{ form.link.label }}:</td>
+                <td style="padding-bottom:10px;">{{ form.link(class="form-control") }}</td>
+            </tr>
+
+            <tr>
+                <td style="padding-bottom:100px;">
+                    {{ form.submit(class="btn btn-primary") }}
+                </td>
+            </tr>
+        </table>
+    </form>
+{% endblock %}

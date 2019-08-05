@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% import "_macro.html" as macro%}
+{% block subtitle %} -签到领会员详情{% endblock %}
+
+{% block page_content %}
+<div class="tab-content">
+	<form class="form-inline panel-default" action="{{ url_for('manage.sign_activity_detail', activity_id=activity_id) }}" method="post" enctype="multipart/form-data">
+    	{{ form.csrf_token }}
+    	<div class="panel-body">
+			<div class="form-group" style="padding-right:5px;padding-top:5px;">
+				{{ form.phone.label }}:
+				{{ form.phone(class="form-control", placeholder="支持部分搜索", style="width:220px; height:40px; display:inline-block;")}}
+			</div>
+			<div class="form-group" style="padding-right:5px;padding-top:5px;">
+				{{ form.sort_type.label }}:
+				{{ form.sort_type(class="form-control", style="width:220px; height:40px; display:inline-block;")}}
+			</div>
+			<div class="form-group" style="padding-right:5px;padding-top:5px;">
+				<a href="{{url_for('manage.sign_activity_detail', activity_id=activity_id)}}" class="btn btn-primary">重置</a>
+				{{ form.submit(class="btn btn-primary") }}
+			</div>
+    	</div>
+	</form>
+	<div class="tab-pane active">
+		<table id="appinfo" class="table table-striped table-hover table-bordered">
+			<thead>
+				<tr class="info">
+					<td class="text-center" >手机号</td>
+					<td class="text-center" >用户名</td>
+					<td class="text-center" >领奖次数</td>
+					<td class="text-center" >完成时间</td>
+					<td class="text-center" style="width:500px;">操作</td>
+				</tr>
+			</thead>
+			<tbody>
+
+                {% for temp in sign_data %}
+			<tr>
+				<td class="text-center">{{ temp.SignData.phone }}</td>
+				<td class="text-center">{{ temp.UserInfo.nick_name }}</td>
+				<td class="text-center">{{ temp.SignData.total_count }}</td>
+				<td class="text-center">{{ temp.SignData.last_sign_time }}</td>
+                <td class="text-center">
+					<a type="button" class="btn btn-info btn-xs" href="{{ url_for('manage.sign_activity_record',
+					activity_id=temp.SignData.activity_id, sign_godin_id=temp.SignData.sign_godin_id) }}">详情</a>
+                </td>
+            </tr>
+			{% endfor %}
+			</tbody>
+		</table>
+	</div>
+</div>
+{% endblock %}
+{% block page %}
+	{{ macro.pagination_widget(pagination, 'manage.sign_activity_detail', activity_id=activity_id, phone=form.phone.data, sort_type=form.sort_type.data) }}
+{% endblock %}

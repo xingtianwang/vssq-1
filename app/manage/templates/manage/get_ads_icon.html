@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+{% import "_macro.html" as macro%}
+{% block subtitle %} -获取默认广告图标{% endblock %}
+
+{% block page_content %}
+<p>默认广告图配置:</p>
+<div class="form-group" style="padding-right:5px;padding-top:5px;text-align:right;">
+    <a href="{{ url_for('manage.ads_icon') }}" class="btn btn-primary">添加默认广告图</a>
+</div>
+<div class="tab-content">
+	<div class="tab-pane active">
+		<table id="appinfo" class="table table-striped table-hover table-bordered">
+			<thead>
+				<tr class="info">
+					<td class="text-center">Id</td>
+					<td class="text-center">广告默认位置</td>
+					<td class="text-center">广告默认图</td>
+					<td class="text-center">广告默认跳转链接</td>
+					<td class="text-center">创建时间</td>
+					<td class="text-center">显示状态</td>
+					<td class="text-center">操作</td>
+				</tr>
+			</thead>
+			<tbody>
+			{% for temp in data %}
+			<tr>
+				<td class="text-center">{{temp.id}}</td>
+				<td class="text-center">{{ADS_ICON[temp.position]}}</td>
+				<td class="text-center">
+                    <img src="{{ base_url + temp.icon_addr }}" width="150" height="150">
+                </td>
+				<td class="text-center">{{temp.jump_link}}</td>
+				<td class="text-center">{{temp.create_time}}</td>
+				<td class="text-center">{% if temp.status == 1 %}显示 {% else %} 不显示{% endif %}</td>
+				<td class="text-center">
+					<a type="button" href="{{url_for('manage.edit_ads_icon', icon_id=temp.id)}}" class="btn btn-info btn-xs">编辑</a>
+				    {% if temp.status == 1 %}
+                        <a onclick="set_ads_icon_status('{{temp.id}}')" class="btn btn-danger btn-xs">关闭</a>
+					{% else %}
+					    <a onclick="set_ads_icon_status('{{temp.id}}')" class="btn btn-success btn-xs">显示</a>
+                    {% endif %}</td>
+                </td>
+			</tr>
+			{% endfor %}
+			</tbody>
+		</table>
+	</div>
+</div>
+<script>
+function set_ads_icon_status(id) {
+   $.ajax({
+       url: "{{ url_for('manage.set_ads_icon_status') }}",
+       data: {"id":id},
+       type: 'GET',
+       dataType: 'json',
+       async: false,
+       cache: false
+    }).done(function ( result) {
+        if (result['code'] < 0){
+           alert('开启失败');
+        }else{
+            if (result['code'] == 1){
+                alert('开启成功!');
+            }
+            if (result['code'] == 0){
+                alert('关闭成功!');
+            }
+            parent.location.reload();
+        }
+    }).fail(function (result) {
+        var errmsg = "访问服务器出错："+fmtJqueryAjaxError(result);
+            alert(errmsg);
+        });
+}
+</script>
+{% endblock %}
+{% block page %}
+	{{ macro.pagination_widget(pagination, 'manage.get_ads_icon') }}
+{% endblock %}

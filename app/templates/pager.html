@@ -1,0 +1,41 @@
+{% macro pager(dest_url, page, query, error) -%}
+
+{% if error['error_msg'] %}
+{% else %}
+{% set left = 3 %}
+{% set right = 7 %}
+{% set begin_idx = 1 if page['cur_page'] <= 3 else page['cur_page'] - left %}
+{% set end_idx = begin_idx + right %}
+
+{% set end_idx = page['page_num'] if page['page_num'] <= end_idx else end_idx %}
+{% if page['page_num'] != 0 %}
+ {% if page['cur_page'] > 1 %}
+ <li><a href="{{url_for(dest_url, cur_page=1, query=query)}}">首页</a></li>
+ <li>
+   <a href="{{url_for(dest_url, cur_page=page['cur_page']-1, query=query)}}" aria-label="Previous">
+     <span aria-hidden="true">&laquo;</span>
+   </a>
+ </li>
+ {% else %}
+ <li class="disable"><a>首页</a></li>
+ <li class="disable"><a><span aria-hidden="true">&laquo;</span></a></li>
+ {% endif %}
+ {% for i in range(begin_idx, end_idx + 1) %}
+ <li class="{% if page['cur_page']==i %}active{% endif %}"><a href="{{url_for(dest_url, cur_page=i, query=query)}}">{{i}}</a></li>
+ {% endfor %}
+ {% if page['cur_page'] < page['page_num'] %}
+ <li>
+   <a href="{{url_for(dest_url, cur_page=page['cur_page']+1, query=query)}}" aria-label="Next">
+     <span aria-hidden="true">&raquo;</span>
+   </a>
+ </li>
+ <li><a href="{{url_for(dest_url, cur_page=page['page_num'], query=query)}}">尾页</a></li>
+ <li style="line-height:30px;height:30px;color: #337ab7;">&nbsp;&nbsp;共{{page['total']}}个</li>
+ {% else %}
+  <li class="disable"><a><span aria-hidden="true">&raquo;</span></a></li>
+  <li class="disable"><a>尾页</a></li>
+  <li style="line-height:30px;height:30px;color: #337ab7;">&nbsp;&nbsp;共{{page['total']}}个</li>
+ {% endif %}
+ {% endif %}
+ {% endif %}
+{%- endmacro %}

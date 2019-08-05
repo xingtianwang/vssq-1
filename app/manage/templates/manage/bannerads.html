@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+{% import "_macro.html" as macro%}
+
+{% block subtitle %} -banner广告信息{% endblock %}
+
+{% block page_content %}
+
+<form class="form-inline panel panel-default" action="{{url_for('manage.get_bannerads_info')}}", method="post">
+    {{ form.csrf_token }}
+    <div class="panel-body">
+        <div class="form-group" style="padding-right:5px;padding-top:5px;">
+            {{ form.name.label }}:
+            {{ form.name(class="form-control", placeholder="广告名称") }}
+        </div>
+        <div class="form-group" style="padding-right:5px;padding-top:5px;">
+            {{ form.position.label }}:
+            {{ form.position(class="form-control") }}
+        </div>
+        <div class="form-group" style="padding-right:5px;padding-top:5px;">
+            {{ form.source.label }}:
+            {{ form.source(class="form-control") }}
+        </div>
+        <div class="form-group" style="padding-right:5px;padding-top:5px;">
+            {{ form.status.label }}:
+            {{ form.status(class="form-control") }}
+        </div>
+        {{ macro.date_search(form) }}
+        <div class="form-group" style="padding-right:5px;padding-top:5px;">
+			<a href="{{url_for('manage.get_bannerads_info')}}" class="btn btn-primary">重置</a>
+            {{ form.submit(class="btn btn-primary") }}
+        </div>
+    </div>
+</form>
+<div class="tab-content">
+	<div class="tab-pane active">
+		<table id="appinfo" class="table table-striped table-hover table-bordered">
+			<thead>
+				<tr class="info">
+				<tr class="info">
+                    <td class="text-center">广告ID</td>
+					<td class="text-center">广告名称</td>
+					<td class="text-center">广告来源</td>
+					<td class="text-center">广告位置</td>
+					<td class="text-center">广告商</td>
+                    <td class="text-center">广告编号</td>
+                    <td class="text-center">总展示量</td>
+                    <td class="text-center">去重展现量</td>
+                    <td class="text-center">点击量</td>
+                    <td class="text-center">去重点击量</td>
+                    <td class="text-center">合作开始时间</td>
+                    <td class="text-center">状态</td>
+                    <td class="text-center">操作</td>
+				</tr>
+				</tr>
+			</thead>
+			<tbody>
+			{% for item in bannerads %}
+			<tr>
+                <td class="text-center">{{ item.id }}</td>
+				<td class="text-center">{{ item.name }}</td>
+				<td class="text-center">{{ ADS_SOURCE[item.source] }}</td>
+				<td class="text-center">{{ BANNER_ADS_POSITION[item.position] }}</td>
+				<td class="text-center">{{ item.advertiser }}</td>
+                <td class="text-center">{{ item.number }}</td>
+				<td class="text-center">{{ data[item.id][0] }}</td>
+                <td class="text-center">{{ data[item.id][1] }}</td>
+                <td class="text-center">{{ data[item.id][2] }}</td>
+                <td class="text-center">{{ data[item.id][3] }}</td>
+                <td class="text-center">{{ item.start_time }}</td>
+                <td class="text-center">{% if item.status == 0 %}关闭{% elif item.status ==1 %}开启{% endif %}</td>
+                <td class="text-center"><a type="button" class="btn btn-info btn-xs"
+                                           href="{{ url_for('manage.get_bannerads_details', ad_id=item.id) }}">广告详情</a>
+                    <a type="button" class="btn btn-info btn-xs" href="{{ url_for('manage.get_banner_config', ad_id=item.id) }}">已开放渠道</a></td>
+			</tr>
+			{% endfor %}
+			</tbody>
+		</table>
+        <a type="button" class="btn btn-primary" href="{{ url_for('manage.add_bannerad') }}">添加广告</a>
+        <a href="{{url_for('manage.export_result', name=form.name.data, position=form.position.data,
+        source=form.source.data, status=form.status.data, start_time=form.start_time.data, end_time=form.end_time.data,
+        export_type = 12)}}" class="btn btn-primary">导出表格</a>
+	</div>
+</div>
+{% endblock %}
+{% block page%}
+	{{ macro.pagination_widget(pagination, 'manage.get_bannerads_info', name=form.name.data, position=form.position.data,
+source=form.source.data, status=form.status.data, start_time=form.start_time.data, end_time=form.end_time.data) }}
+{% endblock %}

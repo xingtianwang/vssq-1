@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+{% import "_macro.html" as macro%}
+
+{% block subtitle %} -注册用户信息统计{% endblock %}
+
+{% block page_content %}
+<form class="form-inline panel panel-default" action="{{url_for('manage.get_reg_user_info')}}", method="post">
+    {{ form.csrf_token }}
+    <div class="panel-body">
+        <div class="form-group" style="padding-right:5px;padding-top:5px;">
+            {{ form.phone_num.label }}:
+            {{ form.phone_num(class="form-control", placeholder="完整或部分手机号") }}
+        </div>
+        <div class="form-group" style="padding-right:5px;padding-top:5px;">
+            {{ form.imei.label }}:
+            {{ form.imei(class="form-control", placeholder="完整或或部分imei") }}
+        </div>
+        <div class="form-group" style="padding-right:5px;padding-top:5px;">
+            {{ form.os_version.label }}:
+            {{ form.os_version(class="form-control") }}
+        </div>
+        <div class="form-group" style="padding-right:5px;padding-top:5px;">
+            {{ form.dev_factory.label }}:
+            {{ form.dev_factory(class="form-control") }}
+        </div>
+        <div class="form-group" style="padding-right:5px;">
+            {{ form.dev_model.label }}:
+            {{ form.dev_model(class="form-control") }}
+        </div>
+        <div class="form-group" style="padding-right:5px;">
+            {{ form.app_version.label }}:
+            {{ form.app_version(class="form-control") }}
+        </div>
+        <div class="form-group" style="padding-right:5px;padding-top:5px;">
+            {{ form.order_time.label }}:
+            {{ form.order_time(class="form-control") }}
+        </div>
+        <div class="form-group" style="padding-right:5px;padding-top:5px;">
+            {{ form.market.label }}:
+            {{ form.market(class="form-control") }}
+        </div>
+        {{ macro.time_search(form) }}
+        <div class="form-group" style="padding-right:5px;padding-top:5px;">
+			<a href="{{url_for('manage.get_reg_user_info')}}" class="btn btn-primary">重置</a>
+            {{ form.submit(class="btn btn-primary") }}
+        </div>
+    </div>
+</form>
+<div class="tab-content">
+	<div class="tab-pane active">
+		<table id="appinfo" class="table table-striped table-hover table-bordered">
+			<thead>
+				<tr class="info">
+				<tr class="info">
+                    <td class="text-center">手机号</td>
+					<td class="text-center">IMEI</td>
+					<td class="text-center">厂商</td>
+					<td class="text-center">型号</td>
+					<td class="text-center">系统版本</td>
+                    <td class="text-center">应用版本</td>
+                    <td class="text-center">渠道</td>
+					<td class="text-center">{% if form.order_time.data == 'create_time' %}注册时间{% else %}活跃时间{% endif %}</td>
+				</tr>
+				</tr>
+			</thead>
+			<tbody>
+			{% for item in data %}
+			<tr>
+                <td class="text-center">{{ item.godin_account.phone_num }}</td>
+				<td class="text-center">{{ item.imei }}</td>
+				<td class="text-center">{{ item.device_info.device_factory }}</td>
+				<td class="text-center">{{ item.device_info.device_model }}</td>
+				<td class="text-center">{{ item.device_info.os_version }}</td>
+				<td class="text-center">{{ item.device_info.app_version }}</td>
+                <td class="text-center">{{ item.device_info.market }}</td>
+				<td class="text-center">{% if form.order_time.data == 'create_time' %}{{ item.godin_account.create_time }}{% else %}{{ item.device_info.last_seen }}{% endif %}</td>
+			</tr>
+			{% endfor %}
+			</tbody>
+		</table>
+        <a href="{{url_for('manage.export_result', phone_num=form.phone_num.data, mei=form.imei.data,
+        os_version=form.os_version.data, dev_factory=form.dev_factory.data, dev_model=form.dev_model.data,
+        app_version=form.app_version.data, order_time=form.order_time.data,
+        market=form.market.data,start_time=form.start_time.data, end_time=form.end_time.data,
+        export_type = 1)}}" class="btn btn-primary">导出结果为<br/>excel表格</a>
+	</div>
+</div>
+{% endblock %}
+{% block page%}
+	{{ macro.pagination_widget(pagination, 'manage.get_reg_user_info', phone_num=form.phone_num.data, mei=form.imei.data,
+os_version=form.os_version.data, dev_factory=form.dev_factory.data, dev_model=form.dev_model.data,
+app_version=form.app_version.data, order_time=form.order_time.data, market=form.market.data,
+start_time=form.start_time.data, end_time=form.end_time.data) }}
+{% endblock %}

@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+{% import "_macro.html" as macro%}
+
+{% block subtitle %} -邀请码推广数据{% endblock %}
+
+{% block page_content %}
+<form class="form-inline panel panel-default" action="{{url_for('manage.invite_code_data')}}", method="post">
+    {{ form.csrf_token }}
+    <div class="panel-body">
+        <div class="form-group" style="padding-right:5px;padding-top:5px;">
+            {{ form.channel_id.label }}:
+            {{ form.channel_id(class="form-control") }}
+        </div>
+        <div class="form-group" style="padding-right:5px;padding-top:5px;">
+            {{ form.invite_phone.label }}:
+            {{ form.invite_phone(class="form-control") }}
+        </div>
+        <div class="form-group" style="padding-right:5px;">
+            {{ form.phone.label }}:
+            {{ form.phone(class="form-control") }}
+        </div>
+        <div class="form-group" style="padding-right:5px;padding-top:5px;">
+			<a href="{{url_for('manage.invite_code_data')}}" class="btn btn-primary">重置</a>
+            {{ form.submit(class="btn btn-primary") }}
+        </div>
+
+        <div class="form-group" style="padding-left:50px;padding-top:5px;">
+			<a href="{{url_for('manage.invite_code_divide')}}" class="btn btn-primary">邀请码分成比例设置</a>
+        </div>
+    </div>
+</form>
+<div class="tab-content">
+	<div class="tab-pane active">
+		<table id="appinfo" class="table table-striped table-hover table-bordered">
+			<thead>
+				<tr class="info">
+                    <td class="text-center">序号</td>
+					<td class="text-center">时间</td>
+					<td class="text-center">渠道ID</td>
+					<td class="text-center">渠道名称</td>
+					<td class="text-center">邀请人手机号</td>
+					<td class="text-center">被邀请人手机号</td>
+					<td class="text-center">key_id</td>
+                    <td class="text-center">key价格</td>
+                    <td class="text-center">邀请者分成比例</td>
+					<td class="text-center">渠道分成比例</td>
+					<td class="text-center">邀请者收益</td>
+					<td class="text-center">渠道收益</td>
+				</tr>
+			</thead>
+			<tbody>
+			{% for item in data %}
+			<tr>
+                <td class="text-center">{% if page == 1 %}{{loop.index}}
+                                        {% else %}{{ per_page*(page - 1) + loop.index }}{% endif %}</td>
+                <td class="text-center">{{ item.create_time }}</td>
+				<td class="text-center">{{ item.channel_id }}</td>
+				<td class="text-center">{{ item.channel_name }}</td>
+				<td class="text-center">{{ item.phone_num }}</td>
+				<td class="text-center">{{ item.be_invited_phone }}</td>
+				<td class="text-center">{{ item.key_id }}</td>
+				<td class="text-center">{{ item.price }}</td>
+                <td class="text-center">{{ item.inviter_per }}</td>
+                <td class="text-center">{{ item.channel_per }}</td>
+				<td class="text-center">{{ item.inviter_earn }}</td>
+				<td class="text-center">{{ item.channel_earn }}</td>
+			</tr>
+			{% endfor %}
+			</tbody>
+		</table>
+        <a href="{{url_for('manage.export_result', channel_id=form.channel_id.data, invite_phone=form.invite_phone.data,
+         phone=form.phone.data, export_type = 33)}}" class="btn btn-primary">导出结果为<br/>excel表格</a>
+	</div>
+</div>
+{% endblock %}
+{% block page %}
+    {% if pagination is not none %}
+        {{ macro.pagination_widget(pagination, 'manage.invite_code_data', channel_id=form.channel_id.data,
+            invite_phone=form.invite_phone.data, phone=form.phone.data) }}
+    {% endif %}
+{% endblock %}

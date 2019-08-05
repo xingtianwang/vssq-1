@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block subtitle %} -次日留存用户信息统计{% endblock %}
+
+{% block page_content %}
+<form class="form-inline panel panel-default" action="{{url_for('manage.get_next_day_stay_statistics')}}", method="post">
+    {{ form.csrf_token }}
+    <div class="panel-body">
+        <div class="form-group" style="padding-right:5px;padding-top:5px;">
+            {{ form.date.label }}:
+            <div class='input-group date form_date' id='date_picker'>
+                {{ form.date(class="form-control curser" ,placeholder="请选择时间") }}
+                <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+            </div>
+        </div>
+        <div class="form-group" style="padding-right:5px;padding-top:5px;">
+			<a href="{{url_for('manage.get_next_day_stay_statistics')}}" class="btn btn-primary">重置</a>
+            {{ form.submit(class="btn btn-primary") }}
+        </div>
+    </div>
+</form>
+<div class="tab-content">
+	<div class="tab-pane active">
+		<table id="appinfo" class="table table-striped table-hover table-bordered">
+			<thead>
+				<tr class="info">
+                    <td class="text-center">渠道</td>
+					<td class="text-center">前日新增用户数</td>
+					<td class="text-center">次日留存用户数</td>
+					<td class="text-center">次日留存率</td>
+				</tr>
+			</thead>
+			<tbody>
+			{% for item in data %}
+			<tr>
+                <td class="text-center">{{ item.channel }}</td>
+                <td class="text-center">{{ item.last_come_count }}</td>
+				<td class="text-center">{{ item.stay_count }}</td>
+				<td class="text-center">{{ item.stay_percent }}</td>
+			</tr>
+			{% endfor %}
+			</tbody>
+		</table>
+	</div>
+</div>
+{% endblock %}

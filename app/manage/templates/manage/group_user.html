@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+{% import "_macro.html" as macro%}
+{% block subtitle %} -群用户信息{% endblock %}
+
+{% block page_content %}
+<div class="form-group" style="padding-right:5px;padding-top:5px;text-align:right;">
+<a href="#"  data-toggle="modal" data-target="#new_group_member" class="btn btn-primary">新增成员</a>
+</div>
+<div class="tab-content">
+	<div class="tab-pane active">
+		<table id="appinfo" class="table table-striped table-hover table-bordered">
+			<thead>
+				<tr class="info">
+					<td class="text-center">序号</td>
+                    <td class="text-center">头像</td>
+                    <td class="text-center">用户名</td>
+					<td class="text-center">操作</td>
+				</tr>
+			</thead>
+			<tbody>
+
+			{% for user in data %}
+                <tr>
+                    <td class="text-center" style="width:200px;">{% if page == 1 %}{{loop.index}}
+                                        {% else %}{{ per_page*(page - 1) + loop.index }}{% endif %}</td>
+                    <td class="text-center">
+                        <img src="{{ photo_url }}{{ user.photo_url }}">
+                    </td>
+                    <td class="text-center">{{ user.user_name}}</td>
+
+                    <td class="text-center">
+                        <a type="button" class="btn btn-info btn-xs" href="{{ url_for('manage.edit_group_user',
+                         user_id=user.id) }}">编辑</a>
+                        <a class="btn btn-danger btn-xs" onclick="del_manager({{ user.id }})">删除</a>
+
+				</td>
+			</tr>
+			{% endfor %}
+			</tbody>
+		</table>
+	</div>
+</div>
+<!-- 新增弹出框开始 -->
+<div class="modal fade bs-example-modal-sm" id="new_group_member" tabindex="-1" role="dialog"
+     aria-labelledby="myModalLabel">
+  <div class="modal-type" role="document" style="width:370px;margin:0 auto;">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">
+            &times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">新增成员</h4>
+      </div>
+      <div class="modal-body">
+        <form action="{{ url_for('manage.add_group_user', group_id=group_id ) }}" method="post" enctype="multipart/form-data">
+        {{ form.csrf_token }}
+        <div class="row">
+            <div class="col-lg-12 col-md-12" style="margin: 10px 0px;text-align:left;">
+            <div>
+                {{ form.user_photo.label}}:
+                {{ form.user_photo(class="form-control", id="upload_file",
+                    placeholder="添加用户头像", style="width:160px; height:40px; display:inline-block;")}}
+            </div>
+            <div style="margin: 10px auto;">
+            {{ form.user_name(class="form-control", placeholder="用户名", style="width:240px; margin: 10px 0px;") }}
+            </div>
+            </div>
+        </div>
+        <div>
+            {{ form.submit(class="btn btn-primary") }}
+        </div>
+</form>
+    </div>
+  </div>
+</div>
+</div>
+<script>
+function del_manager(id)
+{
+    $.ajax({
+          url: "{{url_for('manage.del_group_user')}}",
+          data: {"id":id},
+          type: "GET",
+          dataType: "json",
+          async: false,
+          cache: false
+        }).done(function( result ) {
+            if(result.code != 0){ //如果出错则为非0
+                alert('删除失败');
+            }else{
+                alert('删除成功!');
+                parent.location.reload(); //刷新页面
+            }
+        }).fail(function(result){
+            var errmsg = "访问服务器出错："+fmtJqueryAjaxError(result);
+            alert(errmsg);
+        });
+}
+</script>
+{% endblock %}
+{% block page %}
+	{{ macro.pagination_widget(pagination, 'manage.get_group_user', group_id=group_id) }}
+{% endblock %}

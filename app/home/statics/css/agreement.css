@@ -1,0 +1,50 @@
+*{
+ 	margin:0 auto;
+}
+html,body{ 
+	text-align:center;
+	font-family:"微软雅黑";
+	color: #333333;
+	margin: 0;
+	padding: 0;
+	background: #ffffff !important;}
+*, *:after, *:before {
+  	-webkit-box-sizing: border-box;
+  	-moz-box-sizing: border-box;
+ 	box-sizing: border-box;
+}
+.container {
+    margin-top: 15px;
+}
+.con-padding {
+    padding: 0px 12px;
+}
+pre{
+    font-size: 13px;
+	text-align: left;
+	letter-spacing:0.33px;
+	line-height:22px;
+	text-align:justify;
+	word-break:break-all;
+	white-space: pre-wrap;
+}
+.margin-top{
+	margin-top:20px;
+}
+/*v商报告服务条款*/
+.bottom{
+	position: fixed;
+	bottom: 0;
+	left: 0;
+	background: #ffffff;
+	font-size: 13px;
+	color: #4991F4;
+	letter-spacing: 0;
+	text-align: left;
+}
+.checkType{
+	background: #EBF4FF;
+	border: 1px solid #4991F4;
+	border-radius: 4px;
+}
+

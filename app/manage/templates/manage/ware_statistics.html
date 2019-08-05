@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+{% import "_macro.html" as macro%}
+
+{% block subtitle %} -产品统计{% endblock %}
+
+{% block page_content %}
+<form class="form-inline panel panel-default" action="{{url_for('manage.get_ware_statistics')}}" method="post">
+    {{ form.csrf_token }}
+    <div class="panel-body">
+        <div class="form-group" style="padding-right:5px;padding-top:5px;">
+            {{ form.channel.label }}:
+            {{ form.channel(class="form-control") }}
+        </div>
+        <div class="form-group" style="padding-right:5px;padding-top:5px;">
+            {{ form.category.label }}:
+            {{ form.category(class="form-control") }}
+        </div>
+        <div class="form-group" style="padding-right:5px;padding-top:5px;">
+            {{ form.name.label }}:
+            {{ form.name(class="form-control", placeholder="产品名称") }}
+        </div>
+        <div class="form-group" style="padding-right:5px;padding-top:5px;">
+            {{ form.number.label }}:
+            {{ form.number(class="form-control", placeholder="产品ID") }}
+        </div>
+        {{ macro.time_search(form) }}
+        <div class="form-group" style="padding-right:5px;padding-top:5px;">
+			<a href="{{url_for('manage.get_ware_statistics')}}" class="btn btn-primary">重置</a>
+            {{ form.submit(class="btn btn-primary") }}
+        </div>
+    </div>
+</form>
+<div class="tab-content">
+	<div class="tab-pane active">
+		<table id="appinfo" class="table table-striped table-hover table-bordered">
+			<thead>
+				<tr class="info">
+                    <td class="text-center">序号</td>
+					<td class="text-center">产品ID</td>
+					<td class="text-center">产品归属</td>
+					<td class="text-center">产品类型</td>
+					<td class="text-center">产品名称</td>
+					<td class="text-center">渠道</td>
+					<td class="text-center">销售总数</td>
+					<td class="text-center">销售占比(%)</td>
+                    <td class="text-center">销售总金额</td>
+                    <td class="text-center">总金额占比(%)</td>
+				</tr>
+			</thead>
+			<tbody>
+			{% for item in data %}
+			<tr>
+                <td class="text-center">{% if page == 1 %}{{loop.index}} {% else %}
+                    {{ per_page*(page - 1) + loop.index }}{% endif %}</td>
+                <td class="text-center">{{ item.id }}</td>
+                <td class="text-center">{% if item.gold_or_platinum == 1 %}铂金会员 {% else %}黄金会员{% endif %}</td>
+				<td class="text-center">{{ item.category }}</td>
+				<td class="text-center">{{ item.name }}</td>
+				<td class="text-center">{{ item.channel }}</td>
+				<td class="text-center">{{ item.ware_total_sales_count }}</td>
+				<td class="text-center">{{ item.total_sales_count_ratio }}</td>
+				<td class="text-center">{{ item.ware_total_sales }}</td>
+                <td class="text-center">{{ item.total_sales_ratio }}</td>
+			</tr>
+			{% endfor %}
+			</tbody>
+		</table>
+	</div>
+</div>
+{% endblock %}
+{% block page%}
+	{{ macro.pagination_widget(pagination, 'manage.get_ware_statistics', name=form.name.data, number = form.number.data,
+start_time=form.start_time.data, end_time=form.end_time.data, channel=form.channel.data, category=form.category.data) }}
+{% endblock %}

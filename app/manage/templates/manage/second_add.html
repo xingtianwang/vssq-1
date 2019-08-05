@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block subtitle %} -数据源配置{% endblock %}
+
+{% block page_content %}
+    <form action="{{ url_for('manage.second_add') }}" method="post" enctype="multipart/form-data">
+        {{ form.csrf_token }}
+        <table align="center" style="font-size:14px;">
+            <tr>
+                <td style="padding-right:5px;">{{ form.days.label }}:</td>
+                <td style="padding-bottom:10px;">{{ form.days(class="form-control") }}</td>
+                <td style="padding-bottom:10px;">必填</td>
+            </tr>
+            <tr>
+                <td style="padding-right:5px;">{{ form.count.label }}:</td>
+                <td style="padding-bottom:10px;">{{ form.count(class="form-control") }}</td>
+                <td style="padding-bottom:10px;">必填(填写需小于10)</td>
+            </tr>
+            <tr>
+                <td style="padding-right:5px;"></td>
+                <td style="padding-bottom:10px;"><pre>注：天数与人数配合使用，如天数填写3，
+人数填写2，则表示会员剩余最后3天，
+每次添加都会添加2个好友秒通过的用户</pre></td>
+            </tr>
+            <tr>
+                <td style="padding-bottom:100px;">
+                    <a href="{{url_for('manage.second_add')}}" class="btn btn-primary">重置</a>
+                    {{ form.submit(class="btn btn-primary") }}
+                </td>
+            </tr>
+        </table>
+    </form>
+{% endblock %}

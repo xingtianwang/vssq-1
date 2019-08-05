@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+{% import "_macro.html" as macro%}
+{% block subtitle %} -推广数据{% endblock %}
+
+{% block page_content %}
+    <form action="{{ url_for('manage.money_check') }}" method="post">
+        {{ form.csrf_token }}
+        <table align="center" style="font-size:14px;">
+            <tr>
+                <td style="padding-right:5px;">{{ form.phone_num.label }}:</td>
+                <td style="padding-bottom:10px;padding-right:10px;">{{ form.phone_num(class="form-control") }}</td>
+                <td style="padding-bottom:10px;padding-right:10px;">
+                    {{ form.submit_search(class="btn btn-primary") }}
+                    <a href="{{url_for('manage.money_check')}}" class="btn btn-primary">重置</a>
+                </td>
+            </tr>
+        </table>
+    </form>
+
+
+    <div class="tab-content">
+	<div class="tab-pane active">
+		<table id="appinfo" class="table table-striped table-hover table-bordered" style="margin-top: 50px">
+			<thead>
+				<tr class="info">
+                    <td class="text-center">序号</td>
+					<td class="text-center">申请时间</td>
+					<td class="text-center">手机号</td>
+                    <td class="text-center">总收益</td>
+                    <td class="text-center">账户余额</td>
+                    <td class="text-center">提现金额</td>
+                    <td class="text-center">支付宝帐号</td>
+                    <td class="text-center">姓名</td>
+                    <td class="text-center">状态</td>
+                    <td class="text-center">审核时间</td>
+                    <td class="text-center">操作</td>
+                    <td class="text-center">操作人</td>
+				</tr>
+			</thead>
+			<tbody>
+			{% for temp in data %}
+			<tr>
+                <td class="text-center">{% if page == 1 %}{{loop.index}}
+                                        {% else %}{{ per_page*(page - 1) + loop.index }}{% endif %}</td>
+				<td class="text-center">{{temp.apply_time}}</td>
+				<td class="text-center">{{temp.phone_num}}</td>
+				<td class="text-center">{{temp.award}}</td>
+				<td class="text-center">{{temp.account_balance}}</td>
+				<td class="text-center">{{temp.withdraw}}</td>
+				<td class="text-center">{{temp.zfb_account}}</td>
+				<td class="text-center">{{temp.name}}</td>
+				<td class="text-center check_status">{% if temp.status == 0 %}待打款{% elif temp.status == 1 %}已完成{% else %}已驳回{% endif %}</td>
+				<td class="text-center">{% if temp.check_time %}{{temp.check_time}}{% endif %}</td>
+				<td class="text-center">
+                    {% if temp.status == 0 %}
+                    <a class="btn btn-success btn-xs suss" onclick="suss('{{temp.godin_id}}')">完成</a>
+                    <a class="btn btn-danger btn-xs redo" onclick="redo('{{temp.godin_id}}')">驳回</a>
+                    {% endif %}
+				</td>
+                <td class="text-center">{% if temp.operator %}{{temp.operator}}{% endif %}</td>
+			</tr>
+			{% endfor %}
+			</tbody>
+		</table>
+	</div>
+</div>
+<script>
+    function suss(godin_id) {
+        window.location.href="{{ url_for('manage.money_check') }}" + '?status=' + '1' + "&godin_id=" + godin_id
+    }
+    function redo(godin_id) {
+        window.location.href="{{ url_for('manage.money_check') }}" + '?status=' + '2' + "&godin_id=" + godin_id
+    }
+
+</script>
+{% endblock %}
+{% block page %}
+    {% if pagination is not none %}
+        {{ macro.pagination_widget(pagination, 'manage.money_check', phone_num=form.phone_num.data) }}
+    {% endif %}
+{% endblock %}

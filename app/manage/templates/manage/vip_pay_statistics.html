@@ -1,0 +1,280 @@
+{% extends "base.html" %}
+{% import "_macro.html" as macro%}
+
+{% block subtitle %} -付费统计{% endblock %}
+
+{% block page_content %}
+<form class="form-inline panel panel-default" action="{{url_for('manage.vip_pay_statistics')}}" method="post">
+    {{ form.csrf_token }}
+    <div class="panel-body">
+        <div class="form-group" style="padding-right:5px;padding-top:5px;">
+			{{ form.statistics_way.label }}:
+			{{ form.statistics_way(class="form-control")}}
+        </div>
+
+		<div class="form-group" style="padding-right:5px;padding-top:5px; {% if form.statistics_way.data == 3
+		or form.statistics_way.data == 2%}
+                 display:none{% endif %};" id="start_year_div">
+			{{ form.start_year_m.label }}:
+			{{ form.start_year_m(class="form-control")}}
+        </div>
+        <div class="form-group" style="padding-right:5px;padding-top:5px; {% if form.statistics_way.data == 3 or
+        form.statistics_way.data == 1%}
+                 display:none{% endif %};" id="start_year_w_div">
+			{{ form.start_year_w.label }}:
+			{{ form.start_year_w(class="form-control")}}
+        </div>
+        <div class="form-group" id="month_start_div"
+			 style="padding-right:5px;padding-top:5px;{% if form.statistics_way.data == 2 or form.statistics_way.data == 3 %}
+                 display:none{% endif %};">
+			{{ form.month_start.label }}:
+			{{ form.month_start(class="form-control")}}
+        </div>
+        <div class="form-group" id="week_start_div"
+			 style="padding-right:5px;padding-top:5px;{% if form.statistics_way.data == 1 or form.statistics_way.data == 3 %}
+                 display:none{% endif %};">
+			{{ form.week_start.label }}:
+			{{ form.week_start(class="form-control")}}
+        </div>
+        <div class="form-group" style="padding-right:5px;padding-top:5px; {% if form.statistics_way.data == 3 or
+        form.statistics_way.data == 2%}
+                 display:none{% endif %};" id="end_year_div">
+			{{ form.end_year_m.label }}:
+			{{ form.end_year_m(class="form-control")}}
+        </div>
+        <div class="form-group" style="padding-right:5px;padding-top:5px; {% if form.statistics_way.data == 3
+        or form.statistics_way.data == 1%}
+                 display:none{% endif %};" id="end_year_w_div">
+			{{ form.end_year_w.label }}:
+			{{ form.end_year_w(class="form-control")}}
+        </div>
+        <div class="form-group" id="month_end_div"
+			 style="padding-right:5px;padding-top:5px;{% if form.statistics_way.data == 2 or form.statistics_way.data == 3 %}
+                 display:none{% endif %};">
+			{{ form.month_end.label }}:
+			{{ form.month_end(class="form-control")}}
+        </div>
+        <div class="form-group" id="week_end_div"
+			 style="padding-right:5px;padding-top:5px;{% if form.statistics_way.data == 1 or form.statistics_way.data == 3
+                     %}display:none{% endif %};">
+			{{ form.week_end.label }}:
+			{{ form.week_end(class="form-control")}}
+        </div>
+        <div class="form-group" style="padding-right:5px;padding-top:5px;
+                {% if form.statistics_way.data == 1 or form.statistics_way.data == 2 %}display:none{% endif %};" id="day_start_div">
+            {{ form.day_start.label }}:
+            <div class='input-group date form_date' id='start_date_picker'>
+                {{ form.day_start(class="form-control curser" ,placeholder="请选择时间") }}
+                <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+            </div>
+        </div>
+        <div class="form-group" style="padding-right:5px;padding-top:5px;
+                {% if form.statistics_way.data == 1 or form.statistics_way.data == 2 %}display:none{% endif %};" id="day_end_div" >
+            {{ form.day_end.label }}:
+            <div class='input-group date form_date' id='end_date_picker'>
+                {{ form.day_end(class="form-control curser" ,placeholder="请选择时间") }}
+                <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+            </div>
+        </div>
+        <div id="week_range" class="form-group" style="padding-right:5px;padding-top:5px;"></div>
+        <div class="form-group" style="padding-right:5px;padding-top:5px;">
+			<a href="{{url_for('manage.vip_pay_statistics')}}" class="btn btn-primary">重置</a>
+            {{ form.submit(class="btn btn-primary") }}
+        </div>
+    </div>
+</form>
+<div class="tab-content">
+	<div class="tab-pane active">
+		<table id="appinfo" class="table table-striped table-hover table-bordered">
+			<thead>
+				<tr class="info">
+                    <td class="text-center">序号</td>
+                    <td class="text-center">{% if form.statistics_way.data == 1 %}月
+                        {% elif form.statistics_way.data == 2%}周
+                        {% else %}日{% endif %}
+                    </td>
+					<td class="text-center">新增人数</td>
+					<td class="text-center">新增付费额</td>
+					<td class="text-center">到期未续费人数</td>
+					<td class="text-center">续费人数</td>
+					<td class="text-center">续费额</td>
+                    <td class="text-center">付费总人数</td>
+                    <td class="text-center">收入总额</td>
+				</tr>
+			</thead>
+			<tbody>
+			{% for item in data %}
+			<tr>
+                <td class="text-center">{% if page == 1 %}{{loop.index}}
+                                        {% else %}{{ per_page*(page - 1) + loop.index }}{% endif %}</td>
+                <td class="text-center">{% if statistics_way == 1 %}{{ item.month }}
+                                        {% elif statistics_way == 2 %} {{ item.week }}
+                                        {% elif statistics_way == 3 %} {{ item.date }}{% endif %}</td>
+				<td class="text-center">{{ item.new_reg_count }}</td>
+				<td class="text-center">{{ item.new_pay_amount / 100 | round(2)}}</td>
+				<td class="text-center">{{ item.old_not_pay_count }}</td>
+				<td class="text-center">{{ item.old_pay_count }}</td>
+				<td class="text-center">{{ item.old_pay_amount / 100 | round(2) }}</td>
+				<td class="text-center">{{ item.new_reg_count + item.old_pay_count }} </td>
+				<td class="text-center">{{ item.income_amount / 100 | round(2)}}</td>
+			</tr>
+			{% endfor %}
+			</tbody>
+		</table>
+	</div>
+</div>
+
+<script>
+window.onload = function() {
+    var obj_select = document.getElementById("statistics_way");
+    obj_select.onchange = function () {
+        if (this.value == 1) {
+            $('#start_year_div').show();
+            $('#end_year_div').show();
+            $('#start_year_w_div').hide();
+            $('#end_year_w_div').hide();
+            $("#week_start_div").hide();
+            $("#week_end_div").hide();
+            $("#day_start_div").hide();
+            $("#day_end_div").hide();
+            $("#month_start_div").show();
+            $("#month_end_div").show();
+            document.getElementById("week_range").innerHTML = "";
+        } else if (this.value == 2) {
+            $('#start_year_div').hide();
+            $('#end_year_div').hide();
+            $('#start_year_w_div').show();
+            $('#end_year_w_div').show();
+            $("#week_start_div").show();
+            $("#week_end_div").show();
+            $("#day_start_div").hide();
+            $("#day_end_div").hide();
+            $("#month_start_div").hide();
+            $("#month_end_div").hide();
+            var week_start_select = document.getElementById("week_start");
+            var week_end_select = document.getElementById("week_end");
+            var year_start_select = document.getElementById("start_year_w");
+            var year_end_select = document.getElementById("end_year_w");
+            year_start_w = year_start_select.value;
+            year_end_w = year_end_select.value;
+            week_start = week_start_select.value;
+            week_end = week_end_select.value;
+            $.ajax({
+                url: "{{url_for('manage.get_vip_week_range')}}",
+                data: {'year_start_w': year_start_w, 'year_end_w': year_end_w, 'week_start': week_start,
+                    'week_end': week_end},
+                type: "GET",
+                dataType: "json",
+                async: false,
+                cache: false
+            }).done(function (result) {
+                document.getElementById("week_range").innerHTML = result['data']
+            }).fail(function (result) {
+                var errmsg = "访问服务器出错：" + fmtJqueryAjaxError(result);
+                alert(errmsg);
+            });
+
+            week_start_select.onchange = function () {
+                year_start_w = document.getElementById("start_year_w").value;
+                year_end_w = document.getElementById("end_year_w").value;
+                week_start = document.getElementById("week_start").value;
+                week_end = document.getElementById("week_end").value;
+                $.ajax({
+                    url: "{{url_for('manage.get_vip_week_range')}}",
+                    data: {'year_start_w': year_start_w, 'year_end_w': year_end_w,
+                        'week_start': week_start, 'week_end': week_end},
+                    type: "GET",
+                    dataType: "json",
+                    async: false,
+                    cache: false
+                }).done(function (result) {
+                    document.getElementById("week_range").innerHTML = result["data"]
+                }).fail(function (result) {
+                    var errmsg = "访问服务器出错：" + fmtJqueryAjaxError(result);
+                    alert(errmsg);
+                });
+            };
+            week_end_select.onchange = function () {
+                year_start_w = document.getElementById("start_year_w").value;
+                year_end_w = document.getElementById("end_year_w").value;
+                week_start = document.getElementById("week_start").value;
+                week_end = document.getElementById("week_end").value;
+                $.ajax({
+                    url: "{{url_for('manage.get_vip_week_range')}}",
+                    data: {'year_start_w': year_start_w, 'year_end_w': year_end_w,
+                        'week_start': week_start, 'week_end': week_end},
+                    type: "GET",
+                    dataType: "json",
+                    async: false,
+                    cache: false
+                }).done(function (result) {
+                    document.getElementById("week_range").innerHTML = result["data"]
+                }).fail(function (result) {
+                    var errmsg = "访问服务器出错：" + fmtJqueryAjaxError(result);
+                    alert(errmsg);
+                });
+            };
+            year_start_select.onchange = function () {
+                year_start_w = document.getElementById("start_year_w").value;
+                year_end_w = document.getElementById("end_year_w").value;
+                week_start = document.getElementById("week_start").value;
+                week_end = document.getElementById("week_end").value;
+                $.ajax({
+                    url: "{{url_for('manage.get_vip_week_range')}}",
+                    data: {'year_start_w': year_start_w, 'year_end_w': year_end_w,
+                        'week_start': week_start, 'week_end': week_end},
+                    type: "GET",
+                    dataType: "json",
+                    async: false,
+                    cache: false
+                }).done(function (result) {
+                    document.getElementById("week_range").innerHTML = result["data"]
+                }).fail(function (result) {
+                    var errmsg = "访问服务器出错：" + fmtJqueryAjaxError(result);
+                    alert(errmsg);
+                });
+            };
+            year_end_select.onchange = function () {
+                year_start_w = document.getElementById("start_year_w").value;
+                year_end_w = document.getElementById("end_year_w").value;
+                week_start = document.getElementById("week_start").value;
+                week_end = document.getElementById("week_end").value;
+                $.ajax({
+                    url: "{{url_for('manage.get_vip_week_range')}}",
+                    data: {'year_start_w': year_start_w, 'year_end_w': year_end_w,
+                        'week_start': week_start, 'week_end': week_end},
+                    type: "GET",
+                    dataType: "json",
+                    async: false,
+                    cache: false
+                }).done(function (result) {
+                    document.getElementById("week_range").innerHTML = result["data"]
+                }).fail(function (result) {
+                    var errmsg = "访问服务器出错：" + fmtJqueryAjaxError(result);
+                    alert(errmsg);
+                });
+            }
+        } else if (this.value == 3) {
+                $('#start_year_div').hide();
+                $('#end_year_div').hide();
+                $('#start_year_w_div').hide();
+                $('#end_year_w_div').hide();
+                $("#week_start_div").hide();
+                $("#week_end_div").hide();
+                $("#day_start_div").show();
+                $("#day_end_div").show();
+                $("#month_start_div").hide();
+                $("#month_end_div").hide();
+                document.getElementById("week_range").innerHTML = "";
+        }
+    }
+}
+</script>
+{% endblock %}
+{% block page%}
+	{{ macro.pagination_widget(pagination, 'manage.vip_pay_statistics', statistics_way=form.statistics_way.data,
+	 year_start_w=form.start_year_w.data, year_end_w=form.end_year_w.data,
+	 year_start_m=form.start_year_m.data, year_end_m=form.end_year_m.data, month_start = form.month_start.data,
+     month_end=form.month_end.data, week_start=form.week_start.data, week_end=form.week_end.data,
+      day_start=form.day_start.data, day_end=form.day_end.data) }}
+{% endblock %}

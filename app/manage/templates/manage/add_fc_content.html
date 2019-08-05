@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% import "_macro.html" as macro%}
+{% block subtitle %} -新建素材{% endblock %}
+
+{% block page_content %}
+
+<form action="{{ url_for('manage.add_fc_content') }}" method="post" enctype="multipart/form-data">
+    {{ form.csrf_token }}
+    <table align="center" style="font-size:14px;">
+        <tr>
+            <td style="padding-right:5px;">{{ form.content.label }}:</td>
+            <td style="padding-bottom:10px;">{{ form.content(class="form-control", placeholder="1-500字以内") }}</td>
+        </tr>
+        <tr>
+            <td style="padding-right:5px;">{{ form.picture1.label }}:</td>
+            <td style="padding-bottom:10px;">{{ form.picture1(class="form-control") }}</td>
+        </tr>
+        <tr>
+            <td style="padding-right:5px;">{{ form.picture2.label }}:</td>
+            <td style="padding-bottom:10px;">{{ form.picture2(class="form-control") }}</td>
+        </tr>
+        <tr>
+            <td style="padding-right:5px;">{{ form.picture3.label }}:</td>
+            <td style="padding-bottom:10px;">{{ form.picture3(class="form-control") }}</td>
+        </tr>
+        <tr>
+            <td style="padding-bottom:100px;">
+                <a href="{{url_for('manage.add_fc_content')}}" class="btn btn-primary">重置</a>
+                {{ form.submit(class="btn btn-primary") }}
+            </td>
+        </tr>
+    </table>
+</form>
+{% endblock %}

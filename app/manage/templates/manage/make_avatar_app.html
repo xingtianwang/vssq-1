@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% import "_macro.html" as macro%}
+{% block subtitle %} -添加x分身基础版应用{% endblock %}
+
+{% block page_content %}
+
+
+<form class="form-inline panel-default" action="{{ url_for('manage.make_avatar_app', id=id) }}" method="post" enctype="multipart/form-data">
+    {{ form.csrf_token }}
+    <table align="center" style="font-size:14px;">
+            <tr>
+                <td style="padding-right:5px;">{{ form.app_name.label }}:</td>
+                <td style="padding-bottom:10px;">{{ form.app_name(class="form-control", placeholder="必填") }}</td>
+            </tr>
+            <tr>
+                <td style="padding-bottom:100px;">
+                    {{ form.submit(class="btn btn-primary") }}
+                </td>
+            </tr>
+        </table>
+</form>
+{% endblock %}

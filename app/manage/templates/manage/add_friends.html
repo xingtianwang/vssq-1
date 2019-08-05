@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% import "_macro.html" as macro%}
+{% block subtitle %} -智能加好友{% endblock %}
+
+{% block page_content %}
+    <form action="{{ url_for('manage.add_friends') }}" method="post" enctype="multipart/form-data">
+        {{ form.csrf_token }}
+        <table align="center" style="font-size:14px;">
+            <tr>
+                <td style="padding-right:5px;">{{ form.add_user.label }}:</td>
+                <td style="padding-bottom:10px;">{{ form.add_user(class="form-control") }}</td>
+                <td style="padding-bottom:10px;">(不超过3000人，必填)</td>
+            </tr>
+            <tr>
+                <td style="padding-right:5px;">{{ form.add_count.label }}:</td>
+                <td style="padding-bottom:10px;">{{ form.add_count(class="form-control") }}</td>
+                <td style="padding-bottom:10px;">(不超过添加者，必填)</td>
+            </tr>
+            <tr>
+                <td style="padding-right:5px;">{{ form.by_add_user.label }}:</td>
+                <td style="padding-bottom:10px;">{{ form.by_add_user(class="form-control") }}</td>
+                <td style="padding-bottom:10px;">(不超过100人，必填)</td>
+            </tr>
+            <tr>
+                <td style="padding-right:5px;">{{ form.capita_add.label }}:</td>
+                <td style="padding-bottom:10px;">{{ form.capita_add(class="form-control") }}</td>
+                <td style="padding-bottom:10px;">(必填)</td>
+            </tr>
+            <tr>
+                <td style="padding-bottom:100px;">
+                    <a class="btn btn-primary" onclick="del_friend()">清除</a>
+                    {{ form.submit(class="btn btn-primary") }}
+                </td>
+            </tr>
+        </table>
+    </form>
+<script>
+	function del_friend()
+	{
+		$.ajax({
+			  url: "{{url_for('manage.del_friends')}}",
+			  data: {},
+			  type: "GET",
+			  dataType: "json",
+			  async: false,
+			  cache: false
+			}).done(function( result ) {
+				if(result.code != 1){ //如果出错则为非1
+					alert('清除失败');
+				}else{
+					alert('清除成功!');
+					parent.location.reload(); //刷新页面
+				}
+			}).fail(function(result){
+				var errmsg = "访问服务器出错："+fmtJqueryAjaxError(result);
+				alert(errmsg);
+			});
+	}
+</script>
+{% endblock %}

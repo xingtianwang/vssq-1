@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% import "_macro.html" as macro%}
+{% block subtitle %} -活动管理{% endblock %}
+
+{% block page_content %}
+<div class="tab-content">
+<form class="form-inline panel panel-default" action="{{url_for('manage.get_invite', act_id=act_id)}}" method="post">
+    {{ form.csrf_token }}
+    <div class="panel-body">
+        <div class="form-group" style="padding-right:5px;padding-top:5px;">
+            {{ form.phone_num.label }}:
+            {{ form.phone_num(class="form-control", placeholder="手机号") }}
+        </div>
+        <div class="form-group" style="padding-right:5px;padding-top:5px;">
+			<a href="{{url_for('manage.get_invite', act_id=act_id)}}" class="btn btn-primary">重置</a>
+            {{ form.submit(class="btn btn-primary") }}
+        </div>
+    </div>
+</form>
+<div style="color:#f00;">
+    <span style="font-size: 16px;height:20px;line-height:20px;">已发送邀请:<span>{{ all_count }}</span></span>
+    <div class="float-right" style="font-size: 16px; height:20px;line-height:20px;">注册:<span>{{ re_count }}</span></div>
+</div>
+	<div class="tab-pane active">
+		<table id="appinfo" class="table table-striped table-hover table-bordered">
+			<thead>
+				<tr class="info">
+					<td class="text-center" style="width:200px;">序号</td>
+					<td class="text-center" >手机号</td>
+					<td class="text-center" >IMEI</td>
+					<td class="text-center" >用户名</td>
+					<td class="text-center" >已发送</td>
+					<td class="text-center" >成功注册</td>
+					<td class="text-center" style="width:500px;">操作</td>
+				</tr>
+			</thead>
+			<tbody>
+
+                {% for temp in data %}
+			<tr>
+                <td class="text-center">{% if page == 1 %}{{loop.index}} {% else %}
+                    {{ per_page*(page - 1) + loop.index }}{% endif %}</td>
+				<td class="text-center">{{ temp.GodinAccount.phone_num}}</td>
+				<td class="text-center">{{ temp.UserInfo.imei}}</td>
+				<td class="text-center">{{ temp.UserInfo.nick_name}}</td>
+				<td class="text-center">{{ temp.ShareCount.count }}</td>
+				<td class="text-center">{{ dic[temp.ShareCount.id]}}</td>
+                <td class="text-center"><a type="button" class="btn btn-primary"
+                                           href="{{ url_for('manage.get_share', act_id=temp.ShareCount.number,
+                                           invite_id=temp.ShareCount.invite_id)}}">邀请详情</a>
+                </td>
+            </tr>
+			{% endfor %}
+			</tbody>
+		</table>
+	</div>
+</div>
+
+{% endblock %}
+{% block page %}
+	{{ macro.pagination_widget(pagination, 'manage.get_invite', phone_num = form.phone_num.data, act_id=act_id) }}
+{% endblock %}

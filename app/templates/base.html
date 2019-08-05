@@ -1,0 +1,467 @@
+{% extends "bootstrap/base.html" %}
+
+{% block title %}微商神器管理系统{% block subtitle %}{% endblock %}{% endblock %}
+
+{% block head %}
+{{ super() }}
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/font-awesome.min.css') }}">
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/bootstrap-theme.min.css') }}">
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/bootstrap-datetimepicker.min.css') }}">
+<link rel="stylesheet" type="text/css" href="{{ url_for('manage.static', filename='css/style.css') }}">
+
+{% endblock %}
+
+{% block navbar %}
+{% if not use_login %}
+<div class="nabbar navbar-inverse" role="navigation">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a href="{{ url_for('manage.index') }}"><img src="{{ url_for('manage.static', filename='images/index-logo.png') }}">
+            <span style="color:#fff;font-size: 16px;">微商神器管理系统</span>
+            </a>
+        </div>
+        <div class="navbar-collapse collapse">
+            <ul class="nav navbar-nav navbar-right">
+                {% if current_user.is_authenticated %}
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">您好, {{ current_user.username }}
+                        <b class="caret"></b></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="{{url_for('auth.change_password')}}" class="text-center">修改密码</a></li>
+                        <li><a href="{{url_for('auth.logout')}}" class="text-center">退出登陆</a></li>
+                    </ul>
+                </li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endblock %}
+{% block content %}
+{% if not use_login %}
+<div class="container-fluid padding5">
+    <!-- CONTENT -->
+    <div class="row-fluid">
+        <div class="col-md-2 col-lg-2">
+            <ul class="nav nav-tabs nav-stacked">
+                {% if current_user.can(Role.ADMIN, Department.DEVELOP_SU) %}
+                <li>
+                    <a href="#addUserMenu" class="nav-header menu-first collapsed text-center" data-toggle="collapse">
+                        <i class="icon-user-md icon-large"></i>用户管理</a>
+                    <ul id="addUserMenu" class="nav nav-list collapse menu-second">
+                        <li>
+                            <a href="{{url_for('manage.list_admin_user')}}" class="text-center">
+                            <i class="icon-user"></i>管理员列表</a>
+                        </li>
+                        <li>
+                            <a href="{{url_for('manage.add_admin_user')}}" class="text-center">
+                            <i class="icon-user"></i>添加管理员</a>
+                        </li>
+                    </ul>
+                </li>
+                {% elif current_user.can(Role.AUDITOR, Department.DEVELOP_SU) %}
+                <li>
+                    <a href="#logOpMenu" class="nav-header menu-first collapsed text-center" data-toggle="collapse">
+                        <i class="icon-user-md icon-large"></i>审计管理</a>
+                    <ul id="logOpMenu" class="nav nav-list collapse menu-second">
+                        <li><a href="{{ url_for('manage.audit_user') }}" class="text-center">
+                            <i class="icon-list-alt"></i>日志查询列表</a>
+                        </li>
+                    </ul>
+                </li>
+                {% else %}
+                <li>
+                    <a href="#userMenu" class="nav-header menu-first collapsed text-center" data-toggle="collapse">
+                        <i class="icon-user-md icon-large"></i>用户统计</a>
+                    <ul id="userMenu" class="nav nav-list collapse menu-second">
+                        <li>
+                            <a href="{{ url_for('manage.get_reg_user_info') }}" class="text-center">
+                            <i class="icon-user"></i>注册用户</a>
+                        </li>
+                        <li>
+                            <a href="{{ url_for('manage.get_un_reg_user_info') }}" class="text-center">
+                            <i class="icon-user"></i>未注册用户</a>
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#appManageMenu" class="nav-header menu-first collapsed text-center" data-toggle="collapse">
+                       <i class="icon-book icon-large"></i>应用管理</a>
+                    <ul id="appManageMenu" class="nav nav-list collapse menu-second">
+                        <li>
+                            <a href="{{url_for('manage.get_channel_version_info')}}" class="text-center">
+                                <i class="icon-list-alt"></i>版本信息</a>
+                        </li>
+                        {% if current_user.can(Role.USER, Department.DEVELOP_SU) or
+                        current_user.can(Role.USER, Department.PM) %}
+                        <li>
+                            <a href="{{url_for('manage.channel_upload_app')}}" class="text-center">
+                                <i class="icon-list-alt"></i>应用上传</a>
+                        </li>
+                            {% endif %}
+                        <li>
+                            <a href="{{url_for('manage.get_app_list_info')}}" class="text-center">
+                                <i class="icon-list-alt"></i>应用信息</a>
+                        </li>
+                        {% if current_user.can(Role.USER, Department.DEVELOP_SU) or
+                        current_user.can(Role.USER, Department.PM) %}
+                        <li>
+                            <a href="{{url_for('manage.avatar_app_info')}}" class="text-center">
+                                <i class="icon-list-alt"></i>分身基础版</a>
+                        </li>
+                        {% endif %}
+                        <li>
+                            <a href="{{url_for('manage.get_app_version_check')}}" class="text-center">
+                                <i class="icon-list-alt"></i>版本检测</a>
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#feedbackMenu" class="nav-header menu-first collapsed text-center" data-toggle="collapse">
+                        <i class="icon-book icon-large"></i>信息反馈</a>
+                    <ul id="feedbackMenu" class="nav nav-list collapse menu-second">
+                        <li><a href="{{url_for('manage.get_feedback')}}" class="text-center">
+                            <i class="icon-list-alt"></i>用户反馈</a>
+                        </li>
+                        <li><a href="{{url_for('manage.get_exception')}}" class="text-center">
+                            <i class="icon-list-alt"></i>BUG反馈</a>
+                        </li>
+                    </ul>
+                </li>
+                {% if current_user.can(Role.USER, Department.QA) or current_user.can(Role.USER, Department.DEVELOP_SU)
+                or current_user.can(Role.USER, Department.PM) or current_user.can(Role.USER, Department.OPERATION) %}
+                <li>
+                    <a href="#helpMenu" class="nav-header menu-first collapsed text-center" data-toggle="collapse">
+                        <i class="icon-book icon-large"></i>辅助功能</a>
+                    <ul id="helpMenu" class="nav nav-list collapse menu-second">
+                        {% if current_user.can(Role.USER, Department.QA) or
+                        current_user.can(Role.USER, Department.DEVELOP_SU) or
+                        current_user.can(Role.USER, Department.PM) %}
+                        <li><a href="{{url_for('manage.get_black_list_info')}}" class="text-center">
+                            <i class="icon-list-alt"></i>黑名单信息</a>
+                        </li>
+                        <li><a href="{{url_for('manage.add_black_list')}}" class="text-center">
+                            <i class="icon-list-alt"></i>添加黑名单</a>
+                        </li>
+                        <li><a href="{{url_for('manage.get_white_imei_list_info')}}" class="text-center">
+                            <i class="icon-list-alt"></i>IMEI白名单信息</a>
+                        </li>
+                        <li><a href="{{url_for('manage.add_white_imei_list')}}" class="text-center">
+                            <i class="icon-list-alt"></i>添加IMEI白名单</a>
+                        </li>
+                        {% endif %}
+                        {% if current_user.can(Role.USER, Department.DEVELOP_SU) or
+                        current_user.can(Role.USER, Department.PM) %}
+                        <li><a href="{{url_for('manage.list_duty_manager')}}" class="text-center">
+                            <i class="icon-list-alt"></i>DM信息</a>
+                        </li>
+                        <li><a href="{{url_for('manage.add_duty_manager')}}" class="text-center">
+                            <i class="icon-list-alt"></i>添加DM</a>
+                        </li>
+                        <li><a href="{{url_for('manage.list_spread_manager')}}" class="text-center">
+                            <i class="icon-list-alt"></i>推广人员信息</a>
+                        </li>
+                        <li><a href="{{url_for('manage.add_spread_manager')}}" class="text-center">
+                            <i class="icon-list-alt"></i>添加推广人员</a>
+                        </li>
+                        <li><a href="{{url_for('manage.communicate_group')}}" class="text-center">
+                            <i class="icon-list-alt"></i>添加交流群</a>
+                        </li>
+                        {% endif %}
+                    </ul>
+                </li>
+                {% endif %}
+                {% if current_user.can(Role.USER, Department.QA) or current_user.can(Role.USER, Department.DEVELOP_SU)
+                or current_user.can(Role.USER, Department.PM) or current_user.can(Role.USER, Department.OPERATION) 
+                or current_user.can(Role.USER, Department.LEADER) or current_user.can(Role.USER, Department.PRODUCTION)%}
+                <li>
+                    <a href="#adsMenu" class="nav-header menu-first collapsed text-center" data-toggle="collapse">
+                        <i class="icon-book icon-large"></i>广告管理</a>
+                    <ul id="adsMenu" class="nav nav-list collapse menu-second">
+                        <li><a href="{{url_for('manage.get_open_screen_ads')}}" class="text-center">
+                            <i class="icon-list-alt"></i>开屏广告</a>
+                        </li>
+                        <li><a href="{{url_for('manage.open_screen_ads_data')}}" class="text-center">
+                            <i class="icon-list-alt"></i>开屏广告对比数据</a>
+                        </li>
+                        <li><a href="{{url_for('manage.get_bannerads_info')}}" class="text-center">
+                            <i class="icon-list-alt"></i>banner广告</a>
+                        </li>
+                        <li><a href="{{url_for('manage.get_interactive_ads')}}" class="text-center">
+                            <i class="icon-list-alt"></i>互动广告</a>
+                        </li>
+                        <li><a href="{{url_for('manage.get_ads_icon')}}" class="text-center">
+                            <i class="icon-list-alt"></i>默认广告图</a>
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#payMenu" class="nav-header menu-first collapsed text-center" data-toggle="collapse">
+                        <i class="icon-book icon-large"></i>付费管理</a>
+                    <ul id="payMenu" class="nav nav-list collapse menu-second">
+                        <li><a href="{{url_for('manage.get_bus_info')}}" class="text-center">
+                            <i class="icon-list-alt"></i>付费产品管理</a>
+                        </li>
+                        <li><a href="{{url_for('manage.get_business_category')}}" class="text-center">
+                            <i class="icon-list-alt"></i>付费类型配置</a>
+                        </li>
+                         <li><a href="{{url_for('manage.get_bus_statistics')}}" class="text-center">
+                            <i class="icon-list-alt"></i>付费产品统计</a>
+                        </li>
+                        <li><a href="{{url_for('manage.get_bus_members')}}" class="text-center">
+                            <i class="icon-list-alt"></i>用户付费管理</a>
+                        </li>
+                        <li><a href="{{url_for('manage.get_pay_time')}}" class="text-center">
+                            <i class="icon-list-alt"></i>用户付费时间</a>
+                        </li>
+                        <li><a href="{{url_for('manage.free_vip_days')}}" class="text-center">
+                            <i class="icon-list-alt"></i>免费会员配置</a>
+                        </li>
+                        <li><a href="{{url_for('manage.bus_give_stat')}}" class="text-center">
+                            <i class="icon-list-alt"></i>免费会员数据</a>
+                        </li>
+                        <li><a href="{{url_for('manage.bus_pay_statistics')}}" class="text-center">
+                            <i class="icon-list-alt"></i>统计</a>
+                        </li>
+                        <li><a href="{{url_for('manage.add_business_protocol')}}" class="text-center">
+                            <i class="icon-list-alt"></i>付费协议</a>
+                        </li>
+                        <li><a href="{{url_for('manage.free_experience_days')}}" class="text-center">
+                            <i class="icon-list-alt"></i>免费体验周期</a>
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#WareMenu" class="nav-header menu-first collapsed text-center" data-toggle="collapse">
+                        <i class="icon-book icon-large"></i>用户管理</a>
+                    <ul id="WareMenu" class="nav nav-list collapse menu-second">
+                        <li><a href="{{url_for('manage.get_gold_ware_info')}}" class="text-center">
+                            <i class="icon-list-alt"></i>黄金vip产品管理</a>
+                        </li>
+                         <li><a href="{{url_for('manage.get_ware_info')}}" class="text-center">
+                            <i class="icon-list-alt"></i>铂金vip产品管理</a>
+                        </li>
+                        <li><a href="{{url_for('manage.get_vip_category')}}" class="text-center">
+                            <i class="icon-list-alt"></i>vip类型配置</a>
+                        </li>
+                         <li><a href="{{url_for('manage.get_vip_channel')}}" class="text-center">
+                            <i class="icon-list-alt"></i>vip渠道配置</a>
+                        </li>
+                        <li><a href="{{url_for('manage.get_ware_statistics')}}" class="text-center">
+                            <i class="icon-list-alt"></i>vip产品统计</a>
+                        </li>
+                        <li><a href="{{url_for('manage.get_vip_members')}}" class="text-center">
+                            <i class="icon-list-alt"></i>vip用户管理</a>
+                        </li>
+                        <li><a href="{{url_for('manage.get_vip_pay_time')}}" class="text-center">
+                            <i class="icon-list-alt"></i>vip付费时间</a>
+                        </li>
+                        <li><a href="{{url_for('manage.get_member_info')}}" class="text-center">
+                            <i class="icon-list-alt"></i>手动添加会员</a>
+                        </li>
+                        <li><a href="{{url_for('manage.get_act_members')}}" class="text-center">
+                            <i class="icon-list-alt"></i>赠送会员详情</a>
+                        </li>
+                        <li><a href="{{url_for('manage.vip_pay_statistics')}}" class="text-center">
+                            <i class="icon-list-alt"></i>统计</a>
+                        </li>
+                        <li><a href="{{url_for('manage.add_vip_service_protocol')}}" class="text-center">
+                            <i class="icon-list-alt"></i>会员服务协议</a>
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#keyMenu" class="nav-header menu-first collapsed text-center" data-toggle="collapse">
+                        <i class="icon-book icon-large"></i>授权码管理</a>
+                    <ul id="keyMenu" class="nav nav-list collapse menu-second">
+                        <li><a href="{{url_for('manage.get_key_record')}}" class="text-center">
+                            <i class="icon-list-alt"></i>授权码管理</a>
+                        </li>
+                        <li><a href="{{url_for('manage.get_key_channel')}}" class="text-center">
+                            <i class="icon-list-alt"></i>授权码渠道管理</a>
+                        </li>
+                        <li><a href="{{url_for('manage.get_key_info')}}" class="text-center">
+                            <i class="icon-list-alt"></i>授权码修改</a>
+                        </li>
+{#                        <li><a href="{{url_for('manage.get_imei_info')}}" class="text-center">#}
+{#                            <i class="icon-list-alt"></i>增加imei免广告</a>#}
+{#                        </li>#}
+                        <li><a href="{{url_for('manage.we_get_key_record')}}" class="text-center">
+                            <i class="icon-list-alt"></i>授权码推广</a>
+                        </li>
+                        <li><a href="{{url_for('manage.key_info')}}" class="text-center">
+                            <i class="icon-list-alt"></i>修改key状态</a>
+                        </li>
+                        <li><a href="{{url_for('manage.get_act_key_statistics')}}" class="text-center">
+                            <i class="icon-list-alt"></i>授权码激活数据</a>
+                        </li>
+                        <li><a href="{{url_for('manage.check_key')}}" class="text-center">
+                            <i class="icon-list-alt"></i>授权码记录查询</a>
+                        </li>
+                        <li><a href="{{url_for('manage.get_account_info')}}" class="text-center">
+                            <i class="icon-list-alt"></i>渠道账号</a>
+                        </li>
+                        <li><a href="{{url_for('manage.get_channel_data')}}" class="text-center">
+                            <i class="icon-list-alt"></i>渠道数据</a>
+                        </li>
+                    </ul>
+
+                </li>
+                <li>
+                    <a href="#actMenu" class="nav-header menu-first collapsed text-center" data-toggle="collapse">
+                        <i class="icon-book icon-large"></i>活动管理</a>
+                    <ul id="actMenu" class="nav nav-list collapse menu-second">
+                        <li><a href="{{url_for('manage.get_activity_info')}}" class="text-center">
+                            <i class="icon-list-alt"></i>活动管理</a>
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#noticeMenu" class="nav-header menu-first collapsed text-center" data-toggle="collapse">
+                        <i class="icon-book icon-large"></i>通知管理</a>
+                    <ul id="noticeMenu" class="nav nav-list collapse menu-second">
+                        <li><a href="{{url_for('manage.get_notice_info')}}" class="text-center">
+                            <i class="icon-list-alt"></i>通知管理</a>
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#appMenu" class="nav-header menu-first collapsed text-center" data-toggle="collapse">
+                        <i class="icon-book icon-large"></i>协议管理</a>
+                    <ul id="appMenu" class="nav nav-list collapse menu-second">
+                        <li><a href="{{url_for('manage.add_app_protocol')}}" class="text-center">
+                            <i class="icon-list-alt"></i>协议管理</a>
+                        </li>
+                        <li><a href="{{url_for('manage.add_privacy_protocol')}}" class="text-center">
+                            <i class="icon-list-alt"></i>微商指数隐私协议</a>
+                        </li>
+                    </ul>
+                </li>
+
+                <li>
+                    <a href="#videpMenu" class="nav-header menu-first collapsed text-center" data-toggle="collapse">
+                        <i class="icon-book icon-large"></i>功能视频介绍</a>
+                    <ul id="videpMenu" class="nav nav-list collapse menu-second">
+                        <li><a href="{{url_for('manage.get_function_video')}}" class="text-center">
+                            <i class="icon-list-alt"></i>分身功能视频介绍</a>
+                        </li>
+                        <li><a href="{{url_for('manage.master_get_function_video')}}" class="text-center">
+                            <i class="icon-list-alt"></i>主应用功能视频介绍</a>
+                        </li>
+                    </ul>
+                </li>
+
+                <li>
+                    <a href="#friMenu" class="nav-header menu-first collapsed text-center" data-toggle="collapse">
+                        <i class="icon-book icon-large"></i>智能加好友</a>
+                    <ul id="friMenu" class="nav nav-list collapse menu-second">
+                        <li><a href="{{url_for('manage.add_friends')}}" class="text-center">
+                            <i class="icon-list-alt"></i>智能加好友</a>
+                        </li>
+                        <li><a href="{{url_for('manage.second_add')}}" class="text-center">
+                            <i class="icon-list-alt"></i>数据源配置</a>
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#WeMenu" class="nav-header menu-first collapsed text-center" data-toggle="collapse">
+                        <i class="icon-book icon-large"></i>公众号管理</a>
+                    <ul id="WeMenu" class="nav nav-list collapse menu-second">
+                        <li><a href="{{url_for('manage.business_assistant')}}" class="text-center">
+                            <i class="icon-list-alt"></i>微商助理</a>
+                        </li>
+                        <li><a href="{{url_for('manage.add_link')}}" class="text-center">
+                            <i class="icon-list-alt"></i>微课堂</a>
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#TriangleMenu" class="nav-header menu-first collapsed text-center" data-toggle="collapse">
+                        <i class="icon-book icon-large"></i>倒三角功能配置</a>
+                    <ul id="TriangleMenu" class="nav nav-list collapse menu-second">
+                        <li><a href="{{url_for('manage.set_function')}}" class="text-center">
+                            <i class="icon-list-alt"></i>倒三角功能配置</a>
+                        </li>
+                        <li><a href="{{url_for('manage.micro_store_url')}}" class="text-center">
+                            <i class="icon-list-alt"></i>有好商品跳转链接</a>
+                        </li>
+                        <li><a href="{{url_for('manage.every_wash')}}" class="text-center">
+                            <i class="icon-list-alt"></i>每日一淘跳转链接</a>
+                        </li>
+                        <li><a href="{{url_for('manage.function_hot_dot')}}" class="text-center">
+                            <i class="icon-list-alt"></i>功能小红点</a>
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#GeneralizeMenu" class="nav-header menu-first collapsed text-center" data-toggle="collapse">
+                        <i class="icon-book icon-large"></i>推广赚钱</a>
+                    <ul id="GeneralizeMenu" class="nav nav-list collapse menu-second">
+                        <li><a href="{{url_for('manage.generalize_data')}}" class="text-center">
+                            <i class="icon-list-alt"></i>推广数据</a>
+                        </li>
+                        <li><a href="{{url_for('manage.invite_code_data')}}" class="text-center">
+                            <i class="icon-list-alt"></i>邀请码推广数据</a>
+                        </li>
+                        <li><a href="{{url_for('manage.active_intro')}}" class="text-center">
+                            <i class="icon-list-alt"></i>活动说明</a>
+                        </li>
+                        <li><a href="{{url_for('manage.fc_info')}}" class="text-center">
+                            <i class="icon-list-alt"></i>邀请素材</a>
+                        </li>
+                        <li><a href="{{url_for('manage.money_check')}}" class="text-center">
+                            <i class="icon-list-alt"></i>提现审核</a>
+                        </li>
+                    </ul>
+                </li>
+                {% endif %}
+            {% endif %}
+            </ul>
+        </div>
+        <div class="col-md-10 col-lg-10">
+            <div class="container">
+                {% for message in get_flashed_messages() %}
+                <div class="alert alert-warning col-md-10 col-lg-10">
+                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                    {{ message }}
+                </div>
+                {% endfor %}
+            </div>
+            {% block page_content %}{% endblock %}
+            <!--分页开始-->
+            <div class="row-fluid float-right">
+                <div class="col-md-12">
+                    <div class="pagination">
+                    {% block page %}{% endblock %}
+                    </div>
+                </div>
+            </div>
+            <!--分页结束-->
+        </div>
+    </div>
+</div>
+{% endif %}
+{% if use_login %}
+<div class="container" style="margin-top: 200px;">
+    {% for message in get_flashed_messages() %}
+    <div class="alert alert-warning">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        {{ message }}
+    </div>
+    {% endfor %}
+    {% block login_content %}{% endblock %}
+</div>
+{% endif %}
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/jquery.js') }}"></script>
+<script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/moment.js') }}"></script>
+<script src="{{ url_for('static', filename='js/bootstrap-datetimepicker.js') }}"></script>
+<script src="{{ url_for('manage.static', filename='js/godin.js') }}"></script>
+{{ moment.include_moment() }}
+{% endblock %}

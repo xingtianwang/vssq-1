@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block subtitle %} -功能视频介绍{% endblock %}
+
+{% block page_content %}
+    <form action="{{ url_for('manage.master_edit_function_video', id=id) }}" method="post" enctype="multipart/form-data">
+        {{ form.csrf_token }}
+        <table align="center" style="font-size:14px;">
+            <tr>
+                <td style="padding-right:5px;">{{ form.function_name.label }}:</td>
+                <td style="padding-bottom:10px;">{{ form.function_name(class="form-control") }}</td>
+                <td style="padding-bottom:10px;padding-left:10px;">必填</td>
+            </tr>
+            <tr>
+                <td style="padding-right:5px;padding-bottom:5px;">{{ form.video_url.label }}:</td>
+                <td style="padding-bottom:15px;">{{ form.video_url }}</td>
+            </tr>
+            <tr>
+                <td style="padding-right:5px;">{{ form.comment.label }}:</td>
+                <td style="padding-bottom:10px;">{{ form.comment(class="form-control") }}</td>
+                <td style="padding-bottom:10px;padding-left:10px;">选填</td>
+            </tr>
+
+            <tr>
+                <td style="padding-bottom:100px;">
+                    {{ form.submit(class="btn btn-primary") }}
+                </td>
+            </tr>
+        </table>
+    </form>
+{% endblock %}

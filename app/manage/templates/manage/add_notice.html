@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+{% block subtitle %} -添加通知{% endblock %}
+
+{% block page_content %}
+    <form action="{{ url_for('manage.add_notice') }}" method="post" enctype="multipart/form-data">
+        {{ form.csrf_token }}
+        <table align="center" style="font-size:14px;">
+            <tr>
+                <td style="padding-right:5px;">{{ form.notice_type.label }}:</td>
+                <td style="padding-bottom:10px;">{{ form.notice_type(class="form-control") }}</td>
+            </tr>
+            <tr>
+                <td style="padding-right:5px;">{{ form.title.label }}:</td>
+                <td style="padding-bottom:10px;">{{ form.title(class="form-control", placeholder="必填, 最多12字") }}</td>
+            </tr>
+            <tr>
+                <td style="padding-right:5px;">{{ form.content.label }}:</td>
+                <td style="padding-bottom:10px;">{{ form.content(class="form-control") }}</td>
+                <td style="padding-bottom:10px;">文字通知时必填,最多150字</td>
+            </tr>
+            <tr>
+                <td style="padding-right:5px;">{{ form.icon.label }}:</td>
+                <td style="padding-bottom:10px;">{{ form.icon(class="form-control") }}</td>
+                <td style="padding-bottom:10px;">图片通知时必填</td>
+            </tr>
+            <tr>
+                <td style="padding-right:5px;">{{ form.icon_link.label }}:</td>
+                <td style="padding-bottom:10px;">{{ form.icon_link(class="form-control") }}</td>
+                <td style="padding-bottom:10px;">注：填写功能地址或链接地址，不填写则不跳转</td>
+            </tr>
+            <tr>
+                <td style="padding-right:5px;">{{ form.wx.label }}:</td>
+                <td style="padding-bottom:10px;">{{ form.wx(class="form-control") }}</td>
+            </tr>
+            <tr>
+                <td style="padding-right:5px;"></td>
+                <td style="padding-bottom:15px;">注：添加后用户可在配置的H5页面中添加以上微信号</td>
+            </tr>
+            <tr>
+                <td style="padding-right:5px;">{{ form.time_quantum.label }}:</td>
+                <td style="padding-bottom:10px;">{{ form.time_quantum(class="form-control") }}</td>
+            </tr>
+            <tr>
+                <td style="padding-right:5px;">{{ form.notice_user.label }}:</td>
+                <td style="padding-bottom:10px;">{{ form.notice_user }}</td>
+            </tr>
+            <tr>
+                <td style="padding-right:5px;">{{ form.start_time.label }}:</td>
+                <td style="padding-bottom:10px;">
+                    <div class='input-group date form_datetime' style="width: 240px;" id='start_date_picker'>
+                        {{ form.start_time(class="form-control curser" ,placeholder="请选择时间") }}
+                        <span class="input-group-addon"><span class="glyphicon glyphicon-calendar" ></span></span>
+                    </div></td>
+
+            </tr>
+            <tr>
+                <td style="padding-right:5px;">{{ form.end_time.label }}:</td>
+                <td style="padding-bottom:10px;">
+                    <div class='input-group date form_datetime' style="width: 240px;" id='end_date_picker'>
+                        {{ form.end_time(class="form-control curser" ,placeholder="请选择时间") }}
+                        <span class="input-group-addon"><span class="glyphicon glyphicon-calendar" ></span></span>
+                    </div></td>
+
+            </tr>
+            <tr>
+                <td style="padding-right:5px;">{{ form.remarks.label }}:</td>
+                <td style="padding-bottom:10px;">{{ form.remarks(class="form-control") }}</td>
+            </tr>
+            <tr>
+                <td style="padding-bottom:100px;">
+                    <a href="{{url_for('manage.add_notice')}}" class="btn btn-primary">重置</a>
+                    {{ form.submit(class="btn btn-primary") }}
+                </td>
+            </tr>
+        </table>
+    </form>
+{% endblock %}

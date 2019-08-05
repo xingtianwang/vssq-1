@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% import "_macro.html" as macro %}
+{% import 'bootstrap/wtf.html' as wtf%}
+
+{% block subtitle %} - Login {% endblock %}
+{% set use_login = True %}
+{% block login_content %}
+<div class="text-center text-primary"><h2>微商神器管理系统</h2></div>
+<div class="panel panel-primary">
+    <div class="panel-heading">
+        <a style="color:#fff"></a>
+    </div>
+    <div class="panel-body">
+        {{ macro.login(form) }}
+    </div>
+</div>
+{% endblock %}

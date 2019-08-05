@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block subtitle %} -imei增加免广告时间{% endblock %}
+
+{% block page_content %}
+    <form action="{{ url_for('manage.add_imei_vip', imei=imei) }}" method="post" enctype="multipart/form-data">
+        {{ form.csrf_token }}
+        <table align="center" style="font-size:14px;">
+            <tr>
+                <td style="padding-right:5px;">{{ form.imei.label }}:</td>
+                <td style="padding-bottom:10px;">{{ form.imei(class="form-control", placeholder="必填") }}</td>
+            </tr>
+            <tr>
+                <td style="padding-right:5px;">
+                    <a href="{{url_for('manage.add_imei_vip', imei=imei)}}" class="btn btn-primary">重置</a>
+                </td>
+                <td style="padding-right:5px;">
+                    {{ form.submit(class="btn btn-primary") }}
+                    <a href="{{url_for('manage.get_key_info', imei=imei)}}" class="btn btn-primary">返回</a>
+                </td>
+            </tr>
+        </table>
+    </form>
+{% endblock %}

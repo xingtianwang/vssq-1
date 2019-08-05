@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% block subtitle %} -编辑群回复{% endblock %}
+
+{% block page_content %}
+<form action="{{ url_for('manage.edit_group_reply', reply_id=reply_id) }}" method="post" enctype="multipart/form-data">
+    {{ form.csrf_token }}
+    <div class="row" style="margin:0 auto; text-align:left;">
+        <div class="col-lg-4 col-md-4 col-lg-offset-4 col-md-offset-4">
+            <div style="margin-bottom:20px;", hidden="hidden", id="img">
+                <img src="{{ photo_url}}{{ photo }}" width="140" height="140">
+            </div>
+            <div style="padding-bottom:10px;">
+                {{ form.r_type.label }}:
+                {{ form.r_type(class="form-control", id="r_type", style="width:160px; height:40px; display:inline-block")}}
+            </div>
+            <div id="photo_frame_code", hidden="hidden">
+                {{ form.photo.label }}:
+                {{ form.photo(class="form-control", placeholder="附件", style="width:160px; height:40px; display:inline-block;")}}
+            </div>
+            <div id="reply_frame_code", style="margin: 10px auto;", hidden="hidden">
+                {{ form.reply.label }}:
+                {{ form.reply(class="form-control", placeholder="群回复", style="width:240px; display:inline-block; margin: 10px 0px;") }}
+            </div>
+            <div>
+            {{ form.submit(class="btn btn-primary") }}
+            </div>
+        </div>
+
+    </div>
+
+</form>
+<script>
+    window.onload = function() {
+        var obj_select = document.getElementById("r_type");
+        obj_select.onchange = function () {
+            if (this.value == 0) {
+                $("#reply_frame_code").show();
+                $("#photo_frame_code").hide();
+                $('#img').hide();
+            } else {
+                $("#photo_frame_code").show();
+                $("#reply_frame_code").hide();
+                $('#img').hide();
+            }
+        };
+        r_type = $("#r_type").val();
+        if (r_type == 0) {
+            $("#reply_frame_code").show();
+            $("#photo_frame_code").hide();
+            $('#img').hide();
+        } else {
+            $("#photo_frame_code").show();
+            $("#reply_frame_code").hide();
+            $('#img').show();
+        }
+    }
+</script>
+{% endblock %}

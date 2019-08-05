@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% block subtitle %} -添加互动广告{% endblock %}
+
+{% block page_content %}
+    <form action="{{ url_for('manage.interactive_ads') }}" method="post" enctype="multipart/form-data">
+        {{ form.csrf_token }}
+        <table align="center" style="font-size:14px;">
+            <tr>
+                <td style="padding-right:5px;">{{ form.name.label }}:</td>
+                <td style="padding-bottom:10px;">{{ form.name(class="form-control", placeholder="必填") }}</td>
+            </tr>
+            <tr>
+                <td style="padding-right:5px;">{{ form.position.label }}:</td>
+                <td style="padding-bottom:10px;">{{ form.position(class="form-control") }}</td>
+            </tr>
+            <tr>
+                <td style="padding-right:5px;">{{ form.source.label }}:</td>
+                <td style="padding-bottom:10px;">{{ form.source(class="form-control") }}</td>
+            </tr>
+            <tr>
+                <td style="padding-right:5px;">{{ form.charge_mode.label }}:</td>
+                <td style="padding-bottom:10px;">{{ form.charge_mode(class="form-control") }}</td>
+            </tr>
+            <tr>
+                <td style="padding-right:5px;">{{ form.refresh_status.label }}:</td>
+                <td style="padding-bottom:10px;">{{ form.refresh_status(class="form-control")}}</td>
+            </tr>
+            <tr>
+                <td style="padding-right:5px;">{{ form.user_count.label }}:</td>
+                <td style="padding-bottom:10px;">{{ form.user_count(class="form-control")}}</td>
+            </tr>
+            <tr>
+                <td style="padding-right:5px;">{{ form.morning_count.label }}:</td>
+                <td style="padding-bottom:10px;">{{ form.morning_count(class="form-control")}}</td>
+            </tr>
+            <tr>
+                <td style="padding-right:5px;">{{ form.afternoon_count.label }}:</td>
+                <td style="padding-bottom:10px;">{{ form.afternoon_count(class="form-control")}}</td>
+            </tr>
+            <tr>
+                <td style="padding-right:5px;">{{ form.night_count.label }}:</td>
+                <td style="padding-bottom:10px;">{{ form.night_count(class="form-control")}}</td>
+            </tr>
+            <tr>
+                <td style="padding-right:5px;">{{ form.icon.label }}:</td>
+                <td style="padding-bottom:10px;">{{ form.icon(class="form-control", id="icon") }}</td>
+            </tr>
+            <tr>
+                <td style="padding-right:5px;">{{ form.third_link.label }}:</td>
+                <td style="padding-bottom:10px;">{{ form.third_link(class="form-control") }}</td>
+            </tr>
+            <tr>
+                <td style="padding-bottom:100px;">
+                    {{ form.submit(class="btn btn-primary") }}
+                    <a href="{{url_for('manage.interactive_ads')}}" class="btn btn-primary">重置</a>
+                </td>
+            </tr>
+        </table>
+    </form>
+{% endblock %}

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no">
+    <title></title>
+    <link rel="stylesheet" href="{{ url_for('share.static', filename='css/appeal.css') }}">
+    <script src="{{ url_for('static', filename='js/jquery.js') }}"></script>
+</head>
+<body class="bgcolor-gray">
+    <div class="detailpadding bgcolor-white">
+        <p class="detailTitle">申诉内容：</p>
+        <p class="detailText">{{ feed_back.content }}</p>
+        <p class="detailTitle">问题截图：</p>
+        <img class="detailImg" src="{{ file_ser }}{{ feed_back.picture }}" width="94" height="94">
+        <p class="detailTitle">联系方式：</p>
+        <p class="detailText margin-b">{{ feed_back.user_contact }}</p>
+    </div>
+
+    <div class="detailpadding">
+        <p class="detailTitle"><img class="wxIcon" src="{{ url_for('share.static', filename='images/share/reply.png') }}" width="16" height="15">申诉回复：</p>
+        {% if feed_back.status == 0 %}
+        <p class="return-empty">暂无回复，请耐心等待</p>
+        {% else %}
+        <p class="detailText">{{ feed_back.back_content }}</p>
+        {% endif %}
+    </div>
+</body>
+</html>

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no">
+	<title></title>
+	<link rel="stylesheet" href="{{ url_for('share.static', filename='css/business/agreement.css') }}">
+    <script src="{{ url_for('share.static', filename='js/jquery.js') }}" type="text/javascript"></script>
+</head>
+<body>
+    <div class="container con-padding">
+		<pre>{{ content }} </pre>
+		
+	</div>
+	<div class="bottom">
+		<input type="checkbox" id="awesome" />
+		<label for="awesome">我已阅读并同意以上条款</label>
+        <button class="btn" onclick="checkedState()">确定</button>
+	</div>
+<script>
+	function checkedState(){
+		if($("input").prop("checked") == true){
+			window.location.href="{{ url_for('share.bireport', id=id) }}";
+		}else if($("input").prop("checked") == false){
+			// alert("请同意");
+			// 刷新页面？
+			location.reload();
+		}
+	}
+	</script>
+</body>
+</html>

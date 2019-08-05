@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no">
+	<title>恭喜成为试用代理商</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('home.static', filename='css/agency.css') }}">
+</head>
+<body>
+	<div class="container">
+		<div class="wz1">恭喜成为试用代理商</div>
+		<div class="wz3">
+			{% for item in data %}
+			<p align="center">授权码{{ item.i}}：{{ item.code }}</p>
+			{% endfor %}
+			<div class="copy marginTop">(长按可复制)</div>
+			<div class="tip-red">请您妥善保管授权码</div>
+			<div class="notice">注：可通过点击微信顶部“倒三角”图标后的下拉界面“我的授权码”进入此页面</div>
+		</div>
+		<div class="wz6">下载微商多开分身获取V商神器</div>
+		<div class="wz6">线上唯一购买授权码渠道</div>
+        <p onclick="VSK()" class="link1 marginTop14">http://wemiyao.com/webusiness/share/download</p>
+		<div class="copy">(长按可复制)</div>
+		<div class="wz7">“官方诚招，量大从优”</div>
+		<div class="wz6">详情请联系V商神器官方商务</div>
+		<div  class="wz10">
+			<div class="wz11">我们的联系方式</div>
+			<div class="wz12">
+				<p class="qq">QQ：1642564872</p>
+				<p class="weixin">微信：VSSQ888</p>
+			</div>
+		</div>
+		<div class="wz7">V商神器下载链接</div>
+        <p onclick="VSSQ()" class="link1 marginTop6">http://wemiyao.com/vssq/share/download</p>
+		<div class="copy">(长按可复制)</div>
+		<div>
+			<img class="img1" src="{{ url_for('home.static', filename='imgs/qrcode.png') }}" alt="">
+		</div>
+	</div>
+<script>
+    function VSK(){
+            window.location.href="http://wemiyao.com/webusiness/share/download";
+    }
+    function VSSQ(){
+            window.location.href="http://wemiyao.com/vssq/share/download";
+    }
+</script>
+</body>
+</html>

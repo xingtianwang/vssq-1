@@ -1,0 +1,22 @@
+body{ width: 100%;background: #ffffff; font-family: "微软雅黑";}
+	*{ margin:0 auto;padding: 0;text-align: center;box-sizing:border-box; -moz-box-sizing:border-box;-webkit-box-sizing:border-box;}
+	.tit{ margin-top: 60px; font-size:22px;text-align:center;padding-left:2px;color: #333333;}
+	.details{margin-top: 24px;}
+	.details p{font-size: 13px; color: #333333; margin-top: 18px;}
+	.logo img{margin-top: 35px; width: 95px; height: 95px;}
+	.btn{ margin-top: 35px; margin-bottom:23px;width:225px ; height: 40px; font-size: 16px;color:#333333; background: #f5f3f4; border: #cccccc solid 1px; border-radius: 3px;-moz-border-radius: 3px;-webkit-border-radius: 3px;}
+	.btn:hover{background:#e5e5e5; }
+	.hint{width:108px; height: 32px; line-height:30px; border:solid 1px #cccccc; font-size: 12px;color: #666666; margin-bottom:10px; border-radius: 3px; -moz-border-radius: 3px;-webkit-border-radius: 3px;}
+	.hint2{ background: #999999; width:108px; height: 32px; line-height:30px; border:solid 1px #999999; font-size: 12px;color:#ffffff; margin-bottom:10px; border-radius: 3px; -moz-border-radius: 3px;-webkit-border-radius: 3px;}
+
+	.er{margin-bottom:35px; font-size: 14px; color: #333333;}
+	.two_code img{width: 132px; height: 132px;}
+	.introduce{width: 296px; height:228px;  padding:16px; text-align: center; border: solid 1px #cccccc;border-radius: 3px; -moz-border-radius: 3px;-webkit-border-radius: 3px;}
+	.introduce dl dt,dd{text-align: left; font-size: 13px;color: #333333;}
+	.introduce dt{margin-bottom: 15px;}
+	.introduce dl dd{text-indent:13px; line-height: 21px;}
+	footer{margin:35px 0px 24px; font-size: 12px; color: #333333;}
+	hr{ margin-top: 38px; margin-bottom: 35px;}
+	.shade-style{background-color:#000;position:fixed;z-index:0;left:0;top:0;display:none; width:100%;height:100%; min-height:100%; opacity:0.8;filter: alpha(opacity=80);-moz-opacity: 0.8;}
+	.dx{width:80%;margin: 0px auto;}
+	.dx img{width:100%;}

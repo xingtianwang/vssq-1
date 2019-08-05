@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% import "_macro.html" as macro%}
+{% block subtitle %} -渠道版本功能开关{% endblock %}
+{% block page_content %}
+<div class="form-group" style="padding-right:100px;padding-top:100px;text-align:center;">
+
+
+    {% if data == 1 %}
+    <span>付费渠道版本</span>
+    <br><br><br>
+    <button type="button" data-toggle="modal" class="btn btn-primary" onClick="set_hide_icon_status(0)">
+        已显示图标</button>
+    {% else %}
+    <span>付费渠道版本</span>
+    <br><br><br>
+    <button type="button"  data-toggle="modal" class="btn btn-primary" onClick="set_hide_icon_status(1)">
+        已隐藏图标</button>
+    {% endif %}
+</div>
+<script>
+	function set_hide_icon_status(flag)
+	{
+	    var close = ''
+	    if (flag == 0) {
+	        close = confirm("确认关闭渠道版本图标显示");
+	    } else {
+	        close = confirm("确认开启渠道版本图标显示");
+	    }
+	    if (close) {
+		    $.ajax({
+			    url: "{{url_for('manage.set_hide_icon_status')}}",
+			    data: {"flag":flag},
+			    type: "GET",
+			    dataType: "json",
+			    async: false,
+			    cache: false
+			}).done(function( result ) {
+				if(result["code"] != 0){ //如果出错则为非0
+					alert('设置失败');
+				}else{
+					alert('设置成功!');
+				}
+			}).fail(function(result){
+				var errmsg = "访问服务器出错："+fmtJqueryAjaxError(result);
+				alert(errmsg);
+			});
+		} else {
+		    alert('已取消')
+		}
+		location.reload();
+	}
+</script>
+{% endblock %}

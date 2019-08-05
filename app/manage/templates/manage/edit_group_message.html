@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% block subtitle %} -编辑群信息{% endblock %}
+
+{% block page_content %}
+
+
+<form action="{{ url_for('manage.edit_group_message', message_id=message_id) }}" method="post" enctype="multipart/form-data">
+    {{ form.csrf_token }}
+    <div class="row" style="margin:0 auto; text-align:left;">
+        <div class="col-lg-4 col-md-4 col-lg-offset-4 col-md-offset-4">
+            <div style="margin-bottom:20px;", id="img", hidden="hidden">
+                <img src="{{ photo_url}}{{ photo }}" width="140" height="140">
+            </div>
+            <div style="padding-bottom:10px;">
+                {{ form.m_type.label }}
+                {{ form.m_type(class="form-control", style="width:160px; height:40px; display:inline-block;", id="m_type")}}
+            </div>
+            <div id="photo_frame_code", hidden="hidden">
+                {{ form.photo.label }}:
+                {{ form.photo(class="form-control", placeholder="附件", style="width:160px; height:40px; display:inline-block;")}}
+            </div>
+            <div id="message_frame_code", style="margin: 10px auto; padding-bottom:10px;", hidden="hidden">
+                {{ form.message.label }}:
+                {{ form.message(class="form-control", placeholder="群信息", style="width:240px; display:inline-block; margin: 10px 0px;") }}
+            </div>
+            <div>
+                {{ form.submit(class="btn btn-primary") }}
+            </div>
+        </div>
+
+    </div>
+
+</form>
+<script>
+	window.onload = function() {
+        var obj_select = document.getElementById("m_type");
+        obj_select.onchange = function () {
+            if (this.value == 0) {
+                $("#message_frame_code").show();
+                $("#photo_frame_code").hide();
+                $('#img').hide();
+            } else {
+                $("#photo_frame_code").show();
+                $("#message_frame_code").hide();
+                $('#img').hide();
+            }
+        };
+        m_type = $("#m_type").val();
+        if (m_type == 0) {
+            $("#message_frame_code").show();
+            $("#photo_frame_code").hide();
+            $('#img').hide();
+        } else {
+            $("#photo_frame_code").show();
+            $("#message_frame_code").hide();
+            $('#img').show();
+        }
+    }
+</script>
+{% endblock %}

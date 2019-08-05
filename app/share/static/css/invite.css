@@ -1,0 +1,190 @@
+body{
+    background: #F5F5F5;
+    font-family: "微软雅黑";
+}
+*{
+padding: 0px;
+margin: 0px;
+box-sizing:border-box;
+-webkit-box-sizing:border-box;
+-moz-box-sizing:border-box;
+}
+a{
+    text-decoration:none;
+}
+.container{
+    padding:15px;
+    text-align: center;
+}
+.time{
+    background-color:rgba(0,0,0,0.35);
+    border-radius: 4px;
+    text-align: center;
+    margin:0px auto;
+    font-size: 12px;
+    color: #FFFFFF;
+    letter-spacing: 0.34px;
+    padding:3px 12px;
+}
+.article{
+    background: #ffffff;
+    padding:10px 10px 23px 10px;
+    margin:10px 0px 20px 0px;
+    border-radius:8px;
+}
+.title{
+    font-size: 14px;
+    color: #555555;
+    letter-spacing: 0.4px;
+    text-align: left;
+    font-weight: bold;
+}
+.text{
+    font-family: "微软雅黑";
+    font-size: 14px;
+    line-height: 22px;
+    color: #555555;
+    letter-spacing: 0.4px;
+    text-align: left;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+.img{
+    text-align: left;
+    margin-top:5px;
+}
+.img img{
+    width: 100%;
+}
+.button{
+    margin-top:15px;
+}
+button{
+    border: 1px solid #939393;
+    border-radius: 100px;
+    background: #ffffff;
+    width: 100%;
+    padding:7px 0px;
+    font-size: 15px;
+    color:#888888;
+    letter-spacing:0.43px;
+    text-align:center;
+    font-weight: bold;
+}
+.space{
+    margin-right:20px;
+}
+.flex-box{
+    display: box;
+    display: -webkit-box;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+    width: 100%;
+}
+.flex1{
+    flex: 1;
+    -ms-flex:1;
+    -webkit-flex:1;
+    -moz-box-flex:1;
+    -webkit-box-flex:1;
+    box-flex:1;
+    width: 50%; 
+}
+.imgSyle{
+    width: 85px;
+    height: 85px;
+    float: left;
+    margin: 5px 5px;
+}
+.active{
+    overflow: hidden;
+}
+.visible{
+    overflow: visible;
+}
+.clearFloat{
+    clear: both;
+}
+/*新增*/
+.my_manage {
+    overflow: hidden;
+    background-color: #ffffff;
+    padding: 17px 15px;
+    margin-top:15px;
+}
+.rows {
+    display: box;
+    display: -webkit-box;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+    flex-direction: row;
+}
+.manage_text {
+    font-size: 14px;
+    color: #333333;
+    padding: 3px;
+    background: none !important;
+    text-align: left !important;
+    line-height: 1.4 !important;
+    align-self: center;
+}
+.urlText {
+    font-size: 14px;
+    color: #333333;
+    text-align: left;
+    border: none;
+    outline: none;
+    -webkit-tap-highlight-color: rgba(0,0,0,0);
+    -webkit-tap-highlight-color: transparent;
+    -moz-tap-highlight-color: transparent;
+    display: block;
+    overflow: hidden;
+    word-break: keep-all;
+    white-space: nowrap;
+    height: 24px;
+    padding-top: 6px;
+    margin-right: 10px;
+    resize: none;
+    letter-spacing: -1px;
+}
+.copyBtn {
+    padding: 6px 15px;
+    background: #FD6D57;
+    border-radius: 4px;
+    color: #ffffff;
+    font-size: 12px;
+    text-align: center;
+    border: none;
+    outline: none;
+    -webkit-tap-highlight-color: rgba(0,0,0,0);
+    -webkit-tap-highlight-color: transparent;
+    -moz-tap-highlight-color: transparent;
+}
+.flexOne {
+    flex: 1;
+    -ms-flex: 1;
+    -webkit-flex: 1;
+    -moz-box-flex: 1;
+    -webkit-box-flex: 1;
+    box-flex: 1;
+}
+.alignL{
+    text-align:left;
+}
+.alignR{
+    text-align:right;
+}
+.buttonTitle{
+    font-size: 12px;
+    color: #FD6D57;
+    letter-spacing: 0;
+    text-align: left;
+    padding-left: 5px;
+}
+.alignItem{
+    align-items: center;
+}

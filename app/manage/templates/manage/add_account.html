@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block subtitle %} -添加账户{% endblock %}
+
+{% block page_content %}
+    <form action="{{ url_for('manage.add_account') }}" method="post" enctype="multipart/form-data">
+        {{ form.csrf_token }}
+        <table align="center" style="font-size:14px;">
+            <tr>
+                <td style="padding-right:5px;">{{ form.channel_name.label }}:</td>
+                <td style="padding-bottom:10px;">{{ form.channel_name(class="form-control", placeholder="必填") }}</td>
+            </tr>
+            <tr>
+                <td style="padding-right:5px;">{{ form.account.label }}:</td>
+                <td style="padding-bottom:10px;">{{ form.account(class="form-control", placeholder="6-12位英文+数字") }}</td>
+            </tr>
+            <tr>
+                <td></td>
+                <td style="padding-right:5px;">注：初始密码为6个0</td>
+            </tr>
+            <tr>
+                <td style="padding-right:5px;">{{ form.channel_manager.label }}:</td>
+                <td style="padding-bottom:10px;">{{ form.channel_manager(class="form-control", placeholder="必填") }}</td>
+            </tr>
+
+            <tr>
+                <td style="padding-right:5px;">{{ form.content.label }}:</td>
+                <td style="padding-bottom:10px;">{{ form.content(class="form-control", placeholder="最多20字") }}</td>
+            </tr>
+            <tr>
+                <td style="padding-bottom:100px;">
+                    {{ form.submit(class="btn btn-primary") }}
+                </td>
+            </tr>
+        </table>
+    </form>
+{% endblock %}

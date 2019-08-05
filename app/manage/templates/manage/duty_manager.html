@@ -1,0 +1,110 @@
+{% extends "base.html" %}
+{% import "_macro.html" as macro%}
+{% block subtitle %} -DM管理{% endblock %}
+
+{% block page_content %}
+{% if action == "LIST"%}
+<div class="tab-content">
+	<div class="tab-pane active">
+		<table id="appinfo" class="table table-striped table-hover table-bordered">
+			<thead>
+				<tr class="success">
+					<td class="text-center">ID</td>
+					<td class="text-center">姓名</td>
+					<td class="text-center">邮箱</td>
+					<td class="text-center">操作</td>
+				</tr>
+			</thead>
+			<tbody>
+			{% for user in users %}
+			<tr>
+				<td class="text-center">{{ user.id }}</td>
+				<td class="text-center">{{ user.username }}</td>
+				<td class="text-center">{{ user.email }}</td>
+				<td class="text-center">
+					{% if user.on_duty == True %}
+					<a class="btn btn-danger btn-xs" onclick="set_duty_manager_status({{ user.id }})">停用</a>
+					{% else %}
+					<a class="btn btn-success btn-xs" onclick="set_duty_manager_status({{ user.id }})">启用</a>
+					{% endif %}
+					<a class="btn btn-danger btn-xs" onclick="del_duty_manager({{ user.id }})">删除</a>
+				</td>
+			</tr>
+			{% endfor %}
+			</tbody>
+		</table>
+	</div>
+</div>
+<script>
+	function del_duty_manager(id)
+	{
+		$.ajax({
+			  url: "{{url_for('manage.del_duty_manager')}}",
+			  data: {"id":id},
+			  type: "GET",
+			  dataType: "json",
+			  async: false,
+			  cache: false
+			}).done(function( result ) {
+				if(result.code != 0){ //如果出错则为非0
+					alert('删除失败');
+				}else{
+					alert('删除成功!');
+					parent.location.reload(); //刷新页面
+				}
+			}).fail(function(result){
+				var errmsg = "访问服务器出错："+fmtJqueryAjaxError(result);
+				alert(errmsg);
+			});
+	}
+
+	function set_duty_manager_status(id)
+	{
+		$.ajax({
+			  url: "{{url_for('manage.set_duty_manager_status')}}",
+			  data: {"id":id},
+			  type: "GET",
+			  dataType: "json",
+			  async: false,
+			  cache: false
+			}).done(function( result ) {
+				if(result.code < 0){ //如果出错则为非0
+					alert('操作失败');
+				}else{
+					alert('操作成功!');
+					parent.location.reload(); //刷新页面
+				}
+			}).fail(function(result){
+				var errmsg = "访问服务器出错："+fmtJqueryAjaxError(result);
+				alert(errmsg);
+			});
+	}
+</script>
+{% elif action == "ADD"%}
+
+<form action="{{ url_for('manage.add_duty_manager') }}" method="post">
+    {{ form.csrf_token }}
+    <table align="center" style="font-size:14px;">
+        <tr>
+            <td style="padding-right:5px;">{{ form.name.label }}:</td>
+            <td style="padding-bottom:10px;">{{ form.name(class="form-control", placeholder="值班经理姓名")}}</td>
+        </tr>
+        <tr>
+            <td style="padding-right:5px;">{{ form.email.label }}:</td>
+            <td style="padding-bottom:10px;">{{ form.email(class="form-control", placeholder="邮箱", style="width:240px;") }}</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td style="padding-bottom:10px;">
+                {{ form.submit(class="btn btn-primary") }}
+            </td>
+        </tr>
+    </table>
+</form>
+{% endif %}
+{% endblock %}
+{% block page%}
+{% if action == "LIST"%}
+	{{ macro.pagination_widget(pagination, 'manage.list_duty_manager') }}
+{% endif %}
+{% endblock %}

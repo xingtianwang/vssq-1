@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% import "_macro.html" as macro%}
+{% block subtitle %} -key查询{% endblock %}
+
+{% block page_content %}
+<form class="form-inline panel panel-default" action="{{url_for('manage.get_key_info')}}"  method="post">
+    {{ form.csrf_token }}
+    <div class="panel-body">
+        <div class="form-group" style="padding-right:5px;padding-top:5px;">
+            {{ form.key_id.label }}:
+            {{ form.key_id(class="form-control") }}
+        </div>
+        <div class="form-group" style="padding-right:5px;padding-top:5px;">
+			<a href="{{url_for('manage.get_key_info')}}" class="btn btn-primary">重置</a>
+            {{ form.submit(class="btn btn-primary") }}
+        </div>
+    </div>
+</form>
+
+<div class="tab-content">
+	<div class="tab-pane active">
+		<table id="appinfo" class="table table-striped table-hover table-bordered">
+			<thead>
+				<tr class="info">
+					<td class="text-center">Key-ID</td>
+					<td class="text-center">激活时间</td>
+					<td class="text-center">IMEI</td>
+					<td class="text-center">操作</td>
+				</tr>
+			</thead>
+			<tbody>
+			{% for temp in data %}
+			<tr>
+				<td class="text-center">{{temp.key_id}}</td>
+                <td class="text-center">{{temp.activate_time}}</td>
+                <td class="text-center">{{temp.imei}}</td>
+                <td class="text-center"><a type="button" class="btn btn-info" href="{{ url_for('manage.add_key_imei', key_id=temp.key_id)}}">添加新imei</a></td>
+			</tr>
+			{% endfor %}
+			</tbody>
+		</table>
+    </div>
+</div>
+{% endblock %}

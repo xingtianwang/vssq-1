@@ -1,0 +1,147 @@
+ body,html{
+    margin: 0px;
+    padding: 0px;
+    width: 100%;
+    background:url(../images/invit/wskyqhy1.png) no-repeat;
+    background-size: cover;
+}
+*{
+    margin: 0px;
+    padding: 0px;
+    box-sizing:border-box;
+    -moz-box-sizing:border-box;
+    -webkit-box-sizing:border-box;
+}
+a{
+    display: block;
+    -webkit-tap-highlight-color:rgba(0,0,0,0);
+    tap-highlight-color:rgba(0,0,0,0);
+}
+.container{
+    width: 100%;
+    text-align: center;
+    padding:0px 17px 30px 17px;
+}
+.img1{
+    height: 137px;
+    margin:72px 0px 0px 0px;
+    border: 0;
+}
+.img2{ 
+    height: 44px;
+    margin:14px 0px 0px 0px;
+    border: 0;
+}
+.img3{
+    width: 100%;
+    height: 168px;
+    margin-top:-40px;
+    border: 0;
+}
+.img4{
+    height: 48px;
+    margin:25px 0px 0px 0px;
+    border: 0;
+}
+.img5{
+    height: 37px;
+    margin:13px 0px 0px 0px;
+    border: 0;
+}
+.img6{
+    width: 98%;
+    height: 80px;
+    margin-top: 30px;
+}
+.img7{
+    height: 38px;
+    margin-top: 35px;
+}
+.img8{
+    width: 98%;
+    height: 300px;
+    padding-bottom: 40px;
+}
+
+.wz3{  
+    margin-top: -300px;
+}
+.wz4 p{
+    font-family: PingFangSC-Regular;
+    font-size: 13.5px;
+    color: #FFFFFF;
+    letter-spacing: 0.1px;
+    text-align: left;
+    padding:0.9% 4.5%;
+    padding-top: 9.9%;
+}
+.wz5{
+    font-family: PingFangSC-Regular;
+    font-size: 14px;
+    color: #954F0E;
+    margin-top: -35px;
+    font-weight: bold;
+}
+.wz6{
+    font-family: PingFangSC-Regular;
+    font-size: 13.5px;
+    color: #8804E2;
+    letter-spacing: 0.17px;
+    line-height: 19px;
+}
+.wz8 p{
+    font-family: PingFangSC-Regular;
+    font-size: 13.5px;
+    color: #FFFFFF;
+    letter-spacing: 0.1px;
+    text-align: left;
+    padding:0.9% 4.5%;
+}
+.inviteCode{
+    background: #FFFFFF;
+    border-radius: 10px;
+    padding:2.3% 0;
+    width: 270px;
+    font-family: PingFangSC-Medium;
+    font-size: 14px;
+    color: #1B26C5;
+    font-weight: bold;
+    margin-top: -60px;
+    margin-bottom: 25px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/*微信浏览器中打开*/
+.shade-style{
+    background-color:#000;
+    position:fixed;
+    z-index:0;
+    left:0;
+    top:0;
+    display:none;
+    width:100%;
+    height:100%; 
+    min-height:100%; 
+    opacity:0.8;
+    filter: alpha(opacity=80);
+    -moz-opacity: 0.8;}
+.dx{
+    width:80%;
+    margin: 0px auto;
+}
+.dx img{
+    width:100%;
+}
+/*限购5件商品弹窗样式 start*/
+.five{display: none; position: absolute;z-index: 2; top: 50%;left: 50%; margin-left:-116px;margin-top: -75px; 
+      background: #ffffff; width: 234px;border-radius:3px;text-align: center;}
+.five-title{font-size: 16px;letter-spacing:0.48px; color: #888888;padding:17px 0px 24px 0px; }
+.five-con{font-size: 14px; color: #000000; letter-spacing:0.42px;}
+.five-btn{background:#ff7d43; color:#ffffff;font-size:15px;letter-spacing:0.45px;text-align:center;
+          padding:12px 97px;border-radius:3px; border:none; margin:31px 0px 5px 0px;}
+/*限购5件商品弹窗样式 end*/
+/*遮罩层*/
+#zhezhaoa{display:none;position:fixed;z-index:1;left:0;top:0;
+          background-color:#000;width:100%;height:100%; min-height:100%; opacity:0.5;
+          filter: alpha(opacity=50);-moz-opacity: 0.5;}

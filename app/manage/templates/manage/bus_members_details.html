@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+{% import "_macro.html" as macro%}
+
+{% block subtitle %} -商业充值用户个人详情管理{% endblock %}
+
+{% block page_content %}
+<form class="form-inline panel panel-default" action="{{url_for('manage.get_bus_members_details', godin_id=godin_id)}}", method="post">
+    {{ form.csrf_token }}
+    <div class="panel-body">
+        <div class="form-group" style="padding-right:5px;padding-top:5px;">
+            {{ form.pay_type.label }}:
+            {{ form.pay_type(class="form-control") }}
+        </div>
+        <div class="form-group" style="padding-right:5px;padding-top:5px;">
+            {{ form.category.label }}:
+            {{ form.category(class="form-control") }}
+        </div>
+        <div class="form-group" style="padding-right:5px;padding-top:5px;">
+            {{ form.status.label }}:
+            {{ form.status(class="form-control") }}
+        </div>
+        <div class="form-group" style="padding-right:5px;padding-top:5px;">
+            {{ form.order_number.label }}:
+            {{ form.order_number(class="form-control") }}
+        </div>
+        {{ macro.time_search(form) }}
+        <div class="form-group" style="padding-right:5px;padding-top:5px;">
+			<a href="{{url_for('manage.get_bus_members_details', godin_id=godin_id)}}" class="btn btn-primary">重置</a>
+            {{ form.submit(class="btn btn-primary") }}
+        </div>
+    </div>
+</form>
+<div>
+<span style="font-size: 18px">用户:<span>{{ phone_num }}</span> 注册时间 :<span>{{ create_time }}</span>
+    购买次数:<span>{{ buy_count }}</span> 购买金额:<span>{{ buy_price/100 |round(2) }}</span></span>
+</div>
+<div class="tab-content">
+	<div class="tab-pane active">
+		<table id="appinfo" class="table table-striped table-hover table-bordered">
+			<thead>
+				<tr class="info">
+                    <td class="text-center">序号</td>
+                    <td class="text-center">订单编号</td>
+                    <td class="text-center">订单时间</td>
+					<td class="text-center">支付方式</td>
+					<td class="text-center">支付时间</td>
+					<td class="text-center">类型</td>
+                    <td class="text-center">产品标价</td>
+                    <td class="text-center">折扣信息</td>
+					<td class="text-center">支付金额</td>
+					<td class="text-center">开始时间</td>
+					<td class="text-center">到期时间</td>
+					<td class="text-center">状态</td>
+				</tr>
+			</thead>
+			<tbody>
+			{% for item in data %}
+			<tr>
+                <td class="text-center">{% if page == 1 %}{{loop.index}}
+                                        {% else %}{{ per_page*(page - 1) + loop.index }}{% endif %}</td>
+                <td class="text-center">{{ item.BusinessWareOrder.order_number }}</td>
+                <td class="text-center">{{ item.BusinessWareOrder.create_time }}</td>
+				<td class="text-center">{% if item.BusinessWareOrder.pay_type == 0 %}微信
+                                        {% elif item.BusinessWareOrder.pay_type == 1 %}支付宝
+                                        {% elif item.BusinessWareOrder.pay_type == 2 %}其他{% endif %}</td>
+				<td class="text-center">{{ item.BusinessWareOrder.pay_time }}</td>
+				<td class="text-center">{{ cate_name[item.BusinessWare.id]}}</td>
+				<td class="text-center">{{ item.BusinessWareOrder.ware_price / 100| round(2)}}</td>
+				<td class="text-center">{{ item.BusinessWareOrder.discount }}</td>
+				<td class="text-center">{{ item.BusinessWareOrder.discount_price / 100| round(2) }}</td>
+				<td class="text-center">{{ item.BusinessWareOrder.start_time }}</td>
+				<td class="text-center">{{ item.BusinessWareOrder.end_time }}</td>
+				<td class="text-center">{% if now < item.BusinessWareOrder.start_time %}未开始
+                                        {% elif now >= item.BusinessWareOrder.start_time
+                                                and now <= item.BusinessWareOrder.end_time %}服务中
+                                        {% elif now > item.BusinessWareOrder.end_time %}已过期
+                                        {% endif %}</td>
+			</tr>
+			{% endfor %}
+			</tbody>
+		</table>
+        <a href="{{url_for('manage.export_result', godin_id=godin_id, pay_type=form.pay_type.data, category=form.category.data,
+        order_number = form.order_number.data, status=form.status.data, start_time=form.start_time.data,
+        end_time=form.end_time.data, export_type = 29)}}" class="btn btn-primary">导出结果为<br/>excel表格</a>
+	</div>
+</div>
+{% endblock %}
+{% block page%}
+	{{ macro.pagination_widget(pagination, 'manage.get_bus_members_details', godin_id=godin_id, pay_type=form.pay_type.data,
+	category=form.category.data, order_number = form.order_number.data, status=form.status.data,
+	start_time=form.start_time.data, end_time=form.end_time.data) }}
+{% endblock %}
